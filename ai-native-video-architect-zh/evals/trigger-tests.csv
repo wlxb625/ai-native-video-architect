@@ -1,0 +1,19 @@
+id,language,user_request,expected_mode,should_trigger,notes
+1,zh,帮我想一个关于毕业焦虑的90秒AI短片,Create,yes,中文从零创作
+2,zh,把这个校园剧本改成AI原生版本但不要改结局,Transform,yes,保护结局
+3,zh,这个创意到底算不算AI原生，只评价不要改,Diagnose,yes,禁止重写
+4,zh,把这五场戏拆成可生成镜头和首尾帧,Adapt,yes,制作适配
+5,zh,先评价这个剧本，再改造，最后拆镜头,Mixed,yes,Diagnose-Transform-Adapt
+6,zh,给我三个完全不同的恐怖短片机制,Create,yes,候选多样性
+7,zh,这个透明人物的设计会不会太俗,Diagnose,yes,高频意象检查
+8,zh,不改变创意，降低人物一致性和多人物动作难度,Adapt,yes,保护核心
+9,zh,写一条普通产品朋友圈文案,None,no,无视频叙事需求
+10,zh,生成一张赛博朋克城市图片提示词,None,no,只有图像提示词
+11,en,Develop an AI-native realist short film about invisible care work,Create,yes,中文技能也应理解英文请求
+12,en,Evaluate only whether this script is AI-native,Diagnose,yes,不改写
+13,zh,把这首歌做成AI原生MV概念,Create,yes,通用类型
+14,zh,帮我适配最新Runway模型参数,Adapt,yes,应先核实官方资料
+15,zh,写一篇AI视频行业评论,None,no,普通评论
+16,zh,一个人每次说谎房间就缩小，帮我做压力测试,Diagnose,yes,规则与套路检查
+17,zh,把传统广告脚本加几个炫酷AI特效,Transform,yes,应纠正装饰性改造
+18,zh,只给我一句话概念，不要展开,Create,yes,Level 1
