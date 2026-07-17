@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SKILLS_ROOT="${HOME}/.agents/skills"
-TARGET="${SKILLS_ROOT}/ai-native-video-architect-zh"
-
-mkdir -p "${SKILLS_ROOT}"
-rm -rf "${TARGET}"
-cp -R "${SOURCE}" "${TARGET}"
-
-echo "已安装 AI 原生视频架构师（中文）到：${TARGET}"
-echo "请新建 Codex 会话；如果没有识别到 Skill，请重启 Codex。"
+SRC="$(cd "$(dirname "$0")/.." && pwd)"
+DEST="${1:-$HOME/.agents/skills/ai-native-video-architect-zh}"
+mkdir -p "$(dirname "$DEST")"
+rm -rf "$DEST"
+cp -R "$SRC" "$DEST"
+python3 "$DEST/scripts/validate_package.py"
+echo "Installed to $DEST"

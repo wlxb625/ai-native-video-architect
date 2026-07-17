@@ -1,14 +1,10 @@
-$ErrorActionPreference = "Stop"
-
-$Source = Split-Path -Parent $PSScriptRoot
-$SkillsRoot = Join-Path $HOME ".agents\skills"
-$Target = Join-Path $SkillsRoot "ai-native-video-architect-zh"
-
-New-Item -ItemType Directory -Path $SkillsRoot -Force | Out-Null
-if (Test-Path $Target) {
-    Remove-Item -Path $Target -Recurse -Force
-}
-Copy-Item -Path $Source -Destination $Target -Recurse -Force
-
-Write-Host "已安装 AI 原生视频架构师（中文）到：$Target"
-Write-Host "请新建 Codex 会话；如果没有识别到 Skill，请重启 Codex。"
+param(
+  [string]$Destination = "$HOME\.agents\skills\ai-native-video-architect-zh"
+)
+$Source = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$Parent = Split-Path $Destination -Parent
+New-Item -ItemType Directory -Path $Parent -Force | Out-Null
+if (Test-Path $Destination) { Remove-Item $Destination -Recurse -Force }
+Copy-Item $Source $Destination -Recurse -Force
+python (Join-Path $Destination "scripts\validate_package.py")
+Write-Host "Installed to $Destination"

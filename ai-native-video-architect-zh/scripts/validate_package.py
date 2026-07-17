@@ -1,79 +1,43 @@
-#!/usr/bin/env python3
-from __future__ import annotations
-
 from pathlib import Path
-import re
-import sys
+import re, sys, json
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED = {
-    'SKILL.md',
-    'agents/openai.yaml',
-    'references/core-workflow.md',
-    'modes/create.md',
-    'modes/transform.md',
-    'modes/diagnose.md',
-    'modes/adapt.md',
-    'controllers/realism.md',
-    'controllers/horror.md',
-    'controllers/comedy.md',
-    'evals/trigger-tests.csv',
-    'manifest.txt',
+REQUIRED = [
+    'SKILL.md','AGENT.md','README.md',
+    'modes/create.md','modes/transform.md','modes/diagnose.md','modes/adapt.md',
+    'core/story.md','core/continuity.md','core/dialogue.md','core/transform.md','core/production.md',
+    'controllers/short-video.md','controllers/comedy.md','controllers/suspense.md','controllers/horror.md',
+    'controllers/emotion.md','controllers/realism.md','controllers/visual.md','controllers/trend-culture.md',
+    'evals/semantic-hard-gate.md','evals/drama-score.md','evals/propagation-score.md',
+    'evals/character-agency-check.md','evals/twist-legality-check.md','evals/dialogue-check.md',
+    'evals/mechanism-overuse-check.md','evals/production-score.md','evals/transform-fidelity-score.md',
+    'templates/concept-brief.md','templates/beat-sheet.md','templates/standard-script.md',
+    'templates/diagnosis-report.md','templates/transform-contract.md','templates/production-pack.md',
+    'references/glossary.md','references/platform-notes.md','tests/stress-test-suite.md',
+    'audit/cross-file-consistency-audit.md'
+]
+errors=[]
+for rel in REQUIRED:
+    p=ROOT/rel
+    if not p.exists(): errors.append(f'missing: {rel}')
+    elif not p.read_text(encoding='utf-8').strip(): errors.append(f'empty: {rel}')
+
+skill=(ROOT/'SKILL.md').read_text(encoding='utf-8') if (ROOT/'SKILL.md').exists() else ''
+if not skill.startswith('---\n'): errors.append('SKILL.md missing YAML frontmatter')
+if 'name: ai-native-video-architect-zh' not in skill: errors.append('wrong skill name')
+for token in ['CREATE','TRANSFORM','DIAGNOSE','ADAPT','PASS','CONDITIONAL','FAIL']:
+    if token not in skill: errors.append(f'SKILL.md missing protocol token: {token}')
+
+for p in ROOT.rglob('*.md'):
+    text=p.read_text(encoding='utf-8')
+    if '\ufffd' in text: errors.append(f'encoding replacement character: {p.relative_to(ROOT)}')
+
+manifest={
+    'skill':'ai-native-video-architect-zh',
+    'markdown_files':len(list(ROOT.rglob('*.md'))),
+    'required_files':len(REQUIRED),
+    'status':'FAIL' if errors else 'PASS',
+    'errors':errors,
 }
-
-
-def fail(message: str) -> None:
-    print(f'错误：{message}', file=sys.stderr)
-    raise SystemExit(1)
-
-
-def main() -> None:
-    for path in sorted(EXPECTED):
-        if not (ROOT / path).is_file():
-            fail(f'缺少必要文件：{path}')
-
-    skill_files = [p for p in ROOT.rglob('*') if p.is_file() and p.name.lower() == 'skill.md']
-    if len(skill_files) != 1:
-        fail(f'必须且只能有一个 SKILL.md，当前发现 {len(skill_files)} 个')
-
-    skill = (ROOT / 'SKILL.md').read_text(encoding='utf-8')
-    fm = re.match(r'^---\n(.*?)\n---\n', skill, flags=re.S)
-    if not fm:
-        fail('SKILL.md 缺少 YAML 前置元数据')
-    front = fm.group(1)
-    if not re.search(r'^name:\s*ai-native-video-architect-zh\s*$', front, re.M):
-        fail('前置元数据中的 name 缺失或不正确')
-    if not re.search(r'^description:\s*\S', front, re.M):
-        fail('前置元数据中的 description 缺失')
-
-    links = re.findall(r'`((?:references|modes|controllers|templates|evals|examples|scripts)/[^`]+)`', skill)
-    for rel in links:
-        if not (ROOT / rel).exists():
-            fail(f'SKILL.md 引用了不存在的路径：{rel}')
-
-    manifest_path = ROOT / 'manifest.txt'
-    manifest = [line.strip() for line in manifest_path.read_text(encoding='utf-8').splitlines() if line.strip()]
-    actual = sorted(
-        str(p.relative_to(ROOT))
-        for p in ROOT.rglob('*')
-        if p.is_file()
-        and p.name != 'manifest.txt'
-        and '__pycache__' not in p.parts
-        and p.suffix != '.pyc'
-    )
-    missing = sorted(set(actual) - set(manifest))
-    extra = sorted(set(manifest) - set(actual))
-    if missing:
-        fail('manifest 未登记文件：' + ', '.join(missing))
-    if extra:
-        fail('manifest 登记了不存在的文件：' + ', '.join(extra))
-
-    csv_path = ROOT / 'evals/trigger-tests.csv'
-    if csv_path.stat().st_size < 100:
-        fail('触发测试 CSV 似乎为空')
-
-    print(f'通过：已校验 {len(actual) + 1} 个文件，目录 {ROOT.name}')
-
-
-if __name__ == '__main__':
-    main()
+print(json.dumps(manifest, ensure_ascii=False, indent=2))
+sys.exit(1 if errors else 0)
