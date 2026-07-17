@@ -1,31 +1,43 @@
-# AI 原生性诊断报告
+# Diagnosis Report Template
 
-## 总体判断
+```yaml
+project_title:
+material_version:
+material_stage:
+primary_path:
+overall_status:
+overall_design_tags: []
+diagnostic_summary:
+what_already_works: []
+core_problem:
+recommended_mode:
 
-## 当前等级
+findings:
+  - title:
+    category: BUG | RISK | CHOICE | OPPORTUNITY | PREFERENCE
+    priority: P0 | P1 | P2 | P3
+    location:
+    evidence:
+    established_rule:
+    impact:
+    minimum_fix:
+    stronger_direction:
+    possible_loss:
+    must_protect:
+    route_to: TRANSFORM | ADAPT | NONE
 
-AI 工具化 / AI 增强 / AI 驱动 / AI 原生 / 高成熟度 AI 原生
+evaluations:
+  semantic:
+  drama:
+  agency:
+  twist:
+  dialogue:
+  mechanism:
+  propagation:
+  production:
+  fidelity:
 
-## 最成立的部分
-
-## 最主要的问题
-
-## 主题与机制耦合
-
-## 世界规则或异常倾向
-
-## 叙事参与度
-
-## 类型适配
-
-## 高频意象与替换风险
-
-## 去 AI 测试
-
-## 因果参与测试
-
-## 制作风险
-
-## 最优先修改项
-
-> 用户要求“只评价”时，到此为止，不输出完整替代方案。
+must_fix: []
+should_strengthen: []
+must_protect: []
+```
