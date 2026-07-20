@@ -1,15 +1,17 @@
 {
   "name": "ai-native-video-architect-zh",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "language": "zh-CN",
   "entry": "SKILL.md",
   "files": [
     "AGENT.md",
     "README.md",
     "SKILL.md",
+    "agents/openai.yaml",
     "audit/cross-file-consistency-audit.md",
     "controllers/comedy.md",
     "controllers/emotion.md",
+    "controllers/high-concept-scifi.md",
     "controllers/horror.md",
     "controllers/realism.md",
     "controllers/short-video.md",
@@ -24,6 +26,7 @@
     "evals/character-agency-check.md",
     "evals/dialogue-check.md",
     "evals/drama-score.md",
+    "evals/high-concept-score.md",
     "evals/mechanism-overuse-check.md",
     "evals/production-score.md",
     "evals/propagation-score.md",
@@ -36,6 +39,7 @@
     "modes/transform.md",
     "references/examples/commercial-workplace.md",
     "references/examples/experimental-corridor.md",
+    "references/examples/high-concept-scifi-memory-fuel.md",
     "references/examples/literary-open-ending.md",
     "references/glossary.md",
     "references/platform-notes.md",
@@ -61,6 +65,9 @@
     "LITERARY",
     "EXPERIMENTAL",
     "HYBRID"
+  ],
+  "specialized_controllers": [
+    "HIGH_CONCEPT_SCIFI"
   ],
   "status_protocol": [
     "PASS",
