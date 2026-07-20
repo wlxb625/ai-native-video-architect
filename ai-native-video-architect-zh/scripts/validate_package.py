@@ -3,7 +3,7 @@ import re, sys, json
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
-    'SKILL.md','AGENT.md','README.md','manifest.json',
+    'SKILL.md','AGENT.md','README.md','manifest.json','agents/openai.yaml',
     'modes/create.md','modes/transform.md','modes/diagnose.md','modes/adapt.md',
     'core/story.md','core/continuity.md','core/dialogue.md','core/transform.md','core/production.md',
     'controllers/short-video.md','controllers/comedy.md','controllers/suspense.md','controllers/horror.md',
@@ -59,6 +59,11 @@ high_score=(ROOT/'evals/high-concept-score.md').read_text(encoding='utf-8') if (
 for token in ['Concept Compression','Mechanism Unity','Spectacle Causality','Final Afterimage']:
     if token not in high_score:
         errors.append(f'high-concept score missing dimension: {token}')
+
+agent_meta=(ROOT/'agents/openai.yaml').read_text(encoding='utf-8') if (ROOT/'agents/openai.yaml').exists() else ''
+for token in ['V2.1','高概念科幻','一句话概念']:
+    if token not in agent_meta:
+        errors.append(f'agent metadata missing token: {token}')
 
 for p in ROOT.rglob('*.md'):
     text=p.read_text(encoding='utf-8')
