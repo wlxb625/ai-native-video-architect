@@ -7,6 +7,7 @@
     "AGENT.md",
     "README.md",
     "SKILL.md",
+    "agents/openai.yaml",
     "audit/cross-file-consistency-audit.md",
     "controllers/comedy.md",
     "controllers/emotion.md",
