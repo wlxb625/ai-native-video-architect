@@ -1,7 +1,7 @@
 interface:
-  display_name: "AI视频剧本架构师 V2.1"
-  short_description: "创作、改写、诊断并制作适配AI视频，重点支持单机制、强任务、艰难选择和因果化奇观驱动的高概念科幻与意识流短片。"
+  display_name: "AI原生电影导演工作室 V3.0"
+  short_description: "从概念压缩、视觉叙事和镜头语言，到AI生成、制片管理、声音与传播的完整导演工作流。"
   brand_color: "#5B5BD6"
-  default_prompt: "使用 $ai-native-video-architect-zh，把这个想法发展成概念锋利、人物任务清楚、核心机制统一、视觉奇观参与因果、结尾具有余震并可进入制作的AI视频方案。若是科幻、意识流或大片，先完成一句话概念、单一机制、艰难选择和最后图像，再展开完整剧本。"
+  default_prompt: "使用 $ai-native-video-architect-zh，把这个想法发展成可观看、可生成、可剪辑的AI电影方案。先判断CREATE、TRANSFORM、DIAGNOSE或ADAPT，再选择故事导演、视觉导演、大片导演、实验导演或制作导演模式。优先完成一句话概念、人物—世界关系、视觉母题、镜头揭示顺序和最后图像；需要落地时继续输出视觉圣经、逐镜头计划、声音设计、风险替代和导演包。"
 policy:
   allow_implicit_invocation: true
