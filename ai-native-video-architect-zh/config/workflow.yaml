@@ -1,0 +1,119 @@
+version: 3.0.0
+
+workflow:
+  stage_0_request_analysis:
+    outputs:
+      - operation_mode
+      - director_mode
+      - work_depth
+      - target_duration
+      - target_platform
+      - production_constraints
+    rule: 缺失信息不会自动阻塞；先采用明确假设并标注，只在关键分歧会改变作品方向时提问。
+
+  stage_1_concept_gate:
+    required:
+      - one_sentence_concept
+      - emotional_core
+      - central_question
+      - single_core_mechanism
+      - primary_character_task
+      - irreversible_pressure
+      - final_image
+    fail_action:
+      - 删除竞争机制
+      - 把世界观术语改写为人物面临的具体问题
+      - 用一个可观察动作替代抽象主题说明
+
+  stage_2_visual_narrative:
+    required:
+      - character_world_relationship
+      - three_to_five_visual_motifs
+      - discovery_image
+      - reinterpretation_image
+      - residue_image
+    scene_formula:
+      - subject
+      - action
+      - anomaly
+      - hidden_information
+      - emotional_question
+
+  stage_3_camera_language:
+    required_per_shot:
+      - shot_goal
+      - shot_size
+      - angle
+      - movement
+      - visual_priority
+      - reveal_order
+      - emotional_effect
+      - sound_relation
+      - generation_risk
+    rule: 一个镜头只承担一个主要叙事或情绪功能。
+
+  stage_4_style_dna:
+    required:
+      - spatial_logic
+      - human_scale
+      - time_feeling
+      - color_material
+      - camera_temperament
+      - sound_world
+    rule: 拆解参考作品的语言参数，不直接模仿在世创作者的独特风格。
+
+  stage_5_ai_production:
+    required:
+      - visual_bible
+      - character_lock
+      - environment_lock
+      - shot_inputs_and_outputs
+      - generation_method
+      - continuity_plan
+      - fallback_plan
+
+  stage_6_production_management:
+    required:
+      - shot_inventory
+      - priority_tiers
+      - asset_inventory
+      - generation_order
+      - cost_risk
+      - recovery_strategy
+    priority_order: [S, A, B, C]
+    budget_rule: 资源优先用于S级传播镜头和A级情绪转折镜头。
+
+  stage_7_sound_design:
+    required:
+      - world_sound
+      - character_sound
+      - sound_motif
+      - silence_plan
+      - music_curve
+      - voice_bible_if_needed
+
+  stage_8_virality:
+    required_when_relevant:
+      - first_three_second_hook
+      - iconic_shot
+      - retellable_premise
+      - discussion_gap
+      - rewatch_information
+    rule: 传播优化不得扭曲人物选择、主题或结尾开放程度。
+
+  stage_9_director_review:
+    evaluators:
+      - evals/high-concept-score.md
+      - evals/visual-narrative-score.md
+      - evals/camera-language-score.md
+      - evals/production-score.md
+      - evals/propagation-score.md
+      - evals/director-package-score.md
+    result_protocol: PASS | CONDITIONAL | FAIL
+    iteration_rule: 只重做薄弱层，不无理由推翻已通过层。
+
+output_levels:
+  concept: 概念方向与核心画面
+  development: 概念、视觉圣经、角色和结构
+  director_package: 完整导演包、镜头、声音与制作计划
+  production_pack: 可直接进入生成和后期的执行文档

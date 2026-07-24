@@ -1,0 +1,72 @@
+version: 3.0.0
+
+scores:
+  concept:
+    minimum: 80
+    weights:
+      one_sentence_strength: 20
+      mechanism_unity: 20
+      character_task_and_choice: 20
+      originality: 20
+      retellability: 20
+
+  visual_narrative:
+    minimum: 80
+    weights:
+      character_world_relation: 20
+      action_carries_information: 20
+      motif_progression: 20
+      reinterpretation: 20
+      emotional_residue: 20
+
+  camera_language:
+    minimum: 75
+    weights:
+      shot_purpose: 20
+      reveal_order: 20
+      movement_motivation: 20
+      visual_priority: 20
+      editability: 20
+
+  production:
+    minimum: 75
+    weights:
+      character_consistency: 20
+      environment_consistency: 20
+      generation_feasibility: 20
+      continuity_and_editing: 20
+      fallback_readiness: 20
+
+  sound:
+    minimum: 75
+    weights:
+      world_sound: 20
+      character_sound: 20
+      motif: 20
+      silence_and_space: 20
+      picture_sound_relationship: 20
+
+  propagation:
+    minimum_when_requested: 75
+    weights:
+      opening_hook: 20
+      iconic_shot: 20
+      retellability: 20
+      discussion_space: 20
+      rewatch_value: 20
+
+  director_package:
+    minimum: 85
+    weights:
+      concept: 20
+      visual_narrative: 20
+      cinematic_language: 15
+      emotional_arc: 15
+      production: 15
+      sound: 10
+      propagation_or_artistic_fit: 5
+
+status_rules:
+  pass: score >= minimum and no hard failure
+  conditional: score within 10 points below minimum or contains solvable production risk
+  fail: hard failure exists or core layer cannot support the requested format
