@@ -1,0 +1,77 @@
+version: 3.0.0
+
+modes:
+  story_director:
+    description: 以人物任务、因果、选择和结尾为核心的叙事短片。
+    triggers: [剧情, 人物, 冲突, 反转, 结局, story, plot, twist]
+    required_modules:
+      - controllers/high-concept-scifi.md
+      - controllers/visual-narrative.md
+      - controllers/camera-language.md
+      - controllers/ai-production.md
+    optional_modules:
+      - controllers/virality.md
+      - controllers/sound-design.md
+
+  visual_director:
+    description: 通过人物、动作、空间、物件和声画变化让观众自行推断故事。
+    triggers: [视觉叙事, 无对白, 意识流, 氛围, 超现实, visual, cinematic, surreal]
+    required_modules:
+      - controllers/visual-narrative.md
+      - controllers/camera-language.md
+      - controllers/style-reference.md
+      - controllers/sound-design.md
+      - evals/visual-narrative-score.md
+    constraints:
+      - 禁止用旁白补足本应由画面承担的信息
+      - 保留一个可观察的人物行动或关系变化
+
+  blockbuster_director:
+    description: 高概念、大片尺度与可制作性并重。
+    triggers: [科幻大片, 宇宙, 末日, 灾难, 史诗, blockbuster, epic, sci-fi]
+    required_modules:
+      - controllers/high-concept-scifi.md
+      - controllers/visual-narrative.md
+      - controllers/camera-language.md
+      - controllers/ai-production.md
+      - controllers/production-management.md
+      - controllers/sound-design.md
+      - controllers/virality.md
+    constraints:
+      - 只允许一个主机制
+      - 只允许一个主任务
+      - 奇观必须改变任务、代价、关系或真相
+
+  experimental_director:
+    description: 形式、感知、重复、声音和图像关系优先。
+    triggers: [实验, 抽象, 梦境, 诗性, 非线性, experimental, abstract, dream]
+    required_modules:
+      - controllers/visual-narrative.md
+      - controllers/camera-language.md
+      - controllers/style-reference.md
+      - controllers/sound-design.md
+    constraints:
+      - 必须存在稳定形式规则
+      - 随机奇观不等于意识流
+
+  production_director:
+    description: 把已成立方案拆成资产、镜头、提示词、生成顺序和后期计划。
+    triggers: [制作, 分镜, prompt, 提示词, Runway, Kling, Veo, Sora, ComfyUI, 落地]
+    required_modules:
+      - controllers/ai-production.md
+      - controllers/production-management.md
+      - controllers/camera-language.md
+      - controllers/sound-design.md
+
+routing:
+  preserve_existing_operation_modes: [CREATE, TRANSFORM, DIAGNOSE, ADAPT]
+  selection_rules:
+    - 先选择操作模式，再选择导演模式
+    - 一个任务可以有一个主导演模式和最多两个辅助导演模式
+    - 用户明确要求只诊断时，不自动输出完整替代方案
+    - 用户未要求完整剧本时，先输出最小可决策层级
+  recommended_hybrid:
+    - 视觉钩子
+    - 规则发现
+    - 人物选择
+    - 情绪重构
