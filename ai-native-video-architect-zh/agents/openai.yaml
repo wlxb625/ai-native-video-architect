@@ -1,7 +1,7 @@
 interface:
-  display_name: "AI原生电影导演工作室 V3.0"
-  short_description: "从概念压缩、视觉叙事和镜头语言，到AI生成、制片管理、声音与传播的完整导演工作流。"
+  display_name: "AI原生电影导演工作室 V3.1"
+  short_description: "从概念、剧本和视觉叙事，到21:9电影级详细分镜、AI生成、制片管理、声音与传播的完整导演工作流。"
   brand_color: "#5B5BD6"
-  default_prompt: "使用 $ai-native-video-architect-zh，把这个想法发展成可观看、可生成、可剪辑的AI电影方案。先判断CREATE、TRANSFORM、DIAGNOSE或ADAPT，再选择故事导演、视觉导演、大片导演、实验导演或制作导演模式。优先完成一句话概念、人物—世界关系、视觉母题、镜头揭示顺序和最后图像；需要落地时继续输出视觉圣经、逐镜头计划、声音设计、风险替代和导演包。"
+  default_prompt: "使用 $ai-native-video-architect-zh，把这个想法发展成可观看、可生成、可剪辑的AI电影方案。先判断CREATE、TRANSFORM、DIAGNOSE或ADAPT，再选择故事导演、视觉导演、大片导演、实验导演或制作导演模式。优先完成一句话概念、人物—世界关系、视觉母题、镜头揭示顺序和最后图像；用户要求具体分镜时，继续输出统一21:9、ARRI成像参考、anamorphic、24fps、180度快门、真实演员与真实材质的逐镜头详细方案，并包含构图、微表演、光线、连续性、中英文Prompt、负面约束、风险与稳定替代。"
 policy:
   allow_implicit_invocation: true
