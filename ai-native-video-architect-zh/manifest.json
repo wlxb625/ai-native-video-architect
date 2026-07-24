@@ -1,6 +1,6 @@
 {
   "name": "ai-native-video-architect-zh",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "language": "zh-CN",
   "entry": "SKILL.md",
   "files": [
@@ -15,6 +15,7 @@
     "controllers/ai-production.md",
     "controllers/camera-language.md",
     "controllers/comedy.md",
+    "controllers/detailed-storyboard.md",
     "controllers/director-agent.md",
     "controllers/emotion.md",
     "controllers/high-concept-scifi.md",
@@ -64,6 +65,7 @@
     "templates/beat-sheet.md",
     "templates/camera-shot-plan.md",
     "templates/concept-brief.md",
+    "templates/detailed-storyboard.md",
     "templates/diagnosis-report.md",
     "templates/director-package.md",
     "templates/production-pack.md",
@@ -96,6 +98,7 @@
     "HIGH_CONCEPT_SCIFI",
     "VISUAL_NARRATIVE",
     "CAMERA_LANGUAGE",
+    "DETAILED_STORYBOARD",
     "AI_PRODUCTION",
     "STYLE_REFERENCE",
     "VIRALITY",
@@ -107,6 +110,7 @@
     "CONCEPT_DIRECTION",
     "DEVELOPMENT_PACKAGE",
     "DIRECTOR_PACKAGE",
+    "DETAILED_STORYBOARD",
     "PRODUCTION_PACK"
   ],
   "status_protocol": [
