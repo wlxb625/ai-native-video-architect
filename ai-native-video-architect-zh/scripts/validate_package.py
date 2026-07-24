@@ -134,7 +134,7 @@ for token in [
 
 agent_meta_path = ROOT / "agents/openai.yaml"
 agent_meta = agent_meta_path.read_text(encoding="utf-8") if agent_meta_path.exists() else ""
-for token in ["V3.0", "视觉叙事", "镜头语言", "导演包"]:
+for token in ["V3.1", "视觉叙事", "镜头语言", "详细分镜"]:
     if token not in agent_meta:
         errors.append(f"agent metadata missing token: {token}")
 
