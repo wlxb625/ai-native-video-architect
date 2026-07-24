@@ -90,6 +90,41 @@
 - 同一镜头连续完成多个复杂事件；
 - 纯靠“电影感”“史诗感”而没有具体运动逻辑的提示词。
 
+## 详细分镜模式
+
+当用户要求具体分镜、逐镜头提示词、电影级生成描述或可以直接投入AI视频制作的镜头表时，必须读取：
+
+- `controllers/detailed-storyboard.md`；
+- `templates/detailed-storyboard.md`。
+
+详细分镜必须先给出全片摄影基准，再逐镜头展开。用户未指定时，默认采用：
+
+- 21:9横向宽银幕；
+- ARRI Alexa 35或ARRI Alexa LF成像参考；
+- 变形宽银幕镜头特征；
+- 24fps；
+- 180度快门；
+- 真实演员和真实材质；
+- 柔和高光滚降；
+- 暗部保留层次；
+- 固定、极慢推进、缓慢后拉、稳定横移、稳定跟拍或低幅度焦点转移。
+
+不得用“电影感、史诗感、高级感”代替具体构图、光线、人物动作、材质、运镜和连续性描述。
+
+每个详细分镜至少补充：
+
+- 21:9中主体的准确位置和占比；
+- 前景、中景、背景；
+- 摄影机和变形宽银幕光学基准；
+- 焦段或焦段感；
+- 运镜起止位置、速度和动机；
+- 人物微表演和动作全过程；
+- 光源方向、色温、曝光关系、高光和暗部；
+- 服装、建筑、家具和道具的真实使用痕迹；
+- 帧率、快门和运动模糊；
+- 相邻镜头连续性；
+- AI风险、稳定替代、中文Prompt、英文Prompt和负面约束。
+
 ## 镜头输出协议
 
 ```yaml
@@ -104,15 +139,29 @@ shot:
   angle:
   lens_feeling:
   movement:
+  movement_motivation:
   duration:
+  composition_21_9:
+  foreground:
+  midground:
+  background:
   visual_priority:
   reveal_order:
   hidden_information:
+  performance_detail:
+  lighting_and_exposure:
+  material_detail:
+  frame_rate:
+  shutter_angle:
   emotional_effect:
   sound_relation:
   edit_connection:
+  continuity_lock:
   ai_generation_risk:
   stable_alternative:
+  prompt_zh:
+  prompt_en:
+  negative_prompt:
 ```
 
 ## 高潮与结尾

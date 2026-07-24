@@ -3,7 +3,7 @@ import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "3.0.0"
+VERSION = "3.1.0"
 
 REQUIRED = [
     "SKILL.md", "AGENT.md", "README.md", "manifest.json", "agents/openai.yaml",
@@ -14,9 +14,10 @@ REQUIRED = [
     "controllers/horror.md", "controllers/emotion.md", "controllers/realism.md",
     "controllers/visual.md", "controllers/trend-culture.md", "controllers/high-concept-scifi.md",
     "controllers/visual-narrative.md", "controllers/camera-language.md",
-    "controllers/ai-production.md", "controllers/style-reference.md",
-    "controllers/virality.md", "controllers/production-management.md",
-    "controllers/sound-design.md", "controllers/director-agent.md",
+    "controllers/detailed-storyboard.md", "controllers/ai-production.md",
+    "controllers/style-reference.md", "controllers/virality.md",
+    "controllers/production-management.md", "controllers/sound-design.md",
+    "controllers/director-agent.md",
     "evals/semantic-hard-gate.md", "evals/drama-score.md", "evals/propagation-score.md",
     "evals/character-agency-check.md", "evals/twist-legality-check.md", "evals/dialogue-check.md",
     "evals/mechanism-overuse-check.md", "evals/production-score.md",
@@ -26,7 +27,8 @@ REQUIRED = [
     "templates/concept-brief.md", "templates/beat-sheet.md", "templates/standard-script.md",
     "templates/diagnosis-report.md", "templates/transform-contract.md", "templates/production-pack.md",
     "templates/visual-bible.md", "templates/visual-narrative-board.md",
-    "templates/camera-shot-plan.md", "templates/director-package.md",
+    "templates/camera-shot-plan.md", "templates/detailed-storyboard.md",
+    "templates/director-package.md",
     "references/glossary.md", "references/platform-notes.md",
     "references/examples/high-concept-scifi-memory-fuel.md",
     "references/examples/visual-narrative-last-gardener.md",
@@ -84,14 +86,19 @@ if manifest_path.exists():
         }
         if not expected_director_modes.issubset(set(manifest_data.get("director_modes", []))):
             errors.append("manifest missing director modes")
+        if "DETAILED_STORYBOARD" not in set(manifest_data.get("output_levels", [])):
+            errors.append("manifest missing detailed storyboard output level")
+        if "DETAILED_STORYBOARD" not in set(manifest_data.get("specialized_controllers", [])):
+            errors.append("manifest missing detailed storyboard controller")
     except json.JSONDecodeError as exc:
         errors.append(f"invalid manifest.json: {exc}")
 
 controller_tokens = {
     "controllers/high-concept-scifi.md": ["one_sentence_concept", "core_rule", "impossible_choice", "final_image"],
     "controllers/visual-narrative.md": ["VISUAL_WALLPAPER", "人物—世界关系", "视觉母题"],
-    "controllers/camera-language.md": ["reveal_order", "movement_motivation", "stable_alternative"],
-    "controllers/ai-production.md": ["Visual Bible", "Character Lock", "Environment Lock"],
+    "controllers/camera-language.md": ["reveal_order", "movement_motivation", "stable_alternative", "详细分镜模式"],
+    "controllers/detailed-storyboard.md": ["21:9", "ARRI Alexa 35", "24fps", "180度", "真实演员质感", "单镜头最低描述密度"],
+    "controllers/ai-production.md": ["Visual Bible", "Character Lock", "Environment Lock", "Cinematic Master Spec"],
     "controllers/director-agent.md": ["STORY_DIRECTOR", "VISUAL_DIRECTOR", "Director Critique"],
 }
 
@@ -116,9 +123,18 @@ for rel, tokens in score_tokens.items():
         if token not in text:
             errors.append(f"{rel} missing dimension: {token}")
 
+storyboard_template_path = ROOT / "templates/detailed-storyboard.md"
+storyboard_template = storyboard_template_path.read_text(encoding="utf-8") if storyboard_template_path.exists() else ""
+for token in [
+    "统一画幅：21:9", "摄影机参考", "默认快门角度：180°",
+    "21:9构图", "人物与表演", "光线与曝光", "中文生成提示词", "Negative / Avoid",
+]:
+    if token not in storyboard_template:
+        errors.append(f"detailed storyboard template missing token: {token}")
+
 agent_meta_path = ROOT / "agents/openai.yaml"
 agent_meta = agent_meta_path.read_text(encoding="utf-8") if agent_meta_path.exists() else ""
-for token in ["V3.0", "视觉叙事", "镜头语言", "导演包"]:
+for token in ["V3.1", "视觉叙事", "镜头语言", "详细分镜"]:
     if token not in agent_meta:
         errors.append(f"agent metadata missing token: {token}")
 

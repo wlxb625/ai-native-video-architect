@@ -80,16 +80,38 @@
 64. 声音只有全程史诗音乐，闭眼无法判断空间和人物状态 → FAIL + SOUND_LAYER_MISSING。
 65. 完整导演包概念、视觉、镜头、声音和生产均通过，传播项对艺术片适用性LOW → 不得因传播分低否定作品。
 
+## V3.1详细分镜回归
+
+66. 用户要求电影级详细分镜，输出先统一21:9、ARRI成像参考、anamorphic、24fps和180度快门，再逐镜头展开 → PASS + DETAILED_STORYBOARD。
+67. 同一分镜表混用21:9、16:9和9:16，且没有版本区分 → FAIL + ASPECT_RATIO_DRIFT。
+68. 提示词只写“ARRI Alexa、电影感、史诗光影”，没有构图、光源、曝光、材质和动作 → FAIL + EMPTY_CINEMATIC_TERMS。
+69. 人物写为“完美女主、精致脸、无瑕皮肤”，没有真实皮肤和生活状态 → FAIL + BEAUTY_FILTER_LOOK。
+70. 人物保留毛孔、轻微不对称、眼下泛红、真实发丝和与处境匹配的疲态 → PASS + ACTOR_REALISM。
+71. 古装、木案、铜镜和建筑全部崭新无痕，故事却设定长期废弃 → FAIL + MATERIAL_HISTORY_MISSING。
+72. 材质写明衣料洗涤褶皱、木材手触磨损、铜镜氧化和雨水痕迹，且均有故事来源 → PASS + MATERIAL_REALISM。
+73. 相邻镜头主光从画面左侧突然跳到右侧、色温由冷蓝变暖黄，没有时间或空间变化 → FAIL + LIGHTING_CONTINUITY_BREAK。
+74. 镜头写明21:9中人物位于右三分之一、左侧保留视线空间，前景帷幔、中景人物、背景门廊共同完成揭示 → PASS + COMPOSITION_EXECUTABLE。
+75. 运镜只写“镜头缓慢移动”，没有起止位置、速度、设备逻辑和动机 → FAIL + CAMERA_MOVE_UNDERSPECIFIED。
+76. 采用极慢推进，摄影机在6秒内前移40厘米，用于让观众先看见手中物件，再发现人物眼神变化 → PASS + MOTIVATED_MOVEMENT。
+77. 默认24fps和180度快门；某镜改为48fps并说明用于延长布帛坠落、控制运动模糊及如何回到24fps → PASS + FRAME_RATE_JUSTIFIED。
+78. 特殊慢动作改变帧率和快门但没有说明原因或衔接 → FAIL + FRAME_RATE_DRIFT。
+79. 高光大面积死白、暗部纯黑且人物头发与衣料无纹理 → FAIL + DIGITAL_EXPOSURE_FAILURE。
+80. 高光柔和滚降，暗部仍能辨认黑色衣料织纹、木墙和发丝层次 → PASS + EXPOSURE_LATITUDE。
+81. 镜头同时要求环绕、推进、升降、突然变焦和手持震动 → FAIL + CAMERA_MOTION_OVERLOAD。
+82. 每个镜头包含中文Prompt、英文Prompt、Negative Prompt、AI风险和稳定替代 → PASS + GENERATION_READY。
+83. 分镜只有景别和一句画面描述，缺少微表演、光线、材质、连续性和生成风险，却宣称可直接制作 → FAIL + STORYBOARD_UNDERSPECIFIED。
+
 ## 验收
 
 所有正式实现应将上述案例固化为自动化或人工回归用例。
 
-V3更新至少确保：
+V3.1更新至少确保：
 
 - `SKILL.md`包含双重路由和九阶段导演流程；
 - `config/modes.yaml`、`config/workflow.yaml`和`config/scoring.yaml`存在；
-- 视觉叙事、镜头语言、AI生产、声音和导演Agent控制器存在；
+- 视觉叙事、镜头语言、详细分镜、AI生产、声音和导演Agent控制器存在；
 - 三个V3评估器存在；
-- 视觉圣经、视觉叙事板、镜头计划和导演包模板存在；
+- 视觉圣经、视觉叙事板、镜头计划、详细分镜和导演包模板存在；
 - `references/examples/visual-narrative-last-gardener.md`存在；
+- 详细分镜默认支持21:9、ARRI成像参考、anamorphic、24fps、180度快门、真实演员和真实材质；
 - 验证脚本状态为PASS。
