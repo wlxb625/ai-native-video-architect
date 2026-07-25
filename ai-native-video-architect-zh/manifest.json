@@ -1,6 +1,6 @@
 {
   "name": "ai-native-video-architect-zh",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "language": "zh-CN",
   "entry": "SKILL.md",
   "files": [
@@ -13,6 +13,7 @@
     "config/scoring.yaml",
     "config/workflow.yaml",
     "controllers/ai-production.md",
+    "controllers/asset-first-production.md",
     "controllers/camera-language.md",
     "controllers/comedy.md",
     "controllers/detailed-storyboard.md",
@@ -35,6 +36,7 @@
     "core/production.md",
     "core/story.md",
     "core/transform.md",
+    "evals/asset-readiness-score.md",
     "evals/camera-language-score.md",
     "evals/character-agency-check.md",
     "evals/dialogue-check.md",
@@ -62,25 +64,25 @@
     "scripts/install_unix.sh",
     "scripts/install_windows.ps1",
     "scripts/validate_package.py",
+    "templates/asset-registry.md",
     "templates/beat-sheet.md",
     "templates/camera-shot-plan.md",
+    "templates/character-asset-pack.md",
     "templates/concept-brief.md",
     "templates/detailed-storyboard.md",
     "templates/diagnosis-report.md",
     "templates/director-package.md",
+    "templates/environment-asset-pack.md",
+    "templates/frame-generation-pack.md",
     "templates/production-pack.md",
+    "templates/prop-asset-pack.md",
     "templates/standard-script.md",
     "templates/transform-contract.md",
     "templates/visual-bible.md",
     "templates/visual-narrative-board.md",
     "tests/stress-test-suite.md"
   ],
-  "operation_modes": [
-    "CREATE",
-    "TRANSFORM",
-    "DIAGNOSE",
-    "ADAPT"
-  ],
+  "operation_modes": ["CREATE", "TRANSFORM", "DIAGNOSE", "ADAPT"],
   "director_modes": [
     "STORY_DIRECTOR",
     "VISUAL_DIRECTOR",
@@ -88,16 +90,12 @@
     "EXPERIMENTAL_DIRECTOR",
     "PRODUCTION_DIRECTOR"
   ],
-  "paths": [
-    "COMMERCIAL",
-    "LITERARY",
-    "EXPERIMENTAL",
-    "HYBRID"
-  ],
+  "paths": ["COMMERCIAL", "LITERARY", "EXPERIMENTAL", "HYBRID"],
   "specialized_controllers": [
     "HIGH_CONCEPT_SCIFI",
     "VISUAL_NARRATIVE",
     "CAMERA_LANGUAGE",
+    "ASSET_FIRST_PRODUCTION",
     "DETAILED_STORYBOARD",
     "AI_PRODUCTION",
     "STYLE_REFERENCE",
@@ -109,13 +107,10 @@
   "output_levels": [
     "CONCEPT_DIRECTION",
     "DEVELOPMENT_PACKAGE",
+    "ASSET_PACK",
     "DIRECTOR_PACKAGE",
     "DETAILED_STORYBOARD",
     "PRODUCTION_PACK"
   ],
-  "status_protocol": [
-    "PASS",
-    "CONDITIONAL",
-    "FAIL"
-  ]
+  "status_protocol": ["PASS", "CONDITIONAL", "FAIL"]
 }
