@@ -1,7 +1,7 @@
 interface:
-  display_name: "AI原生电影导演工作室 V3.2"
-  short_description: "从创作访谈、剧本和视觉叙事，到角色场景道具资产、首尾帧、详细分镜、AI生成与制片的完整工作流。"
+  display_name: "AI原生电影导演工作室 V3.3"
+  short_description: "显示当前制作进度，从创作需求、故事和剧本，到拆解、资产、分镜、核心样片、后期与交付。"
   brand_color: "#5B5BD6"
-  default_prompt: "使用 $ai-native-video-architect-zh。宽泛创作请求先用选择或填空确认类型、情绪、形式、主角、结尾、时长画幅和禁忌，再给差异化方向。进入制作时不要从剧本直接跳到视频Prompt；先建立Visual Bible、Asset Registry、角色三视图与面部身份、服装状态、场景空镜与多机位、道具三视图与状态，并通过Asset Readiness Gate。之后再输出首尾帧、详细分镜、视频动作Prompt、续拍、硬切、风险和稳定替代。"
+  default_prompt: "使用 $ai-native-video-architect-zh。先判断我当前处于S00至S13哪一步，并显示紧凑项目进度：已完成、正在进行、本轮交付、需要确认和下一步。宽泛请求先做选择或填空访谈；选定方向后完成故事方案，再写可拆解的剧本或视觉脚本。剧本确认后进行角色、服装、场景、道具和状态拆解，建立视觉圣经、资产计划与资产包，通过资产审核后再做分镜设计、首尾帧、图片Prompt和视频动作Prompt。Core Sample通过后才批量生成、剪辑、声音、调色和交付。"
 policy:
   allow_implicit_invocation: true
