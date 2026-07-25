@@ -1,167 +1,248 @@
-version: 3.2.0
+version: 3.3.0
+
+progress:
+  config: config/progress-navigation.yaml
+  template: templates/progress-status.md
+  show_before_primary_output: true
+  update_on_stage_transition: true
+  update_on_gate_failure: true
+  infer_entry_stage_from_user_materials: true
 
 workflow:
-  stage_0_request_analysis:
-    outputs:
+  S00_creative_brief:
+    name: 创作需求
+    required:
       - operation_mode
       - director_mode
-      - work_depth
-      - target_duration
-      - target_aspect_ratio
-      - target_platform
-      - target_output_level
-      - production_constraints
-    rule: 用户请求宽泛创作且关键方向缺失时，先用选择或填空完成最小创作访谈；已给出的信息不得重复询问。
-    minimum_intake_when_missing:
       - genre_or_content_domain
       - target_emotion
       - narrative_form
       - protagonist_or_subject
       - relationship_or_focus
-      - dialogue_and_voiceover
-      - ending_preference
-      - duration_and_aspect_ratio
+      - duration
+      - aspect_ratio
+      - target_platform
       - production_tool_or_stage
       - forbidden_content
+    rule: 宽泛创作请求先用选择或填空完成最小访谈；已给出的信息不得重复询问。
+    output: CREATIVE_BRIEF
+    next: S01
 
-  stage_1_concept_gate:
+  S01_direction_options:
+    name: 创意方向
     required:
-      - one_sentence_concept
+      - two_or_three_distinct_directions
+      - one_sentence_concept_per_direction
+      - protagonist_or_subject_per_direction
+      - visual_identity_per_direction
+      - ending_direction_per_direction
+      - production_difficulty_per_direction
+    gate: STORY_DIRECTION_CONFIRMATION
+    rule: 用户选择、明确合并或重新定义一个方向后才完成。
+    output: DIRECTION_OPTIONS
+    next: S02
+
+  S02_story_treatment:
+    name: 故事方案
+    required:
+      - one_sentence_story
       - emotional_core
-      - central_question
-      - single_core_mechanism
       - primary_character_task_or_visual_action
-      - irreversible_pressure_if_relevant
+      - central_event_or_visual_rule
+      - progression
       - final_image
-    fail_action:
-      - 删除竞争机制
-      - 把世界观术语改写为人物面临的具体问题
-      - 用一个可观察动作替代抽象主题说明
+    variants:
+      narrative: STORY_TREATMENT
+      visual_or_experimental: VISUAL_TREATMENT
+    rule: 世界可以复杂，但观众必须能够通过普通语言复述主线或视觉规则。
+    output: STORY_TREATMENT
+    next: S03
 
-  stage_2_visual_narrative:
-    required:
-      - character_world_relationship
-      - three_to_five_visual_motifs
-      - discovery_image
-      - reinterpretation_image
-      - residue_image
-    scene_formula:
+  S03_script_or_visual_script:
+    name: 剧本或视觉脚本
+    required_for_narrative:
+      - scene_heading
+      - location_and_time
+      - characters
+      - observable_action
+      - dialogue_if_any
+      - props
+      - scene_exit_state
+    required_for_visual_script:
       - subject
-      - action
-      - anomaly
-      - hidden_information
-      - emotional_question
+      - location_and_time
+      - initial_state
+      - observable_action
+      - environment_change
+      - prop_change
+      - emotional_change
+      - final_state
+      - next_scene_connection
+    gate: SCRIPT_CONFIRMATION
+    rule: 传统剧本不是唯一格式，但正式资产生产前必须有可拆解完整文本；一句概念或零散意象不能直接进入批量资产与分镜。
+    output: SCRIPT_PACKAGE
+    next: S04
 
-  stage_3_camera_language:
-    required_per_shot:
-      - shot_goal
-      - shot_size
-      - angle
-      - movement
-      - visual_priority
-      - reveal_order
-      - emotional_effect
-      - sound_relation
-      - generation_risk
-    rule: 一个镜头只承担一个主要叙事或情绪功能。
-
-  stage_4_style_dna:
+  S04_script_breakdown:
+    name: 剧本拆解
     required:
-      - spatial_logic
-      - human_scale
-      - time_feeling
-      - color_material
+      - character_breakdown
+      - hair_makeup_breakdown
+      - costume_states_and_change_points
+      - environment_breakdown
+      - environment_state_changes
+      - prop_breakdown
+      - prop_owners_hands_interactions_and_states
+      - asset_first_and_last_appearance
+      - production_risks
+    traceability_rule: 每个角色、服装、场景、道具和状态必须追溯到剧本场次或明确导演需求。
+    output: SCRIPT_BREAKDOWN
+    next: S05
+
+  S05_visual_bible:
+    name: 视觉圣经
+    required:
+      - aspect_ratio
+      - visual_style_dna
+      - color_palette
+      - lighting_logic
+      - material_rules
+      - architecture_and_environment_language
+      - actor_realism
+      - costume_language
       - camera_temperament
       - sound_world
-    rule: 拆解参考作品的语言参数，不直接模仿具体镜头、角色、场景或在世创作者的独特风格。
-
-  stage_5_visual_bible_and_asset_plan:
-    required:
-      - visual_bible
+      - forbidden_look
       - cinematic_master_spec_when_relevant
+    output: VISUAL_BIBLE
+    next: S06
+
+  S06_asset_plan:
+    name: 资产计划
+    required:
       - asset_registry
+      - stable_asset_ids
+      - version_policy
       - character_asset_requirements
       - costume_state_requirements
       - environment_asset_requirements
       - prop_asset_requirements
+      - shot_dependencies
+      - generation_order
       - continuity_registry
-    rule: 不得从剧本直接跳到批量视频Prompt。
+    rule: 不得从剧本或视觉圣经直接跳到批量视频Prompt。
+    output: ASSET_PLAN
+    next: S07
 
-  stage_6_asset_production:
+  S07_asset_production:
+    name: 资产制作
     required_when_relevant:
       - character_turnaround
       - face_identity_board
       - hair_structure
-      - costume_state_boards
+      - costume_layer_and_state_boards
+      - pose_and_hand_prop_interaction
       - environment_master_layout
       - empty_environment_plates
       - environment_multi_angle_board
-      - prop_turnarounds_and_states
-    gate:
-      evaluator: evals/asset-readiness-score.md
-      pass_for_storyboard_frames: score >= 85 and no hard failure
-      conditional: score >= 70 permits Core Sample only
-      fail_action:
-        - 修复身份漂移
-        - 补充场景布局和空镜
-        - 补充道具尺寸与状态
-        - 建立资产ID与版本
+      - prop_turnarounds_dimensions_and_states
+    rule: 艺术身份板可以用于探索，但不能替代生产三视图和结构参考。
+    output: ASSET_PACK
+    next: S08
 
-  stage_7_storyboard_frames:
+  S08_asset_readiness_gate:
+    name: 资产审核
+    evaluator: evals/asset-readiness-score.md
+    pass_for_storyboard: score >= 85 and no hard failure
+    conditional: score >= 70 permits Core Sample only
+    fail_action:
+      - 返回S06修复资产规划或状态链
+      - 返回S07修复身份、结构、空镜、多机位和道具资产
+    gate: ASSET_CONFIRMATION
+    rule: 用户自带资产也必须先审核，不能默认视为通过。
+    output: ASSET_READINESS_REPORT
+    next: S09
+
+  S09_shot_design:
+    name: 分镜设计
     required_per_shot:
+      - shot_goal
+      - narrative_or_emotional_function
       - asset_dependencies
       - input_state
-      - start_frame
+      - shot_size
+      - angle_and_axis
       - primary_action
-      - camera_plan
+      - movement_and_motivation
+      - visual_priority
+      - reveal_order
+      - duration
+      - sound_relation
       - output_state
-      - end_frame_when_needed
       - edit_connection
+      - generation_risk
       - stable_alternative
+    gate: STORYBOARD_CONFIRMATION
+    rule: 一个镜头只承担一个主要叙事或情绪功能；先确认镜头表，再批量写帧Prompt。
+    output: SHOT_LIST_AND_CAMERA_PLAN
+    next: S10
+
+  S10_storyboard_frames_and_prompts:
+    name: 分镜帧与提示词
+    required_per_shot:
+      - approved_asset_versions
+      - start_frame
+      - end_frame_when_needed
+      - image_prompt
+      - video_motion_prompt
+      - preserve_list
+      - forbidden_changes
+      - continuity_anchors
+      - fallback
     prompt_split:
-      image_prompt: 静态身份、状态、构图、光线和材质
-      video_prompt: 起始状态、动作、摄影机运动和结束状态
+      image_prompt: 静态身份、状态、构图、景别、机位、光线和材质
+      video_prompt: 指定首帧、起始状态、唯一动作、起势过程收住、摄影机起止和结束状态
+    output: DETAILED_STORYBOARD_AND_FRAME_PACK
+    next: S11
 
-  stage_8_ai_video_production:
+  S11_core_sample:
+    name: 核心样片
     required:
-      - generation_method
-      - core_sample
-      - first_last_frame_or_hard_cut_strategy
-      - continuity_plan
-      - version_naming
-      - fallback_plan
-    batch_rule: 先验证一名角色、一个场景、一个道具和一个Core Sample，再扩展整片。
+      - one_core_character_across_two_angles
+      - one_primary_environment_across_two_angles
+      - one_core_prop_with_stable_scale_and_state
+      - one_first_last_frame_or_hard_cut_test
+      - one_three_to_eight_second_core_sample
+    gate: CORE_SAMPLE_GATE
+    pass_rule: 关键一致性通过或每个失败点都有经验证的稳定替代。
+    fail_action: 返回S05至S10中的具体薄弱层，不整体推翻已通过内容。
+    output: CORE_SAMPLE_REPORT
+    next: S12
 
-  stage_9_production_management:
+  S12_batch_production_and_post:
+    name: 批量制作与后期
     required:
       - shot_inventory
       - priority_tiers
-      - asset_inventory
       - generation_batches
-      - cost_risk
-      - recovery_strategy
-    priority_order: [S, A, B, C]
-    budget_rule: 资源优先用于高复用核心资产、S级标志镜头和A级情绪转折镜头。
-
-  stage_10_sound_design:
-    required:
+      - version_naming
+      - continuation_and_hard_cut_plan
+      - fallback_matrix
+      - editing_plan
       - world_sound
       - character_sound
       - sound_motif
-      - silence_plan
-      - music_curve
-      - voice_bible_if_needed
+      - music_and_silence_curve
+      - subtitle_or_graphics_if_needed
+      - color_management
+      - delivery_versions
+    priority_order: [S, A, B, C]
+    budget_rule: 资源优先用于高复用核心资产、S级标志镜头和A级情绪转折镜头。
+    output: PRODUCTION_PACK
+    next: S13
 
-  stage_11_virality:
-    required_when_relevant:
-      - first_three_second_hook
-      - iconic_shot
-      - retellable_premise
-      - discussion_gap
-      - rewatch_information
-    rule: 传播优化不得扭曲人物选择、主题或结尾开放程度。
-
-  stage_12_director_review:
+  S13_director_review_and_delivery:
+    name: 导演审查与交付
     evaluators:
       - evals/high-concept-score.md
       - evals/visual-narrative-score.md
@@ -170,13 +251,40 @@ workflow:
       - evals/production-score.md
       - evals/propagation-score.md
       - evals/director-package-score.md
+    checks:
+      - concept_and_script_integrity
+      - character_and_world_relation
+      - visual_and_camera_language
+      - asset_and_state_continuity
+      - first_last_frame_and_edit_continuity
+      - sound_and_music
+      - final_image
+      - delivery_completeness
     result_protocol: PASS | CONDITIONAL | FAIL
     iteration_rule: 只重做薄弱层，不无理由推翻已通过层。
+    output: DIRECTOR_REVIEW_AND_DELIVERY
+    next: null
+
+entry_inference:
+  vague_idea: S00
+  clear_direction_without_treatment: S02
+  approved_treatment_without_script: S03
+  approved_script_or_visual_script: S04
+  breakdown_and_visual_bible_available: S06
+  user_provided_assets: S08
+  shot_list_without_stable_assets: S06
+  approved_assets_and_storyboard_frames: S11
+  diagnosis_only: DIAGNOSE
+  transform_existing_work: TRANSFORM
 
 output_levels:
-  concept: 概念方向与核心画面
-  development: 概念、视觉圣经、人物和结构
-  asset_pack: 角色、服装、场景、道具和资产台账
-  director_package: 完整导演包、镜头、声音与制作计划
-  detailed_storyboard: 逐镜头资产引用、首尾帧、Prompt与替代
-  production_pack: 可直接进入生成、续拍、剪辑和后期的执行文档
+  creative_brief: 创作需求整理
+  direction_options: 创意方向比较
+  story_treatment: 故事或视觉方案
+  script_package: 剧本或视觉脚本
+  script_breakdown: 角色、服装、场景、道具和状态拆解
+  development: 视觉圣经、人物、母题和结构
+  asset_plan: 资产台账、ID、版本和生产要求
+  asset_pack: 角色、服装、场景和道具资产
+  detailed_storyboard: 镜头设计、首尾帧、图片Prompt、视频Prompt和替代
+  production_pack: Core Sample、生成批次、剪辑、声音、调色和交付
