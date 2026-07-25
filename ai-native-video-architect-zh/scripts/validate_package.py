@@ -62,7 +62,7 @@ for token in [
 for token in [
     "项目进度导航", "S00：创作需求", "S03：剧本或视觉脚本", "S04：剧本拆解",
     "STORY_DIRECTION_CONFIRMATION", "SCRIPT_CONFIRMATION", "ASSET_CONFIRMATION",
-    "STORYBOARD_CONFIRMATION", "CORE_SAMPLE", "current_stage", "completed_outputs",
+    "STORYBOARD_CONFIRMATION", "Core Sample", "current_stage", "completed_outputs",
     "next_stage", "config/progress-navigation.yaml", "templates/progress-status.md",
     "Asset Readiness Gate", "角色正面、严格侧面和背面生产三视图",
     "场景主布局、无人物空镜和多机位", "道具三视图、尺寸、结构和状态版本",
@@ -131,6 +131,8 @@ for token in [
         errors.append(f"workflow missing stage: {token}")
 
 for rel, tokens in {
+    "modes/create.md": ["S00 创作需求", "S03 剧本或视觉脚本", "SCRIPT_CONFIRMATION", "CORE_SAMPLE_GATE"],
+    "modes/adapt.md": ["启动进度", "剧本门槛", "STORYBOARD_CONFIRMATION", "S11 Core Sample Gate"],
     "templates/progress-status.md": ["紧凑版", "修复回退版", "中途进入版", "DIAGNOSE版", "TRANSFORM版", "S13 导演审查与交付"],
     "templates/asset-registry.md": ["ready_for_storyboard_frames", "镜头帧资产", "资产依赖"],
     "templates/character-asset-pack.md": ["生产三视图", "面部身份板", "服装状态"],
@@ -142,6 +144,11 @@ for rel, tokens in {
     for token in tokens:
         if token not in text:
             errors.append(f"{rel} missing token: {token}")
+
+for rel in ["config/modes.yaml", "config/workflow.yaml", "config/scoring.yaml", "config/progress-navigation.yaml"]:
+    text = (ROOT / rel).read_text(encoding="utf-8") if (ROOT / rel).exists() else ""
+    if f"version: {VERSION}" not in text:
+        errors.append(f"{rel} version must be {VERSION}")
 
 asset_tests = (ROOT / "tests/asset-first-stress-tests.md").read_text(encoding="utf-8") if (ROOT / "tests/asset-first-stress-tests.md").exists() else ""
 for token in ["STRUCTURED_INTAKE", "PRODUCTION_TURNAROUND", "FRAME_PAIR_READY", "VERSION_SAFE"]:
