@@ -1,4 +1,4 @@
-version: 3.2.0
+version: 3.3.0
 
 scores:
   concept:
@@ -86,11 +86,13 @@ status_rules:
 
 production_gates:
   before_storyboard_frames:
+    - script or visual script confirmed
+    - script breakdown completed
     - visual_bible established
     - asset_registry established
     - asset_readiness score >= 85 or explicitly marked exploratory
   before_batch_video_generation:
-    - core_sample passed
+    - CORE_SAMPLE_GATE passed
     - character and environment consistency tested across at least two angles
     - key props and costume states versioned
     - first-frame/end-frame or hard-cut strategy defined
