@@ -122,7 +122,7 @@
 
 1. Visual Bible；
 2. Asset Registry；
-3. Character/Cosutme/Environment/Prop资产；
+3. Character / Costume / Environment / Prop资产；
 4. Asset Readiness Gate；
 5. 首帧和尾帧；
 6. 视频动作Prompt。
