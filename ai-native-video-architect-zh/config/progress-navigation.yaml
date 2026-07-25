@@ -1,0 +1,217 @@
+version: 3.3.0
+
+progress_navigation:
+  enabled_by_default: true
+  suppress_when:
+    - 用户明确要求不显示流程提示
+    - 仅回答一个不推进项目的简短事实问题
+  show_on:
+    - Skill首次调用
+    - 用户补充或确认关键信息后
+    - 当前阶段完成并进入下一阶段时
+    - 评估门未通过、流程回退或进入修复时
+    - 用户询问现在做到哪一步
+    - 用户带着已有剧本、资产或分镜中途进入时
+
+  display_contract:
+    title: 项目进度
+    required_fields:
+      - current_stage
+      - current_goal
+      - completed_outputs
+      - current_deliverable
+      - user_decision_if_needed
+      - next_stage
+    optional_fields:
+      - entry_reason
+      - gate_status
+      - skipped_stages
+      - blockers
+      - repair_target
+    rules:
+      - 进度提示必须短于本轮主要交付内容
+      - 不展示内部推理，只展示可验证的项目状态
+      - 不把尚未完成的内容标记为已完成
+      - 用户已提供成熟成果时，从对应阶段进入，不强制从零重走
+      - 跳过阶段必须说明依据和风险
+      - 当前阶段有确认门时，明确告诉用户需要确认什么
+      - 没有用户确认需求时，不制造无意义等待
+
+  status_symbols:
+    complete: "✓"
+    current: "●"
+    pending: "○"
+    conditional: "△"
+    blocked: "!"
+    skipped: "—"
+
+  stages:
+    - id: S00
+      index: 0
+      name: 创作需求
+      objective: 确认题材、情绪、形式、主角、时长、画幅、工具与禁忌
+      deliverable: Creative Brief
+      completion_evidence:
+        - 关键创作约束已明确或已有可靠输入
+      next: S01
+
+    - id: S01
+      index: 1
+      name: 创意方向
+      objective: 提供并比较2至3个差异明显的创作方向
+      deliverable: Direction Options
+      gate: STORY_DIRECTION_CONFIRMATION
+      completion_evidence:
+        - 用户已选择或明确合并一个方向
+      next: S02
+
+    - id: S02
+      index: 2
+      name: 故事方案
+      objective: 建立一句话故事、人物任务、核心事件、情绪递进与最后图像
+      deliverable: Story Treatment or Visual Treatment
+      completion_evidence:
+        - 故事因果或视觉规则已成立
+      next: S03
+
+    - id: S03
+      index: 3
+      name: 剧本或视觉脚本
+      objective: 完成可供制作拆解的完整文本
+      deliverable: Screenplay or Visual Script
+      gate: SCRIPT_CONFIRMATION
+      completion_evidence:
+        - 场次、人物、动作、场景与结束状态足以拆解
+      next: S04
+
+    - id: S04
+      index: 4
+      name: 剧本拆解
+      objective: 提取角色、服装、场景、道具、状态变化与制作需求
+      deliverable: Script Breakdown
+      completion_evidence:
+        - 所有生产资产和状态链有来源场次
+      next: S05
+
+    - id: S05
+      index: 5
+      name: 视觉圣经
+      objective: 统一美术、摄影、光线、色彩、材质、表演与禁止风格
+      deliverable: Visual Bible
+      completion_evidence:
+        - 项目视觉规则可约束全部资产和镜头
+      next: S06
+
+    - id: S06
+      index: 6
+      name: 资产计划
+      objective: 建立Asset Registry、资产ID、版本、状态链和生成顺序
+      deliverable: Asset Plan and Registry
+      completion_evidence:
+        - 每个关键资产都有用途、版本和依赖镜头
+      next: S07
+
+    - id: S07
+      index: 7
+      name: 资产制作
+      objective: 制作角色、服装、场景空镜、多机位、道具和交互参考
+      deliverable: Asset Pack
+      completion_evidence:
+        - 所需资产参考图与状态版本齐备
+      next: S08
+
+    - id: S08
+      index: 8
+      name: 资产审核
+      objective: 运行Asset Readiness Gate并修复身份、结构、状态与版本问题
+      deliverable: Asset Readiness Report
+      gate: ASSET_CONFIRMATION
+      completion_evidence:
+        - 评分达到85且无硬失败
+      conditional_path: 70至84仅进入Core Sample
+      fail_path: 返回S06或S07修复
+      next: S09
+
+    - id: S09
+      index: 9
+      name: 分镜设计
+      objective: 确定镜头数量、目的、景别、机位、动作、运镜、声音和连接
+      deliverable: Shot List and Camera Plan
+      gate: STORYBOARD_CONFIRMATION
+      completion_evidence:
+        - 每镜只有一个主要功能且可剪辑、可生成
+      next: S10
+
+    - id: S10
+      index: 10
+      name: 分镜帧与提示词
+      objective: 引用已批准资产，制作首帧、尾帧、图片Prompt和视频动作Prompt
+      deliverable: Detailed Storyboard and Frame Generation Pack
+      completion_evidence:
+        - 每镜输入、输出、资产依赖和禁止变化清楚
+      next: S11
+
+    - id: S11
+      index: 11
+      name: 核心样片
+      objective: 验证角色、场景、道具、动作、首尾帧和硬切连续性
+      deliverable: Core Sample Test Plan and Results
+      gate: CORE_SAMPLE_GATE
+      completion_evidence:
+        - 关键一致性测试通过或有稳定替代
+      fail_path: 返回S05至S10中的具体薄弱层
+      next: S12
+
+    - id: S12
+      index: 12
+      name: 批量制作与后期
+      objective: 批量生成、版本管理、续拍、剪辑、声音、音乐、调色和字幕
+      deliverable: Production Pack and Rough/Final Cut Plan
+      completion_evidence:
+        - 镜头、声音和后期版本可交付
+      next: S13
+
+    - id: S13
+      index: 13
+      name: 导演审查与交付
+      objective: 检查表达、连续性、资产、声音、结尾与交付版本
+      deliverable: Director Review and Delivery Checklist
+      completion_evidence:
+        - 关键评估通过且交付清单完成
+      next: null
+
+  entry_inference:
+    - when: 用户只有模糊想法
+      enter: S00
+    - when: 用户已有明确方向但无故事方案
+      enter: S02
+      skip_reason: 创作需求和方向已明确
+    - when: 用户已有完整故事梗概但无剧本
+      enter: S03
+    - when: 用户提供已确认剧本或视觉脚本
+      enter: S04
+    - when: 用户已有剧本拆解和视觉圣经
+      enter: S06
+    - when: 用户已有角色场景道具参考图
+      enter: S08
+      action: 先审核，不默认认为资产合格
+    - when: 用户已有镜头表但没有稳定资产
+      enter: S06
+      action: 保留镜头意图，补资产后再生成正式分镜帧
+    - when: 用户已有完整分镜帧和资产
+      enter: S11
+      action: 先做Core Sample
+    - when: 用户要求DIAGNOSE
+      enter: DIAGNOSE
+      action: 显示被诊断成果所属阶段，不自动推进
+    - when: 用户要求TRANSFORM
+      enter: TRANSFORM
+      action: 显示原成果阶段、修改范围和完成后返回的阶段
+
+  compact_display_example: |
+    【项目进度｜S04/13 剧本拆解】
+    已完成：✓ 创作需求 ✓ 创意方向 ✓ 故事方案 ✓ 剧本
+    正在进行：提取角色、服装、场景、道具和状态变化
+    本轮交付：剧本拆解表
+    需要你确认：是否遗漏关键资产或状态
+    下一步：S05 视觉圣经
