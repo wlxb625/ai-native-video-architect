@@ -1,4 +1,4 @@
-version: 3.0.0
+version: 3.2.0
 
 workflow:
   stage_0_request_analysis:
@@ -7,9 +7,22 @@ workflow:
       - director_mode
       - work_depth
       - target_duration
+      - target_aspect_ratio
       - target_platform
+      - target_output_level
       - production_constraints
-    rule: 缺失信息不会自动阻塞；先采用明确假设并标注，只在关键分歧会改变作品方向时提问。
+    rule: 用户请求宽泛创作且关键方向缺失时，先用选择或填空完成最小创作访谈；已给出的信息不得重复询问。
+    minimum_intake_when_missing:
+      - genre_or_content_domain
+      - target_emotion
+      - narrative_form
+      - protagonist_or_subject
+      - relationship_or_focus
+      - dialogue_and_voiceover
+      - ending_preference
+      - duration_and_aspect_ratio
+      - production_tool_or_stage
+      - forbidden_content
 
   stage_1_concept_gate:
     required:
@@ -17,8 +30,8 @@ workflow:
       - emotional_core
       - central_question
       - single_core_mechanism
-      - primary_character_task
-      - irreversible_pressure
+      - primary_character_task_or_visual_action
+      - irreversible_pressure_if_relevant
       - final_image
     fail_action:
       - 删除竞争机制
@@ -60,30 +73,77 @@ workflow:
       - color_material
       - camera_temperament
       - sound_world
-    rule: 拆解参考作品的语言参数，不直接模仿在世创作者的独特风格。
+    rule: 拆解参考作品的语言参数，不直接模仿具体镜头、角色、场景或在世创作者的独特风格。
 
-  stage_5_ai_production:
+  stage_5_visual_bible_and_asset_plan:
     required:
       - visual_bible
-      - character_lock
-      - environment_lock
-      - shot_inputs_and_outputs
-      - generation_method
-      - continuity_plan
-      - fallback_plan
+      - cinematic_master_spec_when_relevant
+      - asset_registry
+      - character_asset_requirements
+      - costume_state_requirements
+      - environment_asset_requirements
+      - prop_asset_requirements
+      - continuity_registry
+    rule: 不得从剧本直接跳到批量视频Prompt。
 
-  stage_6_production_management:
+  stage_6_asset_production:
+    required_when_relevant:
+      - character_turnaround
+      - face_identity_board
+      - hair_structure
+      - costume_state_boards
+      - environment_master_layout
+      - empty_environment_plates
+      - environment_multi_angle_board
+      - prop_turnarounds_and_states
+    gate:
+      evaluator: evals/asset-readiness-score.md
+      pass_for_storyboard_frames: score >= 85 and no hard failure
+      conditional: score >= 70 permits Core Sample only
+      fail_action:
+        - 修复身份漂移
+        - 补充场景布局和空镜
+        - 补充道具尺寸与状态
+        - 建立资产ID与版本
+
+  stage_7_storyboard_frames:
+    required_per_shot:
+      - asset_dependencies
+      - input_state
+      - start_frame
+      - primary_action
+      - camera_plan
+      - output_state
+      - end_frame_when_needed
+      - edit_connection
+      - stable_alternative
+    prompt_split:
+      image_prompt: 静态身份、状态、构图、光线和材质
+      video_prompt: 起始状态、动作、摄影机运动和结束状态
+
+  stage_8_ai_video_production:
+    required:
+      - generation_method
+      - core_sample
+      - first_last_frame_or_hard_cut_strategy
+      - continuity_plan
+      - version_naming
+      - fallback_plan
+    batch_rule: 先验证一名角色、一个场景、一个道具和一个Core Sample，再扩展整片。
+
+  stage_9_production_management:
     required:
       - shot_inventory
       - priority_tiers
       - asset_inventory
-      - generation_order
+      - generation_batches
       - cost_risk
       - recovery_strategy
     priority_order: [S, A, B, C]
-    budget_rule: 资源优先用于S级传播镜头和A级情绪转折镜头。
+    budget_rule: 资源优先用于高复用核心资产、S级标志镜头和A级情绪转折镜头。
 
-  stage_7_sound_design:
+  stage_10_sound_design:
     required:
       - world_sound
       - character_sound
@@ -92,7 +152,7 @@ workflow:
       - music_curve
       - voice_bible_if_needed
 
-  stage_8_virality:
+  stage_11_virality:
     required_when_relevant:
       - first_three_second_hook
       - iconic_shot
@@ -101,11 +161,12 @@ workflow:
       - rewatch_information
     rule: 传播优化不得扭曲人物选择、主题或结尾开放程度。
 
-  stage_9_director_review:
+  stage_12_director_review:
     evaluators:
       - evals/high-concept-score.md
       - evals/visual-narrative-score.md
       - evals/camera-language-score.md
+      - evals/asset-readiness-score.md
       - evals/production-score.md
       - evals/propagation-score.md
       - evals/director-package-score.md
@@ -114,6 +175,8 @@ workflow:
 
 output_levels:
   concept: 概念方向与核心画面
-  development: 概念、视觉圣经、角色和结构
+  development: 概念、视觉圣经、人物和结构
+  asset_pack: 角色、服装、场景、道具和资产台账
   director_package: 完整导演包、镜头、声音与制作计划
-  production_pack: 可直接进入生成和后期的执行文档
+  detailed_storyboard: 逐镜头资产引用、首尾帧、Prompt与替代
+  production_pack: 可直接进入生成、续拍、剪辑和后期的执行文档
