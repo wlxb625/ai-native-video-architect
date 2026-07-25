@@ -1,6 +1,6 @@
-# AI Native Film Studio V3.2
+# AI Native Film Studio V3.3
 
-一套中文AI电影导演、资产设计与制作Skill。
+一套中文AI电影导演、剧本拆解、资产设计与制作Skill。
 
 显式调用：
 
@@ -8,58 +8,88 @@
 $ai-native-video-architect-zh
 ```
 
+调用后会先显示当前项目进度：已经完成什么、正在做什么、本轮交付什么、需要用户确认什么、下一步是什么。
+
 ## 完整链路
 
 ```text
-创作访谈
-→ 概念与剧本
-→ 视觉叙事与镜头语言
-→ Visual Bible
-→ 角色、服装、场景和道具资产
-→ Asset Readiness Gate
-→ 首帧、尾帧和详细分镜
-→ 视频动作Prompt、续拍和硬切
-→ 制片、声音、调色、传播与导演审查
+S00 创作需求
+→ S01 创意方向
+→ S02 故事方案
+→ S03 剧本或视觉脚本
+→ S04 剧本拆解
+→ S05 视觉圣经
+→ S06 资产计划
+→ S07 资产制作
+→ S08 资产审核
+→ S09 分镜设计
+→ S10 分镜帧与提示词
+→ S11 核心样片
+→ S12 批量制作与后期
+→ S13 导演审查与交付
 ```
 
-## V3.2：资产先行
+## V3.3：可见进度与剧本优先
 
-V3.2不再从剧本直接跳到批量视频Prompt。
+V3.3解决两个流程问题：
 
-正式制作前按需建立：
+1. 用户不知道当前做到哪一步；
+2. “资产先行”容易被误解成没有剧本就先做角色和场景。
 
-- 角色生产三视图、面部身份、发型和姿态；
-- 服装结构与状态版本；
-- 场景主布局、无人物空镜和多机位；
-- 道具尺寸、三视图、交互和状态链；
-- 资产ID、版本和镜头依赖；
-- 分镜首帧与尾帧；
-- Core Sample与不同机位一致性测试。
+正确顺序是：
 
-图片Prompt负责静态身份、状态、构图、光线和材质；视频Prompt负责从指定首帧完成一个明确动作并抵达指定结束状态。
+> 故事和剧本先确定；资产相对于正式分镜帧和视频生成先行。
 
-## 创作前访谈
+正式生产前先完成剧本或视觉脚本，并从中拆解角色、服装、场景、道具和状态变化。之后建立Visual Bible、资产台账、生产资产与审核门，再进入分镜设计、首尾帧和视频Prompt。
 
-宽泛请求会先通过选择或填空确认类型、情绪、形式、场景、主角、关系、对白、结尾、时长画幅、工具阶段和禁忌，再提供差异化创作方向。
+## 项目进度提示
+
+默认格式：
+
+```text
+【项目进度｜S04/13 剧本拆解】
+已完成：✓ 创作需求 ✓ 创意方向 ✓ 故事方案 ✓ 剧本
+正在进行：提取角色、服装、场景、道具和状态变化
+本轮交付：剧本拆解表
+需要你确认：是否遗漏关键资产或状态
+下一步：S05 视觉圣经
+```
+
+用户已有完整剧本、资产或分镜时，Skill会从对应阶段进入，不强制重走全部流程；但未经审核的资产不会直接标记为通过。
+
+## 确认门
+
+- `STORY_DIRECTION_CONFIRMATION`
+- `SCRIPT_CONFIRMATION`
+- `ASSET_CONFIRMATION`
+- `STORYBOARD_CONFIRMATION`
+- `CORE_SAMPLE_GATE`
+
+未确认的方向、剧本、资产和分镜不会被虚假标记为完成。Core Sample未通过时不得批量生成。
 
 ## 输出层级
 
-- `CONCEPT_DIRECTION`
+- `CREATIVE_BRIEF`
+- `DIRECTION_OPTIONS`
+- `STORY_TREATMENT`
+- `SCRIPT_PACKAGE`
+- `SCRIPT_BREAKDOWN`
 - `DEVELOPMENT_PACKAGE`
+- `ASSET_PLAN`
 - `ASSET_PACK`
 - `DIRECTOR_PACKAGE`
 - `DETAILED_STORYBOARD`
 - `PRODUCTION_PACK`
 
-## 核心新增文件
+## 核心文件
 
+- `config/progress-navigation.yaml`
+- `templates/progress-status.md`
+- `config/workflow.yaml`
+- `controllers/director-agent.md`
 - `controllers/asset-first-production.md`
 - `evals/asset-readiness-score.md`
-- `templates/asset-registry.md`
-- `templates/character-asset-pack.md`
-- `templates/environment-asset-pack.md`
-- `templates/prop-asset-pack.md`
-- `templates/frame-generation-pack.md`
+- `tests/progress-navigation-stress-tests.md`
 
 ## 安装
 
