@@ -31,7 +31,8 @@ REQUIRED = [
     "references/glossary.md", "references/platform-notes.md",
     "references/examples/high-concept-scifi-memory-fuel.md",
     "references/examples/visual-narrative-last-gardener.md",
-    "tests/stress-test-suite.md", "audit/cross-file-consistency-audit.md",
+    "tests/asset-first-stress-tests.md", "tests/stress-test-suite.md",
+    "audit/cross-file-consistency-audit.md",
 ]
 
 errors = []
@@ -111,6 +112,11 @@ for rel, tokens in {
     for token in tokens:
         if token not in text:
             errors.append(f"{rel} missing token: {token}")
+
+asset_tests = (ROOT / "tests/asset-first-stress-tests.md").read_text(encoding="utf-8") if (ROOT / "tests/asset-first-stress-tests.md").exists() else ""
+for token in ["STRUCTURED_INTAKE", "PRODUCTION_TURNAROUND", "FRAME_PAIR_READY", "VERSION_SAFE"]:
+    if token not in asset_tests:
+        errors.append(f"asset-first stress tests missing token: {token}")
 
 agent_meta = (ROOT / "agents/openai.yaml").read_text(encoding="utf-8") if (ROOT / "agents/openai.yaml").exists() else ""
 for token in ["V3.2", "资产", "首尾帧", "详细分镜"]:
