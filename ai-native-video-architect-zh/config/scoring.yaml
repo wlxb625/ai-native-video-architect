@@ -1,4 +1,4 @@
-version: 3.0.0
+version: 3.2.0
 
 scores:
   concept:
@@ -28,14 +28,26 @@ scores:
       visual_priority: 20
       editability: 20
 
+  asset_readiness:
+    minimum_for_storyboard_frames: 85
+    conditional_for_core_sample: 70
+    weights:
+      character_identity: 20
+      costume_states: 15
+      environment_structure: 20
+      prop_identity_and_states: 15
+      frame_readiness: 15
+      continuity_and_versioning: 15
+
   production:
     minimum: 75
     weights:
-      character_consistency: 20
-      environment_consistency: 20
+      character_consistency: 15
+      environment_consistency: 15
+      prop_and_costume_consistency: 15
       generation_feasibility: 20
       continuity_and_editing: 20
-      fallback_readiness: 20
+      fallback_readiness: 15
 
   sound:
     minimum: 75
@@ -58,15 +70,27 @@ scores:
   director_package:
     minimum: 85
     weights:
-      concept: 20
-      visual_narrative: 20
-      cinematic_language: 15
-      emotional_arc: 15
-      production: 15
-      sound: 10
-      propagation_or_artistic_fit: 5
+      concept: 18
+      visual_narrative: 18
+      cinematic_language: 14
+      emotional_arc: 14
+      asset_readiness_or_fit: 12
+      production: 12
+      sound: 8
+      propagation_or_artistic_fit: 4
 
 status_rules:
   pass: score >= minimum and no hard failure
   conditional: score within 10 points below minimum or contains solvable production risk
   fail: hard failure exists or core layer cannot support the requested format
+
+production_gates:
+  before_storyboard_frames:
+    - visual_bible established
+    - asset_registry established
+    - asset_readiness score >= 85 or explicitly marked exploratory
+  before_batch_video_generation:
+    - core_sample passed
+    - character and environment consistency tested across at least two angles
+    - key props and costume states versioned
+    - first-frame/end-frame or hard-cut strategy defined
