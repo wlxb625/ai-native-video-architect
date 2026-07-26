@@ -72,7 +72,17 @@ workflow:
     name: 视觉设定
     internal_stage: true
     modules: [prompt-engineering/visual-style-color-light.md]
-    required: [aspect_ratio, visual_style, primary_secondary_accent_colors, color_temperature_saturation_contrast, real_light_sources_and_directions, material_rules, camera_tendency, forbidden_look]
+    required:
+      - aspect_ratio
+      - visual_style
+      - primary_secondary_accent_colors
+      - color_temperature_saturation_contrast
+      - scene_lighting_master
+      - real_light_sources_and_world_positions
+      - white_balance_exposure_highlight_and_shadow_policy
+      - material_rules
+      - camera_tendency
+      - forbidden_look
     output: VISUAL_RULESET
     next: S06
 
@@ -118,7 +128,23 @@ workflow:
   S09_shot_design:
     name: 分镜设计
     internal_stage: true
-    required_per_shot: [shot_goal, references, input_state, static_moment, primary_action, shot_size, angle_and_axis, composition, movement_and_motivation, duration, sound_relation, output_state, edit_connection, risk]
+    required_per_shot:
+      - shot_goal
+      - references
+      - input_state
+      - static_moment
+      - primary_action
+      - shot_size
+      - angle_axis_and_screen_direction
+      - foreground_midground_background
+      - composition
+      - movement_and_motivation
+      - duration
+      - sound_relation
+      - output_state
+      - next_shot_input_requirement
+      - generation_mode_recommendation
+      - risk
     batch_rule: 一次性完成整片镜头表，相似镜头合并，每镜一个主要重点。
     gate: STORYBOARD_CONFIRMATION
     output: SHOT_LIST_AND_CAMERA_PLAN
@@ -133,12 +159,30 @@ workflow:
       - prompt-engineering/visual-style-color-light.md
       - prompt-engineering/continuity-repair-system.md
       - templates/storyboard-frame-prompt-block.md
-    required_per_shot: [reference_images, inherited_state, static_moment, positive_prompt, negative_prompt, output_rules, continuity_anchors]
-    optional_per_shot: [end_frame, image_edit_prompt, local_repair_prompt, stable_alternative]
+    required_per_shot:
+      - reference_images
+      - inherited_state
+      - next_shot_input_requirement
+      - generation_mode_decision
+      - start_frame_design
+      - start_positive_prompt
+      - start_negative_prompt
+      - start_output_rules
+      - end_frame_contract
+      - shot_lighting_contract
+      - optical_contract
+      - continuity_anchors
+    conditional_per_shot:
+      - generated_end_frame
+      - end_frame_positive_prompt
+      - end_frame_negative_prompt
+      - image_edit_prompt
+      - local_repair_prompt
+      - stable_alternative
     generation_order:
       first_frame: 角色参考 + 场景空镜 + 道具参考 + 当前镜头要求
-      later_frames: 角色参考 + 场景空镜 + 上一张满意分镜 + 当前镜头要求
-    tail_frame_rule: 只有动作终点、状态变化、模型要求或下一镜精确继承时才增加尾帧。
+      later_frames: 角色参考 + 场景空镜 + 上一镜稳定尾帧 + 当前镜头要求
+    tail_frame_rule: 下一镜依赖姿态、视线、手部、道具、构图、焦点或状态时必须预制尾帧；只有微动作或独立硬切才允许单首帧，并必须写结束帧合同和抽尾帧方案。
     output: FRAME_PROMPT_PACK
     next: S11
 
@@ -148,6 +192,7 @@ workflow:
     modules:
       - prompt-engineering/video-prompt-compiler.md
       - prompt-engineering/camera-movement-library.md
+      - prompt-engineering/visual-style-color-light.md
       - prompt-engineering/continuity-repair-system.md
       - templates/video-shot-prompt-block.md
     required: [one_representative_normal_shot]
@@ -163,18 +208,47 @@ workflow:
     modules:
       - prompt-engineering/video-prompt-compiler.md
       - prompt-engineering/camera-movement-library.md
+      - prompt-engineering/visual-style-color-light.md
       - prompt-engineering/continuity-repair-system.md
       - templates/video-shot-prompt-block.md
-    required_per_shot: [unique_start_frame, start_state, one_primary_action, action_direction_speed_and_scale, one_primary_camera_move, stability_requirements, end_state, sound, negative_constraints]
-    project_outputs: [video_prompt_pack, continuation_and_hard_cut_plan, editing_plan, sound_plan, color_consistency, version_naming]
-    repair_order: [simplify_prompt, local_image_repair, simplify_action, fixed_camera, shorten_clip, add_end_frame_or_hard_cut, add_new_reference_last]
+    required_per_shot:
+      - generation_mode_and_reason
+      - unique_start_frame
+      - end_frame_or_end_frame_contract
+      - timeline_action_beats
+      - action_physics
+      - foreground_midground_background
+      - camera_contract
+      - optical_contract
+      - shot_lighting_contract
+      - color_and_material_contract
+      - allowed_environment_motion
+      - fixed_elements
+      - next_shot_inheritance
+      - sound
+      - positive_prompt
+      - negative_constraints
+      - failure_repair
+    hard_rule: 下一镜依赖精确尾态时，不得只用无尾帧控制的单首帧视频。
+    prompt_detail_rule: 每条最终Prompt必须具体写清画面、时间轴、摄影机、焦点景深、曝光、逐镜灯光、材质和精确结尾，不得压缩为通用动作摘要。
+    project_outputs: [video_prompt_pack, tail_frame_and_continuation_plan, hard_cut_and_layer_plan, editing_plan, sound_plan, lighting_and_color_continuity, version_naming]
+    repair_order: [simplify_prompt, local_image_repair, simplify_action, fixed_camera, shorten_clip, add_or_replace_end_frame, extract_tail_frame_continuation, split_at_occlusion_or_hard_cut, layered_composite, add_new_reference_last]
     output: VIDEO_PROMPT_PACK_AND_PRODUCTION_PACK
     next: S13
 
   S13_review_and_delivery:
     name: 审查与交付
     internal_stage: true
-    checks: [script_fidelity, shot_purpose, character_environment_prop_continuity, frame_and_video_prompt_quality, sound_and_color_continuity, final_image, delivery_completeness]
+    checks:
+      - script_fidelity
+      - shot_purpose
+      - character_environment_prop_continuity
+      - start_and_end_frame_continuity
+      - camera_focus_exposure_and_lighting_quality
+      - frame_and_video_prompt_detail
+      - sound_and_color_continuity
+      - final_image
+      - delivery_completeness
     result_protocol: PASS | CONDITIONAL | FAIL
     iteration_rule: 只重做薄弱层。
     output: DIRECTOR_REVIEW_AND_DELIVERY
