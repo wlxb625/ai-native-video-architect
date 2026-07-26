@@ -1,32 +1,46 @@
-# Cross-File Consistency Audit V4.1
+# Cross-File Consistency Audit V4.2
 
 ## 静态审计结论
 
 - `SKILL.md`与`AGENT.md`均将Skill定义为“剧本创作 + 剧本后Prompt生产”的统一能力：PASS。
-- 用户可从想法、大纲、完整剧本、参考图、分镜图或单个Prompt任务直接进入：PASS。
+- 用户可从想法、大纲、完整剧本、参考图、镜头表、分镜图或单个Prompt直接进入：PASS。
 - 已有剧本时不强制重走创作阶段：PASS。
-- Skill完成剧本后可继续生成核心参考图、分镜帧和视频Prompt：PASS。
 - 普通短片默认采用最少必要参考图，不建立完整影视资产库：PASS。
-- `LEAN`为默认，`CONTROLLED`仅按失败升级，`STUDIO`仅由用户明确要求：PASS。
-- 角色默认采用综合角色板或标准三视图，场景默认采用一张无人物空镜：PASS。
-- 后续分镜优先继承上一张满意分镜，不默认预制多机位空镜：PASS。
-- 尾帧、手部板、面部板、技术测试和多机位参考均为按需能力：PASS。
 - 用户提供Prompt资料时，原模板、主体提示和负面约束优先，自行补充必须区分：PASS。
-- 图片Prompt与视频Prompt分工明确：PASS。
-- 进度导航默认关闭，仅在用户要求、长任务或回退时启用：PASS。
+- 每镜在视频Prompt前选择单首帧、首尾帧、抽尾帧续拍、两段硬切、遮挡切换或分层合成：PASS。
+- 单首帧仅用于低幅度运动且下一镜不依赖准确尾态：PASS。
+- 下一镜依赖姿势、视线、手部、道具、焦点或构图时，必须预制或抽取稳定尾帧：PASS。
+- 每镜均要求`END_FRAME_CONTRACT`：PASS。
+- 每镜视频Prompt均要求`CAMERA_CONTRACT`、`OPTICAL_CONTRACT`和`LIGHTING_CONTRACT`：PASS。
+- 逐镜灯光必须包含真实光源、方向、高度、色温、软硬、光比、亮区、阴影和连续性：PASS。
+- 视频Prompt必须使用分秒动作时间轴，并量化方向、距离、速度和接触：PASS。
+- 分镜设计阶段已提前定义焦点、灯光和精确尾态，避免视频阶段临时补写：PASS。
+- 模板、评分器、压力测试、配置和验证脚本均包含V4.2导演级合同：PASS。
 - “下一步”表示下一个相关交付物，而不是下一张图或下一个资产：PASS。
-- 用户默认自行在外部工具中生成和筛选，辅助审核仅在明确请求时启用：PASS。
-- V4.1版本已同步至Manifest、配置、调用描述和验证脚本：PASS。
 
 ## 兼容性说明
 
-- S00至S13仍作为内部兼容定位保留，不作为强制用户界面。
-- 旧版完整资产、评分器和生产模板仍可用于系列项目、长片或用户明确要求的STUDIO模式。
-- `CREATE`、`TRANSFORM`、`DIAGNOSE`、`ADAPT`四种操作模式继续保留。
-- `STORY_DIRECTOR`、`VISUAL_DIRECTOR`、`BLOCKBUSTER_DIRECTOR`、`EXPERIMENTAL_DIRECTOR`、`PRODUCTION_DIRECTOR`继续保留。
+- S00至S13继续作为内部兼容定位，不作为强制用户界面。
+- 旧版细分资产模板仍可用于系列项目、长片或用户明确要求的高控制模式。
+- V4.2增加的是镜头控制帧和导演级Prompt字段，不等于增加角色资产数量。
+- `CREATE`、`TRANSFORM`、`DIAGNOSE`、`ADAPT`继续保留。
+- 五种导演模式继续保留。
 
-## 非阻塞说明
+## 验证重点
 
-- 当前执行环境无法直接连接GitHub运行完整仓库验证，因此本轮完成了文件级静态审计和验证脚本同步。
-- 正式安装后应运行：`python scripts/validate_package.py`。
-- 平台能力、模型版本、价格、额度和规则仍需在真实任务中实时核实。
+安装后运行：
+
+```bash
+python scripts/validate_package.py
+```
+
+验证必须确认：
+
+- 版本为4.2.0；
+- 每镜结束帧合同存在；
+- 单首帧边界明确；
+- 摄影机、光学、逐镜灯光字段存在；
+- 视频Prompt不只是动作摘要；
+- Manifest包含六种视频生成模式和四项视频合同。
+
+平台能力、模型版本、价格、额度和规则仍需在真实任务中实时核实。
