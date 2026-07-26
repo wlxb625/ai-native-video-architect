@@ -2,36 +2,50 @@
 
 ## 目的
 
-本文件记录用户提供的AI生图与视频Prompt工程资料如何被提炼进V4.1。它只做知识映射，不复制原资料的推广信息、链接、平台额度、临时模型排行或大量案例原文。
+本文件记录用户提供的AI生图与视频Prompt工程资料如何被提炼进V4.2。它只做知识映射，不复制推广信息、链接、平台额度、临时模型排行或大量案例原文。
 
 ## 总体映射
 
-| 原资料主题 | V4.1模块 |
+| 原资料主题 | V4.2模块 |
 |---|---|
 | 剧本可制作性、人物场景先行、分镜一致性 | `controllers/post-script-production.md` |
 | 主色调、场景色调、六维色调、夜景降噪 | `prompt-engineering/visual-style-color-light.md` |
-| 光影关键词、伦勃朗光、窗光、火光、低调光 | `prompt-engineering/visual-style-color-light.md` |
+| 光影关键词、窗口光、火光、低调光、真实光源 | `prompt-engineering/visual-style-color-light.md`、`video-prompt-compiler.md` |
 | 角色板、三视图、面部特写、人物细节 | `prompt-engineering/asset-prompt-system.md` |
 | 场景设定、道具设定、多人站位 | `prompt-engineering/asset-prompt-system.md` |
-| 图片基础公式、超写实、图生图、局部修改、4K | `prompt-engineering/image-prompt-compiler.md`、`continuity-repair-system.md` |
-| 分镜图、九宫格、多机位、一致性 | `prompt-engineering/storyboard-frame-system.md` |
-| 视频基础公式、图生视频、首尾帧、动作、氛围 | `prompt-engineering/video-prompt-compiler.md` |
-| 固定、推拉摇移、跟拍、环绕、FPV、焦点转移等 | `prompt-engineering/camera-movement-library.md` |
-| 抽尾帧续拍、硬切、上下视频衔接、多角度穿帮 | `prompt-engineering/continuity-repair-system.md` |
-| 人物台词错误、局部修复、夜景噪点 | `prompt-engineering/continuity-repair-system.md` |
+| 图片基础公式、图生图、局部修改、4K | `image-prompt-compiler.md`、`continuity-repair-system.md` |
+| 分镜图、九宫格、多机位、一致性 | `storyboard-frame-system.md` |
+| 视频基础公式、图生视频、首尾帧、动作、氛围 | `video-prompt-compiler.md` |
+| 固定、推拉摇移、跟拍、环绕、FPV、焦点转移 | `camera-movement-library.md` |
+| 抽尾帧续拍、硬切、上下视频衔接、多角度穿帮 | `continuity-repair-system.md` |
+| 人物台词错误、局部修复、夜景噪点 | `continuity-repair-system.md` |
+
+## V4.2新增的项目工程化规则
+
+原资料提供了视频Prompt、首尾帧、运镜、灯光和衔接方法。V4.2在不冒充原文的前提下，将这些内容编译为项目级生产合同：
+
+- 按下一镜连续性选择单首帧、首尾帧、抽尾帧续拍、硬切、遮挡切换或分层合成；
+- 每镜建立可截图验证的结束帧合同；
+- 将动作拆成分秒时间轴；
+- 将运镜补充为焦段、机位、开始时间、结束时间、幅度和终点；
+- 将光影公式补充为逐镜真实光源、方向、高度、色温、软硬、光比、亮区、阴影与连续性；
+- 增加焦点、景深、曝光、白平衡、高光和暗部合同。
+
+以上属于V4.2生产工程化补充，不宣称是用户资料中的原句或固定模板。
 
 ## 提炼原则
 
 1. 保留长期稳定的方法，不写死模型版本、平台价格、额度和临时榜单。
 2. 将案例句式提炼为字段、公式、检查项和稳定替代，不机械复制整篇资料。
-3. 图片和视频严格分工：静态瞬间由图片Prompt控制，时间过程由视频Prompt控制。
+3. 图片负责准确静态瞬间；视频负责时间变化，但每镜必须有准确起终控制。
 4. 每种资产和镜头根据功能调用不同模板，不使用一个万能Prompt替代全部任务。
-5. 普通短片优先使用最少必要参考；多视图、多人站位、首尾帧和复杂动作的分步控制只在剧情确有需要或实际生成失败时启用。
-6. 用户提供的新资料优先于模型凭经验自由扩写；发生冲突时以项目剧本、视觉圣经和用户明确要求为最高约束。
+5. 普通短片优先使用最少必要参考；镜头尾帧属于镜头控制帧，不等于扩张角色资产库。
+6. 用户提供的新资料优先于模型凭经验自由扩写；项目剧本、用户明确要求和已批准视觉规则为最高约束。
+7. 自行增加的摄影、光学、灯光和尾帧工程规则必须明确标记为Skill补充。
 
 ## 资料主题索引
 
-原资料中与V4.1生产层直接相关的主要章节包括：
+原资料中与V4.2生产层直接相关的主要章节包括：
 
 - 视频主色调与场景设定；
 - 图片光影关键词与色调一致性；
