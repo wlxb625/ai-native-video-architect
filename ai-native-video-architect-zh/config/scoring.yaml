@@ -1,4 +1,4 @@
-version: 4.1.0
+version: 4.2.0
 
 scores:
   concept:
@@ -20,27 +20,37 @@ scores:
     rule: 不以资产数量评分；少量参考能够稳定支持镜头即可通过。
 
   prompt_production_readiness:
-    minimum: 80
-    conditional_for_representative_test: 70
+    minimum: 85
+    conditional_for_representative_test: 75
     evaluator: evals/prompt-production-readiness-score.md
     weights:
-      script_traceability: 15
-      source_template_fidelity: 10
-      reference_roles: 10
-      image_prompt_completeness: 15
-      color_and_light: 10
-      frame_state_design: 10
-      video_prompt_completeness: 15
-      continuity_and_transitions: 10
-      repair_and_fallback: 5
+      script_traceability: 10
+      source_template_fidelity: 8
+      reference_roles: 8
+      image_prompt_completeness: 10
+      frame_and_end_state_design: 12
+      generation_mode_selection: 10
+      camera_and_optics: 12
+      per_shot_lighting: 12
+      video_timeline_and_physics: 10
+      continuity_and_transitions: 5
+      repair_and_fallback: 3
 
   production:
-    minimum: 75
-    weights: {character_consistency: 15, environment_consistency: 15, prop_and_state_consistency: 10, generation_feasibility: 25, continuity_and_editing: 20, fallback_readiness: 15}
+    minimum: 80
+    weights:
+      character_consistency: 12
+      environment_consistency: 10
+      prop_and_state_consistency: 8
+      generation_feasibility: 18
+      end_frame_reachability: 12
+      camera_focus_and_lighting_stability: 18
+      continuity_and_editing: 14
+      fallback_readiness: 8
 
   director_package:
     minimum: 85
-    weights: {concept: 16, visual_narrative: 16, cinematic_language: 12, emotional_arc: 12, reference_fit: 10, prompt_production: 14, production: 10, sound: 6, artistic_fit: 4}
+    weights: {concept: 14, visual_narrative: 14, cinematic_language: 12, emotional_arc: 10, reference_fit: 8, prompt_production: 22, production: 12, sound: 5, artistic_fit: 3}
 
 status_rules:
   pass: score >= minimum and no hard failure
@@ -50,5 +60,22 @@ status_rules:
 production_gates:
   before_reference_prompts: [script confirmed or user supplied a complete script, visual rules sufficient for the requested images]
   before_storyboard_frames: [minimum core references available or user explicitly accepts text-only generation, shot design confirmed]
-  before_video_prompts: [storyboard frame or other valid start image available, action and end state defined]
-  before_batch_video_generation: [at least one representative shot tested when project risk justifies testing, continuation strategy defined]
+  before_video_prompts:
+    - storyboard frame or other valid start image available
+    - generation mode selected per shot
+    - action timeline and exact end frame defined
+    - camera, focus, exposure and per-shot lighting contracts defined
+  before_batch_video_generation:
+    - at least one representative shot tested when project risk justifies testing
+    - end-frame reachability checked
+    - lighting and focus stability checked
+    - continuation strategy defined
+
+hard_failures:
+  - single_start_frame_used_when_next_shot_requires_exact_tail_state
+  - missing_end_frame_contract
+  - missing_camera_endpoint
+  - missing_focus_depth_or_exposure
+  - missing_real_light_source_direction_and_illuminated_areas
+  - light_focus_or_exposure_drift_inside_one_shot
+  - video_prompt_is_only_action_summary
