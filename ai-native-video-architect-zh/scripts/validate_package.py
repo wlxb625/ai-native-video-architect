@@ -100,8 +100,9 @@ require_tokens("config/progress-navigation.yaml", [
 
 require_tokens("config/workflow.yaml", [
     "MINIMUM_VIABLE_REFERENCES", "MINIMUM_REFERENCE_PLAN", "REFERENCE_PROMPT_PACK",
-    "next_means_next_relevant_deliverable", "tail_frame_rule",
-    "one_representative_normal_shot", "DIRECT_IMAGE_PROMPT", "DIRECT_VIDEO_PROMPT",
+    "next_means_next_relevant_deliverable", "end_frame_contract",
+    "shot_lighting_contract", "optical_contract", "one_representative_normal_shot",
+    "DIRECT_IMAGE_PROMPT", "DIRECT_VIDEO_PROMPT",
 ])
 
 require_tokens("controllers/post-script-production.md", [
@@ -116,7 +117,7 @@ require_tokens("prompt-engineering/image-prompt-compiler.md", [
 
 require_tokens("prompt-engineering/visual-style-color-light.md", [
     "primary_colors", "secondary_colors", "accent_colors", "color_temperature",
-    "saturation", "contrast", "真实光源",
+    "scene_lighting_master", "shot_lighting_contract", "光比", "曝光、焦点与景深",
 ])
 
 require_tokens("prompt-engineering/asset-prompt-system.md", [
@@ -126,11 +127,14 @@ require_tokens("prompt-engineering/asset-prompt-system.md", [
 ])
 
 require_tokens("prompt-engineering/storyboard-frame-system.md", [
-    "首帧", "尾帧", "多人站位", "九宫格", "多机位",
+    "结束帧决策", "必须预制尾帧", "END_FRAME_CONTRACT",
+    "逐镜灯光合同", "焦点、景深和曝光", "硬切新首帧",
 ])
 
 require_tokens("prompt-engineering/video-prompt-compiler.md", [
-    "视频Prompt基础公式", "唯一主要动作", "起势", "过程", "收住", "结束状态",
+    "视频Prompt完整公式", "结束帧合同", "时间轴动作编译",
+    "摄影机合同", "焦点、景深和曝光合同", "逐镜灯光合同",
+    "单首帧图生视频", "首尾帧视频", "结尾至少稳定停留12至24帧",
 ])
 
 require_tokens("prompt-engineering/camera-movement-library.md", [
@@ -151,7 +155,20 @@ require_tokens("templates/storyboard-frame-prompt-block.md", [
 ])
 
 require_tokens("templates/video-shot-prompt-block.md", [
-    "【视频正向Prompt】", "【视频负面Prompt】", "【结束状态】", "【失败修复】",
+    "【生成模式判断】", "【画面空间与构图】", "【摄影机合同】",
+    "【光学合同】", "【逐镜灯光合同】", "【结束帧合同】",
+    "【视频正向Prompt】", "【视频负面Prompt】", "【失败修复】",
+])
+
+require_tokens("evals/prompt-production-readiness-score.md", [
+    "分镜首尾状态", "灯光与色彩", "摄影机与光学",
+    "结束状态与连续性", "每镜没有结束帧合同",
+])
+
+require_tokens("tests/post-script-prompt-pipeline-stress-tests.md", [
+    "END_FRAME_DECISION_REQUIRED", "SINGLE_START_FRAME_BOUNDARY",
+    "TIMELINE_ACTION_BEATS", "SHOT_LIGHTING_CONTRACT", "LIGHT_WORLD_POSITION",
+    "OPTICAL_CONTRACT", "END_HOLD", "PROMPT_DETAIL_DENSITY",
 ])
 
 manifest_path = ROOT / "manifest.json"
