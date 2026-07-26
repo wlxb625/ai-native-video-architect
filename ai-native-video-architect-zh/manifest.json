@@ -1,6 +1,6 @@
 {
   "name": "ai-native-video-architect-zh",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "language": "zh-CN",
   "entry": "SKILL.md",
   "files": [
@@ -60,6 +60,8 @@
     "VIDEO_PROMPT_PACK", "REPAIR_PACK", "POST_PRODUCTION_PLAN", "PRODUCTION_PACK",
     "DIRECTOR_REVIEW_AND_DELIVERY"
   ],
+  "video_generation_modes": ["SINGLE_START_FRAME", "FIRST_LAST_FRAME", "TAIL_FRAME_CONTINUATION", "TWO_SEGMENT_HARD_CUT", "OCCLUSION_SWITCH", "LAYERED_COMPOSITE"],
+  "video_contracts": ["CAMERA_CONTRACT", "OPTICAL_CONTRACT", "LIGHTING_CONTRACT", "END_FRAME_CONTRACT"],
   "progress_stages": ["S00", "S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S11", "S12", "S13"],
   "confirmation_gates": ["STORY_DIRECTION_CONFIRMATION", "SCRIPT_CONFIRMATION", "ASSET_CONFIRMATION", "STORYBOARD_CONFIRMATION", "CORE_SAMPLE_GATE"],
   "interaction_contracts": ["DIRECT_ENTRY", "USER_SELF_AUDIT", "NEXT_MEANS_NEXT_DELIVERABLE"],
