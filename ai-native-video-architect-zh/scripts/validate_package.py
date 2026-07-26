@@ -81,7 +81,7 @@ require_tokens("SKILL.md", [
 require_tokens("AGENT.md", [
     "AI Native Film Studio V4.1", "用户当前已经有什么成熟成果",
     "继续使用同一个Skill完成下游制作", "最小参考合同",
-    "用户资料忠实度合同", "FRAME_PROMPT_PACK", "VIDEO_PROMPT_PACK",
+    "用户资料忠实度合同", "分镜帧Prompt包", "视频Prompt包",
 ])
 
 for rel in ["config/modes.yaml", "config/workflow.yaml", "config/scoring.yaml", "config/progress-navigation.yaml"]:
