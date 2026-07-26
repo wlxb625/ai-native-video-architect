@@ -3,7 +3,7 @@ import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "3.3.0"
+VERSION = "4.0.0"
 
 REQUIRED = [
     "SKILL.md", "AGENT.md", "README.md", "manifest.json", "agents/openai.yaml",
@@ -15,24 +15,33 @@ REQUIRED = [
     "controllers/visual.md", "controllers/trend-culture.md", "controllers/high-concept-scifi.md",
     "controllers/visual-narrative.md", "controllers/camera-language.md",
     "controllers/asset-first-production.md", "controllers/detailed-storyboard.md",
-    "controllers/ai-production.md", "controllers/style-reference.md", "controllers/virality.md",
+    "controllers/ai-production.md", "controllers/post-script-production.md",
+    "controllers/style-reference.md", "controllers/virality.md",
     "controllers/production-management.md", "controllers/sound-design.md", "controllers/director-agent.md",
+    "prompt-engineering/image-prompt-compiler.md", "prompt-engineering/visual-style-color-light.md",
+    "prompt-engineering/asset-prompt-system.md", "prompt-engineering/storyboard-frame-system.md",
+    "prompt-engineering/video-prompt-compiler.md", "prompt-engineering/camera-movement-library.md",
+    "prompt-engineering/continuity-repair-system.md",
     "evals/semantic-hard-gate.md", "evals/drama-score.md", "evals/propagation-score.md",
     "evals/character-agency-check.md", "evals/twist-legality-check.md", "evals/dialogue-check.md",
     "evals/mechanism-overuse-check.md", "evals/production-score.md", "evals/transform-fidelity-score.md",
     "evals/high-concept-score.md", "evals/visual-narrative-score.md", "evals/camera-language-score.md",
-    "evals/asset-readiness-score.md", "evals/director-package-score.md",
+    "evals/asset-readiness-score.md", "evals/prompt-production-readiness-score.md",
+    "evals/director-package-score.md",
     "templates/concept-brief.md", "templates/beat-sheet.md", "templates/standard-script.md",
     "templates/diagnosis-report.md", "templates/transform-contract.md", "templates/production-pack.md",
     "templates/visual-bible.md", "templates/visual-narrative-board.md", "templates/camera-shot-plan.md",
     "templates/detailed-storyboard.md", "templates/director-package.md", "templates/asset-registry.md",
     "templates/character-asset-pack.md", "templates/environment-asset-pack.md",
     "templates/prop-asset-pack.md", "templates/frame-generation-pack.md", "templates/progress-status.md",
-    "references/glossary.md", "references/platform-notes.md",
+    "templates/asset-prompt-block.md", "templates/storyboard-frame-prompt-block.md",
+    "templates/video-shot-prompt-block.md",
+    "references/glossary.md", "references/platform-notes.md", "references/prompt-engineering-source-map.md",
     "references/examples/high-concept-scifi-memory-fuel.md",
     "references/examples/visual-narrative-last-gardener.md",
     "tests/asset-first-stress-tests.md", "tests/progress-navigation-stress-tests.md",
-    "tests/stress-test-suite.md", "audit/cross-file-consistency-audit.md",
+    "tests/post-script-prompt-pipeline-stress-tests.md", "tests/stress-test-suite.md",
+    "audit/cross-file-consistency-audit.md",
 ]
 
 errors = []
@@ -43,32 +52,83 @@ for rel in REQUIRED:
     elif not path.read_text(encoding="utf-8").strip():
         errors.append(f"empty: {rel}")
 
-skill = (ROOT / "SKILL.md").read_text(encoding="utf-8") if (ROOT / "SKILL.md").exists() else ""
+
+def require_tokens(rel: str, tokens: list[str]) -> None:
+    path = ROOT / rel
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    for token in tokens:
+        if token not in text:
+            errors.append(f"{rel} missing token: {token}")
+
+
+skill_path = ROOT / "SKILL.md"
+skill = skill_path.read_text(encoding="utf-8") if skill_path.exists() else ""
 if not skill.startswith("---\n"):
     errors.append("SKILL.md missing YAML frontmatter")
-if "name: ai-native-video-architect-zh" not in skill:
-    errors.append("wrong skill name")
-
-for token in [
+require_tokens("SKILL.md", [
+    "name: ai-native-video-architect-zh", "AI Native Film Studio V4.0",
     "CREATE", "TRANSFORM", "DIAGNOSE", "ADAPT",
     "STORY_DIRECTOR", "VISUAL_DIRECTOR", "BLOCKBUSTER_DIRECTOR",
     "EXPERIMENTAL_DIRECTOR", "PRODUCTION_DIRECTOR",
-    "STORY_TREATMENT", "SCRIPT_PACKAGE", "SCRIPT_BREAKDOWN",
-    "ASSET_PACK", "DETAILED_STORYBOARD", "PASS", "CONDITIONAL", "FAIL",
-]:
-    if token not in skill:
-        errors.append(f"SKILL.md missing protocol token: {token}")
+    "S07 整批资产Prompt", "S10 整批分镜帧Prompt", "S12 整批视频生产",
+    "ASSET_PROMPT_PACK", "FRAME_PROMPT_PACK", "CORE_SAMPLE_PACK", "VIDEO_PROMPT_PACK",
+    "USER_SELF_AUDIT", "下一步", "prompt-engineering/image-prompt-compiler.md",
+    "prompt-engineering/video-prompt-compiler.md", "PASS", "CONDITIONAL", "FAIL",
+])
 
-for token in [
-    "项目进度导航", "S00：创作需求", "S03：剧本或视觉脚本", "S04：剧本拆解",
-    "STORY_DIRECTION_CONFIRMATION", "SCRIPT_CONFIRMATION", "ASSET_CONFIRMATION",
-    "STORYBOARD_CONFIRMATION", "Core Sample", "current_stage", "completed_outputs",
-    "next_stage", "config/progress-navigation.yaml", "templates/progress-status.md",
-    "Asset Readiness Gate", "角色正面、严格侧面和背面生产三视图",
-    "场景主布局、无人物空镜和多机位", "道具三视图、尺寸、结构和状态版本",
-]:
-    if token not in skill:
-        errors.append(f"SKILL.md missing V3.3 token: {token}")
+for rel in ["config/modes.yaml", "config/workflow.yaml", "config/scoring.yaml", "config/progress-navigation.yaml"]:
+    require_tokens(rel, [f"version: {VERSION}"])
+
+require_tokens("config/progress-navigation.yaml", [
+    "NEXT_MEANS_NEXT_STAGE", "USER_SELF_AUDIT", "BATCH_STAGE_OUTPUT",
+    "S00", "S07", "S08", "S10", "S11", "S12", "S13",
+])
+require_tokens("config/workflow.yaml", [
+    "S00_creative_brief", "S03_script_or_visual_script", "S04_script_breakdown",
+    "S07_asset_prompt_pack_and_production", "S08_user_asset_confirmation",
+    "S10_storyboard_frame_prompt_pack", "S11_core_sample", "S12_batch_video_production_and_post",
+    "USER_SELF_AUDIT", "NEXT_MEANS_NEXT_STAGE",
+])
+require_tokens("controllers/post-script-production.md", [
+    "S04 剧本拆解", "S07 资产制作Prompt", "完整整批资产Prompt包",
+    "USER_SELF_AUDIT", "下一步", "S10 分镜帧Prompt", "S12 批量视频制作",
+])
+require_tokens("prompt-engineering/image-prompt-compiler.md", [
+    "图片Prompt基础公式", "一个静态瞬间", "正向Prompt", "负面Prompt", "输出规则",
+])
+require_tokens("prompt-engineering/visual-style-color-light.md", [
+    "primary_colors", "secondary_colors", "accent_colors", "color_temperature",
+    "saturation", "contrast", "真实光源",
+])
+require_tokens("prompt-engineering/asset-prompt-system.md", [
+    "面部身份板", "生产三视图", "场景主布局", "道具结构", "局部修复",
+])
+require_tokens("prompt-engineering/storyboard-frame-system.md", [
+    "首帧", "尾帧", "多人站位", "九宫格", "多机位",
+])
+require_tokens("prompt-engineering/video-prompt-compiler.md", [
+    "视频Prompt基础公式", "唯一主要动作", "起势", "过程", "收住", "结束状态",
+])
+require_tokens("prompt-engineering/camera-movement-library.md", [
+    "固定镜头", "推镜", "拉镜", "跟拍", "环绕", "FPV", "焦点转移", "硬切",
+])
+require_tokens("prompt-engineering/continuity-repair-system.md", [
+    "抽尾帧续拍", "硬切", "多角度", "局部修复", "夜景", "4K", "台词",
+])
+require_tokens("templates/asset-prompt-block.md", [
+    "【正向Prompt】", "【负面Prompt】", "【输出规则】", "【稳定生成方案】",
+])
+require_tokens("templates/storyboard-frame-prompt-block.md", [
+    "【首帧正向Prompt】", "【首帧负面Prompt】", "【尾帧正向Prompt】",
+])
+require_tokens("templates/video-shot-prompt-block.md", [
+    "【视频正向Prompt】", "【视频负面Prompt】", "【结束状态】", "【失败修复】",
+])
+require_tokens("tests/post-script-prompt-pipeline-stress-tests.md", [
+    "SOURCE_MODULE_REQUIRED", "BATCH_ASSET_OUTPUT", "FULL_COPY_BLOCK",
+    "NEXT_MEANS_NEXT_STAGE", "USER_SELF_AUDIT", "IMAGE_VIDEO_SEPARATION",
+    "COLOR_SIX_AXIS", "CAMERA_ENDPOINT", "TAIL_FRAME_CONTINUATION",
+])
 
 manifest_path = ROOT / "manifest.json"
 if manifest_path.exists():
@@ -82,92 +142,20 @@ if manifest_path.exists():
                 errors.append(f"manifest missing file: {rel}")
         expected_outputs = {
             "CREATIVE_BRIEF", "DIRECTION_OPTIONS", "STORY_TREATMENT", "SCRIPT_PACKAGE",
-            "SCRIPT_BREAKDOWN", "ASSET_PLAN", "ASSET_PACK", "DETAILED_STORYBOARD", "PRODUCTION_PACK",
+            "SCRIPT_BREAKDOWN", "ASSET_PLAN", "ASSET_PROMPT_PACK", "ASSET_PACK",
+            "SHOT_LIST_AND_CAMERA_PLAN", "FRAME_PROMPT_PACK", "CORE_SAMPLE_PACK",
+            "VIDEO_PROMPT_PACK", "PRODUCTION_PACK", "DIRECTOR_REVIEW_AND_DELIVERY",
         }
         if not expected_outputs.issubset(set(manifest.get("output_levels", []))):
-            errors.append("manifest missing V3.3 output levels")
+            errors.append("manifest missing V4 output levels")
         expected_stages = {f"S{i:02d}" for i in range(14)}
         if expected_stages != set(manifest.get("progress_stages", [])):
             errors.append("manifest progress stages must be S00 through S13")
-        expected_gates = {
-            "STORY_DIRECTION_CONFIRMATION", "SCRIPT_CONFIRMATION", "ASSET_CONFIRMATION",
-            "STORYBOARD_CONFIRMATION", "CORE_SAMPLE_GATE",
-        }
-        if not expected_gates.issubset(set(manifest.get("confirmation_gates", []))):
-            errors.append("manifest missing confirmation gates")
+        expected_contracts = {"BATCH_STAGE_OUTPUT", "USER_SELF_AUDIT", "NEXT_MEANS_NEXT_STAGE"}
+        if not expected_contracts.issubset(set(manifest.get("interaction_contracts", []))):
+            errors.append("manifest missing V4 interaction contracts")
     except json.JSONDecodeError as exc:
         errors.append(f"invalid manifest.json: {exc}")
-
-controller_tokens = {
-    "controllers/asset-first-production.md": ["Asset Readiness Gate", "Production Turnaround", "Empty Plate", "尾帧续拍", "硬切连续性"],
-    "controllers/ai-production.md": ["Asset Registry", "图片Prompt与视频Prompt分离", "Core Sample"],
-    "controllers/detailed-storyboard.md": ["21:9", "ARRI Alexa 35", "24fps", "资产依赖", "首帧与尾帧"],
-    "controllers/director-agent.md": ["Progress Navigation Contract", "SCRIPT_CONFIRMATION", "剧本优先与资产先行", "CORE_SAMPLE_GATE"],
-    "core/continuity.md": ["production_continuity", "prop_continuity", "硬切连续性"],
-}
-for rel, tokens in controller_tokens.items():
-    text = (ROOT / rel).read_text(encoding="utf-8") if (ROOT / rel).exists() else ""
-    for token in tokens:
-        if token not in text:
-            errors.append(f"{rel} missing token: {token}")
-
-progress_config = (ROOT / "config/progress-navigation.yaml").read_text(encoding="utf-8") if (ROOT / "config/progress-navigation.yaml").exists() else ""
-for token in [
-    "enabled_by_default", "current_stage", "completed_outputs", "user_decision_if_needed",
-    "S00", "S03", "S04", "S08", "S11", "S13", "entry_inference", "DIAGNOSE", "TRANSFORM",
-]:
-    if token not in progress_config:
-        errors.append(f"progress navigation config missing token: {token}")
-
-workflow = (ROOT / "config/workflow.yaml").read_text(encoding="utf-8") if (ROOT / "config/workflow.yaml").exists() else ""
-for token in [
-    "S00_creative_brief", "S01_direction_options", "S02_story_treatment",
-    "S03_script_or_visual_script", "S04_script_breakdown", "S05_visual_bible",
-    "S06_asset_plan", "S07_asset_production", "S08_asset_readiness_gate",
-    "S09_shot_design", "S10_storyboard_frames_and_prompts", "S11_core_sample",
-    "S12_batch_production_and_post", "S13_director_review_and_delivery",
-]:
-    if token not in workflow:
-        errors.append(f"workflow missing stage: {token}")
-
-for rel, tokens in {
-    "modes/create.md": ["S00 创作需求", "S03 剧本或视觉脚本", "SCRIPT_CONFIRMATION", "CORE_SAMPLE_GATE"],
-    "modes/adapt.md": ["启动进度", "剧本门槛", "STORYBOARD_CONFIRMATION", "S11 Core Sample Gate"],
-    "templates/progress-status.md": ["紧凑版", "修复回退版", "中途进入版", "DIAGNOSE版", "TRANSFORM版", "S13 导演审查与交付"],
-    "templates/asset-registry.md": ["ready_for_storyboard_frames", "镜头帧资产", "资产依赖"],
-    "templates/character-asset-pack.md": ["生产三视图", "面部身份板", "服装状态"],
-    "templates/environment-asset-pack.md": ["无人物空镜", "多机位环境板", "空间主布局"],
-    "templates/prop-asset-pack.md": ["道具三视图Prompt", "状态时间线", "道具与人物交互板"],
-    "templates/frame-generation-pack.md": ["首帧 FRAME_SH_IN", "尾帧 FRAME_SH_OUT", "尾帧续拍", "硬切镜头"],
-}.items():
-    text = (ROOT / rel).read_text(encoding="utf-8") if (ROOT / rel).exists() else ""
-    for token in tokens:
-        if token not in text:
-            errors.append(f"{rel} missing token: {token}")
-
-for rel in ["config/modes.yaml", "config/workflow.yaml", "config/scoring.yaml", "config/progress-navigation.yaml"]:
-    text = (ROOT / rel).read_text(encoding="utf-8") if (ROOT / rel).exists() else ""
-    if f"version: {VERSION}" not in text:
-        errors.append(f"{rel} version must be {VERSION}")
-
-asset_tests = (ROOT / "tests/asset-first-stress-tests.md").read_text(encoding="utf-8") if (ROOT / "tests/asset-first-stress-tests.md").exists() else ""
-for token in ["STRUCTURED_INTAKE", "PRODUCTION_TURNAROUND", "FRAME_PAIR_READY", "VERSION_SAFE"]:
-    if token not in asset_tests:
-        errors.append(f"asset-first stress tests missing token: {token}")
-
-progress_tests = (ROOT / "tests/progress-navigation-stress-tests.md").read_text(encoding="utf-8") if (ROOT / "tests/progress-navigation-stress-tests.md").exists() else ""
-for token in [
-    "FALSE_COMPLETION", "SCRIPT_GATE_BYPASS", "SCRIPT_FIRST_ASSET_READY",
-    "STORY_DIRECTION_CONFIRMATION", "SCRIPT_CONFIRMATION", "ASSET_CONFIRMATION",
-    "STORYBOARD_CONFIRMATION", "CORE_SAMPLE_GATE",
-]:
-    if token not in progress_tests:
-        errors.append(f"progress navigation stress tests missing token: {token}")
-
-agent_meta = (ROOT / "agents/openai.yaml").read_text(encoding="utf-8") if (ROOT / "agents/openai.yaml").exists() else ""
-for token in ["V3.3", "进度", "剧本", "资产", "首尾帧"]:
-    if token not in agent_meta:
-        errors.append(f"agent metadata missing token: {token}")
 
 for path in ROOT.rglob("*.md"):
     if "\ufffd" in path.read_text(encoding="utf-8"):

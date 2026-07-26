@@ -1,6 +1,6 @@
-# AI Native Film Studio V3.3
+# AI Native Film Studio V4.0
 
-## AI原生电影导演、剧本拆解、资产与制作工作室
+## 从剧本到生图、图生视频和成片的完整中文Skill
 
 显式调用：
 
@@ -8,20 +8,9 @@
 $ai-native-video-architect-zh
 ```
 
-调用后，Skill会先告诉你目前做到哪一步：
+V4.0保留原有故事、剧本、导演、资产与分镜能力，并把用户提供的专业AI生图和视频Prompt工程规范整理成可调用模块，正式覆盖剧本确认后的全部生产步骤。
 
-```text
-【项目进度｜S04/13 剧本拆解】
-已完成：✓ 创作需求 ✓ 创意方向 ✓ 故事方案 ✓ 剧本
-正在进行：提取角色、服装、场景、道具和状态变化
-本轮交付：剧本拆解表
-需要你确认：是否遗漏关键资产或状态
-下一步：S05 视觉圣经
-```
-
-它不会默认所有项目都从零开始。你有完整剧本时可直接进入剧本拆解；有资产图时会先进入资产审核；有完整资产和分镜帧时会先做Core Sample。
-
-## 完整短视频流程
+## 完整流程
 
 ```text
 S00 创作需求
@@ -31,248 +20,139 @@ S00 创作需求
 → S04 剧本拆解
 → S05 视觉圣经
 → S06 资产计划
-→ S07 资产制作
-→ S08 资产审核
+→ S07 整批资产Prompt与资产制作
+→ S08 用户自审与资产确认
 → S09 分镜设计
-→ S10 分镜帧与提示词
+→ S10 整批分镜帧Prompt
 → S11 核心样片
-→ S12 批量制作与后期
+→ S12 整批视频生产与后期
 → S13 导演审查与交付
 ```
 
-## 为什么必须先有剧本
+## V4.0解决了什么
 
-“资产先行”并不是没有故事就先做角色和场景。
+### 1. 不再凭通用经验自由写Prompt
 
-正确含义是：
+剧本完成后必须读取内置Prompt工程模块：
 
-> 相对于正式分镜帧和视频生成，资产必须先行；相对于故事和剧本，资产不能盲目先行。
+- 图片Prompt基础公式；
+- 主色、辅助色、点缀色、色温、饱和度和对比度；
+- 光源、方向、光色、受光对象和暗部；
+- 角色板、三视图、面部、服装和交互；
+- 场景主布局、空镜和多机位；
+- 道具结构、尺寸和状态链；
+- 图生图、局部修改、降噪和4K增强；
+- 首帧、尾帧、图生视频和硬切；
+- 动作、环境、台词和声音；
+- 固定、推、拉、摇、移、跟拍、环绕、升降、FPV、焦点转移等运镜；
+- 抽尾帧续拍、多角度防穿帮和失败修复。
 
-角色、服装、场景和道具提示词都需要从剧本中提取：
+### 2. 阶段一次性交付
 
-- 角色是谁、处于什么身体和情绪状态；
-- 穿什么服装，在哪一场发生变化；
-- 场景是什么空间，人物从哪里进入和离开；
-- 道具由谁持有、使用哪只手、状态如何变化；
-- 每项资产在哪些镜头中出现。
+默认批次单位是阶段，不是单张图片：
 
-没有可拆解剧本或视觉脚本时，只能做概念探索，不能宣称已经得到可稳定生产的资产和分镜。
+- S07一次性给完全部资产Prompt；
+- S09一次性给完整镜头表；
+- S10一次性给完全部首尾帧Prompt；
+- S11一次性给核心样片测试包；
+- S12一次性给完整视频Prompt和后期包。
 
-传统对白剧本不是唯一格式。无对白、意识流、广告或MV可以使用完整视觉脚本，但至少要包含：主体、场景、初始状态、动作、环境变化、道具变化、情绪变化、结束状态和下一场连接。
+内容很长时可以分章节，但在同一轮完整交付，不要求用户每生成一张图就回来。
 
-## 项目进度导航
+### 3. 单资产一块完整复制
 
-进度提示会在以下时机出现：
+每个资产块同时包含：
 
-- 第一次调用Skill；
-- 用户选定方向、确认剧本、确认资产或确认分镜后；
-- 当前阶段完成并进入下一阶段；
-- 资产审核或Core Sample未通过；
-- 用户带着现有剧本、资产或分镜中途进入；
-- 用户询问“现在做到哪一步”。
+- 资产用途；
+- 前置参考图和参考职责；
+- 必须保持和允许变化；
+- 完整正向Prompt；
+- 针对性负面Prompt；
+- 输出规则；
+- 稳定生成方案；
+- 修改与修复Prompt；
+- 文件命名和后续依赖。
 
-进度不会虚报：
+不会把全局Prompt、负面Prompt和输出规则拆散后让用户自行拼接。
 
-- 未选择的方向不能显示完成；
-- 未确认的剧本不能显示完成；
-- 用户自带资产也必须先审核；
-- 只完成部分分镜不能把整个阶段标记完成；
-- Core Sample失败不能进入批量生产。
+### 4. 用户默认自行审核
 
-用户明确说“不显示进度”后，可以隐藏进度提示。
+S08默认为`USER_SELF_AUDIT`。用户在外部软件里生成、筛选和修改，完成后回复：
 
-## 四个确认门和一个生产门
+```text
+下一步
+```
 
-### STORY_DIRECTION_CONFIRMATION
+Skill就把当前阶段视为用户已确认并进入下一阶段。
 
-确认选定的方向、主角、核心事件、情绪和结尾方向。
+只有用户明确说“帮我审核这张图”时，才由Skill辅助检查候选图。
 
-### SCRIPT_CONFIRMATION
+### 5. “下一步”表示下一个阶段
 
-确认剧本或视觉脚本内容已锁定，可以进行制作拆解。
+当当前阶段已经整批交付时，“下一步”不会被理解成下一个资产或下一张图。
 
-### ASSET_CONFIRMATION
+只有用户明确说“逐项来”“下一个资产”时，才在同一阶段内部继续。
 
-资产评分达到85且无硬失败后，确认角色、服装、场景、道具和状态版本。
+## 图片Prompt公式
 
-### STORYBOARD_CONFIRMATION
+```text
+主体 + 场景环境 + 静态动作瞬间 + 服饰道具
++ 景别 + 机位 + 构图 + 光线色调
++ 材质真实度 + 风格 + 比例 + 负面约束
+```
 
-确认镜头数量、目的、动作、构图、机位、运镜、时长和制作难度。
+图片只负责一个准确瞬间，不负责完整动作过程。
 
-### CORE_SAMPLE_GATE
+## 视频Prompt公式
 
-至少验证一名角色、一个主场景、一个核心道具、一次首尾帧或硬切和一个3—8秒样片。未通过不得批量生成。
+```text
+唯一首帧 + 视频类型 + 场景 + 主体 + 起始状态
++ 动作过程 + 运镜 + 光线色调 + 风格
++ 稳定要求 + 结尾 + 声音 + 负面约束
+```
 
-## 创作前访谈
+短镜头只保留一个主要动作和一种主要运镜。
 
-宽泛请求如“帮我做一个短视频”会先通过选择或填空确认：
+## 色调与光影
 
-- 类型和题材；
-- 目标情绪；
-- 剧情、视觉或意识流形式；
-- 场景和主角；
-- 关系或表达焦点；
-- 对白与旁白；
-- 结尾；
-- 时长和画幅；
-- 工具或制作阶段；
-- 明确禁忌。
+色调不是单一滤镜。每个项目锁定：
 
-已给出的内容不会重复询问。确认后先提供2—3个差异明显的方向，选定后进入故事方案和剧本。
+```text
+主色 + 辅助色 + 点缀色 + 色温 + 饱和度 + 对比度
+```
 
-## 剧本拆解
+光影锁定：
 
-剧本确认后，Skill不会直接跳到长篇Prompt，而会先提取：
+```text
+真实光源 + 方向 + 光色 + 照亮对象 + 暗部层次 + 情绪目的
+```
 
-### 角色
+## 新增核心文件
 
-- 年龄、身份、性格和身体状态；
-- 首次与最后出现；
-- 情绪和动作语言；
-- 需要保持一致的角度和景别。
+### 编排
 
-### 发型、妆造和服装
+- `controllers/post-script-production.md`
 
-- 发型结构；
-- 服装内外层；
-- 每套服装使用场次；
-- 淋湿、染血、破损、沾灰等状态变化点。
+### Prompt工程
 
-### 场景
+- `prompt-engineering/image-prompt-compiler.md`
+- `prompt-engineering/visual-style-color-light.md`
+- `prompt-engineering/asset-prompt-system.md`
+- `prompt-engineering/storyboard-frame-system.md`
+- `prompt-engineering/video-prompt-compiler.md`
+- `prompt-engineering/camera-movement-library.md`
+- `prompt-engineering/continuity-repair-system.md`
 
-- 空间布局、出入口和固定地标；
-- 时间、天气和主光方向；
-- 同一空间的不同剧情状态；
-- 需要生成的空镜与多机位。
+### 模板
 
-### 道具
+- `templates/asset-prompt-block.md`
+- `templates/storyboard-frame-prompt-block.md`
+- `templates/video-shot-prompt-block.md`
 
-- 尺寸、材质和独特标记；
-- 持有者、左右手和使用方式；
-- 出现场次；
-- 状态时间线和产生镜头。
+### 评估和测试
 
-## Visual Bible与Asset Pack
-
-剧本拆解后建立Visual Bible，再制作资产。
-
-### 角色资产
-
-- 正面、严格侧面、背面生产三视图；
-- 面部身份板；
-- 发型正侧背；
-- 服装结构与状态；
-- 手部与道具交互；
-- 关键姿态和动作语言。
-
-### 场景资产
-
-- 主布局和出入口；
-- 无人物空镜；
-- 前中后景固定地标；
-- 光线方向、时间与天气；
-- 多机位参考；
-- 场景状态版本。
-
-### 道具资产
-
-- 尺寸和人体比例；
-- 正侧背结构；
-- 材质、工艺和历史；
-- 持有与使用逻辑；
-- 独特标记；
-- 状态时间线。
-
-核心文件：
-
-- `controllers/asset-first-production.md`
-- `evals/asset-readiness-score.md`
-- `templates/asset-registry.md`
-- `templates/character-asset-pack.md`
-- `templates/environment-asset-pack.md`
-- `templates/prop-asset-pack.md`
-- `templates/frame-generation-pack.md`
-
-## 分镜设计与分镜提示词
-
-分镜分两步：
-
-### S09 分镜设计
-
-先决定：
-
-- 镜头为什么存在；
-- 景别、机位和轴线；
-- 人物唯一主要动作；
-- 摄影机运动和动机；
-- 观众先看到什么；
-- 镜头如何结束；
-- 下一镜继承什么；
-- 生成风险和替代方案。
-
-### S10 分镜帧与提示词
-
-分镜确认后，才引用已批准资产制作首帧、尾帧和Prompt。
-
-图片Prompt负责：人物是谁、穿哪个版本、在哪里、道具是什么状态、构图和光线如何。
-
-视频Prompt负责：使用哪张首帧、从什么状态开始、完成哪个动作、摄影机怎么动、最后停在哪里、哪些内容不能变化。
-
-## 详细分镜默认摄影规格
-
-用户未另行指定时，电影级横屏详细分镜可默认采用：
-
-- 21:9；
-- ARRI Alexa 35或Alexa LF成像参考；
-- 克制anamorphic；
-- 24fps、180度快门；
-- 普通真实演员皮肤；
-- 有来源的材质磨损；
-- 柔和高光滚降和暗部纹理；
-- 有动机的摄影机运动。
-
-这些是默认值，不覆盖用户明确指定的画幅和风格。
-
-## 双重路由
-
-操作模式：
-
-- `CREATE`
-- `TRANSFORM`
-- `DIAGNOSE`
-- `ADAPT`
-
-导演模式：
-
-- `STORY_DIRECTOR`
-- `VISUAL_DIRECTOR`
-- `BLOCKBUSTER_DIRECTOR`
-- `EXPERIMENTAL_DIRECTOR`
-- `PRODUCTION_DIRECTOR`
-
-## 输出层级
-
-- `CREATIVE_BRIEF`
-- `DIRECTION_OPTIONS`
-- `STORY_TREATMENT`
-- `SCRIPT_PACKAGE`
-- `SCRIPT_BREAKDOWN`
-- `DEVELOPMENT_PACKAGE`
-- `ASSET_PLAN`
-- `ASSET_PACK`
-- `DIRECTOR_PACKAGE`
-- `DETAILED_STORYBOARD`
-- `PRODUCTION_PACK`
-
-## 关键文件
-
-- `config/progress-navigation.yaml`
-- `templates/progress-status.md`
-- `config/workflow.yaml`
-- `controllers/director-agent.md`
-- `controllers/asset-first-production.md`
-- `controllers/detailed-storyboard.md`
-- `tests/progress-navigation-stress-tests.md`
+- `evals/prompt-production-readiness-score.md`
+- `tests/post-script-prompt-pipeline-stress-tests.md`
 
 ## 安装
 
@@ -281,16 +161,11 @@ git clone https://github.com/wlxb625/ai-native-video-architect.git
 cd ai-native-video-architect/ai-native-video-architect-zh
 ```
 
-Windows目录：
+复制到：
 
 ```text
-%USERPROFILE%\.agents\skills\ai-native-video-architect-zh
-```
-
-macOS / Linux目录：
-
-```text
-$HOME/.agents/skills/ai-native-video-architect-zh
+Windows: %USERPROFILE%\.agents\skills\ai-native-video-architect-zh
+macOS/Linux: $HOME/.agents/skills/ai-native-video-architect-zh
 ```
 
 ## 验证
@@ -301,4 +176,4 @@ python scripts/validate_package.py
 
 ## 当前边界
 
-Skill保存稳定的创作和制作原则，不永久写死视频模型版本、价格、额度、平台算法和实时版权状态。需要时应查询最新信息。
+Skill保存长期稳定的创作、图片和视频Prompt工程原则，不永久写死具体模型版本、价格、额度和平台规则。涉及当前工具能力时需要实时核实。

@@ -1,14 +1,12 @@
-# AI Native Film Studio V3.3
+# AI Native Film Studio V4.0
 
-一套中文AI电影导演、剧本拆解、资产设计与制作Skill。
+一套中文AI电影全流程导演、剧本拆解、资产Prompt、分镜帧、视频Prompt与后期制作Skill。
 
 显式调用：
 
 ```text
 $ai-native-video-architect-zh
 ```
-
-调用后会先显示当前项目进度：已经完成什么、正在做什么、本轮交付什么、需要用户确认什么、下一步是什么。
 
 ## 完整链路
 
@@ -20,76 +18,60 @@ S00 创作需求
 → S04 剧本拆解
 → S05 视觉圣经
 → S06 资产计划
-→ S07 资产制作
-→ S08 资产审核
+→ S07 整批资产Prompt与资产制作
+→ S08 用户自审与资产确认
 → S09 分镜设计
-→ S10 分镜帧与提示词
+→ S10 整批分镜帧Prompt
 → S11 核心样片
-→ S12 批量制作与后期
+→ S12 整批视频生产与后期
 → S13 导演审查与交付
 ```
 
-## V3.3：可见进度与剧本优先
+## V4.0：剧本之后的Prompt工程全流程
 
-V3.3解决两个流程问题：
+V4.0在V3.3的剧本优先、资产先行和进度导航基础上，加入完整的生图与视频Prompt生产系统：
 
-1. 用户不知道当前做到哪一步；
-2. “资产先行”容易被误解成没有剧本就先做角色和场景。
+- 色调六轴与真实光源合同；
+- 面部身份板、三视图、发型、服装、手部与动作资产；
+- 场景主布局、无人物空镜和多机位；
+- 道具结构、尺寸、磨损和状态链；
+- 图片Prompt编译、图生图修改、局部修复、降噪与4K增强；
+- 分镜首帧、尾帧、九宫格、多人站位和硬切新机位；
+- 图生视频、首尾帧视频、人物动作、环境氛围和声音；
+- 固定、推拉摇移、跟拍、环绕、FPV、焦点转移等运镜；
+- 抽尾帧续拍、多角度防穿帮、台词修复和失败恢复。
 
-正确顺序是：
+## 阶段交互规则
 
-> 故事和剧本先确定；资产相对于正式分镜帧和视频生成先行。
+- S07一次性交付全部资产Prompt，不逐资产等待；
+- S09一次性设计完整镜头表；
+- S10一次性交付全部首尾帧Prompt；
+- S11一次性交付核心样片测试包；
+- S12一次性交付全片视频Prompt和后期方案；
+- 用户默认在外部工具中自行筛选和审核；
+- 用户回复“下一步”表示进入下一个阶段，不是同阶段下一张图；
+- 只有用户明确请求时才由助手逐图或逐段辅助审核。
 
-正式生产前先完成剧本或视觉脚本，并从中拆解角色、服装、场景、道具和状态变化。之后建立Visual Bible、资产台账、生产资产与审核门，再进入分镜设计、首尾帧和视频Prompt。
-
-## 项目进度提示
-
-默认格式：
+## Prompt工程模块
 
 ```text
-【项目进度｜S04/13 剧本拆解】
-已完成：✓ 创作需求 ✓ 创意方向 ✓ 故事方案 ✓ 剧本
-正在进行：提取角色、服装、场景、道具和状态变化
-本轮交付：剧本拆解表
-需要你确认：是否遗漏关键资产或状态
-下一步：S05 视觉圣经
+ai-native-video-architect-zh/prompt-engineering/
+├─ image-prompt-compiler.md
+├─ visual-style-color-light.md
+├─ asset-prompt-system.md
+├─ storyboard-frame-system.md
+├─ video-prompt-compiler.md
+├─ camera-movement-library.md
+└─ continuity-repair-system.md
 ```
 
-用户已有完整剧本、资产或分镜时，Skill会从对应阶段进入，不强制重走全部流程；但未经审核的资产不会直接标记为通过。
+剧本确认后的生产流程由：
 
-## 确认门
+```text
+controllers/post-script-production.md
+```
 
-- `STORY_DIRECTION_CONFIRMATION`
-- `SCRIPT_CONFIRMATION`
-- `ASSET_CONFIRMATION`
-- `STORYBOARD_CONFIRMATION`
-- `CORE_SAMPLE_GATE`
-
-未确认的方向、剧本、资产和分镜不会被虚假标记为完成。Core Sample未通过时不得批量生成。
-
-## 输出层级
-
-- `CREATIVE_BRIEF`
-- `DIRECTION_OPTIONS`
-- `STORY_TREATMENT`
-- `SCRIPT_PACKAGE`
-- `SCRIPT_BREAKDOWN`
-- `DEVELOPMENT_PACKAGE`
-- `ASSET_PLAN`
-- `ASSET_PACK`
-- `DIRECTOR_PACKAGE`
-- `DETAILED_STORYBOARD`
-- `PRODUCTION_PACK`
-
-## 核心文件
-
-- `config/progress-navigation.yaml`
-- `templates/progress-status.md`
-- `config/workflow.yaml`
-- `controllers/director-agent.md`
-- `controllers/asset-first-production.md`
-- `evals/asset-readiness-score.md`
-- `tests/progress-navigation-stress-tests.md`
+统一编排。
 
 ## 安装
 
