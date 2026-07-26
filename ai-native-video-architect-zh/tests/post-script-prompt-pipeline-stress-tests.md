@@ -1,4 +1,4 @@
-# Post-Script Prompt Pipeline Stress Tests V4.1
+# Post-Script Prompt Pipeline Stress Tests V4.2
 
 ## T01 SOURCE_MODULE_REQUIRED
 
@@ -56,11 +56,11 @@ PASS：静态图描述准确瞬间；视频描述时间过程。
 
 FAIL：一张静态图要求先走、再拿、再转身、再离开。
 
-## T09 END_FRAME_DECISION_REQUIRED
+## T09 END_FRAME_CONTRACT
 
 每个镜头进入视频阶段前。
 
-PASS：先回答最后0.5秒人物、手部、道具、摄影机、焦点和光线具体停在哪里。
+PASS：写清最后0.5秒人物、手部、道具、摄影机、焦点、灯光和下一镜继承。
 
 FAIL：只有首帧和动作，没有结束帧合同。
 
@@ -126,7 +126,7 @@ PASS：写明75毫米、景深、起始焦点、转移时间、最终焦点、�
 
 FAIL：只写“焦点转移到人物”。
 
-## T18 SHOT_LIGHTING_CONTRACT
+## T18 PER_SHOT_LIGHTING
 
 阴雨作坊内人物靠近左侧窗户。
 
@@ -176,7 +176,7 @@ PASS：抽取上一段最后稳定帧作为下一段唯一首帧，只继续剩�
 
 FAIL：续拍重新设计人物、服装、背景或光线。
 
-## T25 OCCLUSION_SPLIT
+## T25 OCCLUSION_SWITCH
 
 人物面部在手臂遮挡期间从状态D变为E。
 
@@ -190,7 +190,7 @@ PASS：硬切继承人物位置、动作百分比、左右手、道具、背景�
 
 FAIL：硬切后人物换方向、道具消失或光线反向。
 
-## T27 LAYERED_EFFECT
+## T27 LAYERED_COMPOSITE
 
 镜中人物呼气产生薄雾。
 
