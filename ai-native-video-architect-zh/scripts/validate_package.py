@@ -56,9 +56,6 @@ require_tokens("SKILL.md", [
     "抽尾帧续拍",
     "逐镜灯光合同",
     "END_FRAME_CONTRACT",
-    "CAMERA_CONTRACT",
-    "OPTICAL_CONTRACT",
-    "LIGHTING_CONTRACT",
     "下一步",
 ])
 
@@ -101,7 +98,7 @@ require_tokens("prompt-engineering/video-prompt-compiler.md", [
 require_tokens("templates/video-shot-prompt-block.md", [
     "【生成模式与选择理由】",
     "【画面空间与构图】",
-    "【时间轴动作】",
+    "【时长与时间轴】",
     "【摄影机合同】",
     "【焦点、景深与曝光】",
     "【逐镜灯光合同】",
@@ -123,6 +120,13 @@ require_tokens("evals/prompt-production-readiness-score.md", [
     "逐镜灯光合同",
     "单首帧",
     "结束帧合同",
+])
+
+require_tokens("tests/post-script-prompt-pipeline-stress-tests.md", [
+    "SINGLE_START_FRAME_BOUNDARY",
+    "END_FRAME_CONTRACT",
+    "PER_SHOT_LIGHTING",
+    "PROMPT_DETAIL_DENSITY",
 ])
 
 manifest_path = ROOT / "manifest.json"
