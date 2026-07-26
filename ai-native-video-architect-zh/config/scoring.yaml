@@ -1,4 +1,4 @@
-version: 4.0.0
+version: 4.1.0
 
 scores:
   concept:
@@ -13,21 +13,22 @@ scores:
     minimum: 75
     weights: {shot_purpose: 20, reveal_order: 20, movement_motivation: 20, visual_priority: 20, editability: 20}
 
-  asset_readiness:
-    minimum_for_storyboard_frames: 85
+  reference_readiness:
+    minimum_for_storyboard_frames: 80
     advisory_only_under_user_self_audit: true
-    weights: {character_identity: 20, costume_states: 15, environment_structure: 20, prop_identity_and_states: 15, frame_readiness: 15, continuity_and_versioning: 15}
+    weights: {main_character_identity: 25, main_environment_structure: 25, core_prop_or_special_state: 15, visual_rule_consistency: 20, frame_reusability: 15}
+    rule: 不以资产数量评分；少量参考能够稳定支持镜头即可通过。
 
   prompt_production_readiness:
     minimum: 80
-    conditional_for_core_sample: 70
+    conditional_for_representative_test: 70
     evaluator: evals/prompt-production-readiness-score.md
     weights:
-      script_traceability: 10
+      script_traceability: 15
+      source_template_fidelity: 10
       reference_roles: 10
       image_prompt_completeness: 15
       color_and_light: 10
-      asset_consistency: 15
       frame_state_design: 10
       video_prompt_completeness: 15
       continuity_and_transitions: 10
@@ -35,11 +36,11 @@ scores:
 
   production:
     minimum: 75
-    weights: {character_consistency: 15, environment_consistency: 15, prop_and_costume_consistency: 15, generation_feasibility: 20, continuity_and_editing: 20, fallback_readiness: 15}
+    weights: {character_consistency: 15, environment_consistency: 15, prop_and_state_consistency: 10, generation_feasibility: 25, continuity_and_editing: 20, fallback_readiness: 15}
 
   director_package:
     minimum: 85
-    weights: {concept: 16, visual_narrative: 16, cinematic_language: 12, emotional_arc: 12, asset_readiness_or_fit: 10, prompt_production: 14, production: 10, sound: 6, artistic_fit: 4}
+    weights: {concept: 16, visual_narrative: 16, cinematic_language: 12, emotional_arc: 12, reference_fit: 10, prompt_production: 14, production: 10, sound: 6, artistic_fit: 4}
 
 status_rules:
   pass: score >= minimum and no hard failure
@@ -47,6 +48,7 @@ status_rules:
   fail: hard failure exists or core layer cannot support requested format
 
 production_gates:
-  before_asset_prompts: [script confirmed, script breakdown completed, visual_bible established, asset_registry established]
-  before_storyboard_frames: [user confirmed generated assets, shot design confirmed]
-  before_batch_video_generation: [CORE_SAMPLE_GATE passed, character and environment tested, key props versioned, continuation strategy defined]
+  before_reference_prompts: [script confirmed or user supplied a complete script, visual rules sufficient for the requested images]
+  before_storyboard_frames: [minimum core references available or user explicitly accepts text-only generation, shot design confirmed]
+  before_video_prompts: [storyboard frame or other valid start image available, action and end state defined]
+  before_batch_video_generation: [at least one representative shot tested when project risk justifies testing, continuation strategy defined]
