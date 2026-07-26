@@ -1,51 +1,47 @@
-version: 4.0.0
+version: 4.1.0
 
 progress_navigation:
-  enabled_by_default: true
-  suppress_when:
-    - 用户明确要求不显示流程提示
-    - 仅回答不推进项目的简短事实问题
-
-  show_on:
-    - Skill首次调用
-    - 阶段切换
-    - 用户确认当前阶段完成
-    - 评估门失败或流程回退
+  enabled_by_default: false
+  enable_when:
+    - 用户明确要求按步骤推进
+    - 任务跨越多个交付阶段且需要说明当前状态
     - 用户询问当前进度
-    - 用户带着已有剧本、资产、分镜或视频中途进入
+    - 发生回退、阻塞或需要重新确认
+  suppress_when:
+    - 用户只需要单个Prompt或单个修改
+    - 用户已有成熟成果并明确要求直接交付
+    - 进度提示会打断当前主要结果
 
   semantic_contract:
-    NEXT_MEANS_NEXT_STAGE: true
+    DIRECT_ENTRY: true
+    NEXT_MEANS_NEXT_DELIVERABLE: true
     USER_SELF_AUDIT: true
-    BATCH_STAGE_OUTPUT: true
     rules:
-      - 当前阶段已整批交付后，用户说“下一步”表示进入下一个S阶段
-      - 只有用户明确说“下一个资产”“下一张”“逐项来”时才在同阶段内部推进
-      - S07、S09、S10、S11、S12默认按阶段整批交付
+      - 用户已有剧本、参考图、分镜或视频时直接从对应交付物开始
+      - 当前交付完整后，用户说“下一步”表示继续下一个相关交付物
+      - 只有用户明确说“下一个资产”“下一张”“逐项来”时才在当前交付内部推进
       - 用户默认在外部工具中自行生成、筛选和确认图片或视频
       - 只有用户明确请求审核时才进入ASSISTED_AUDIT
 
   display_contract:
     title: 项目进度
     required_fields:
-      - current_stage
-      - current_goal
+      - current_work
       - completed_outputs
       - current_deliverable
-      - user_decision_if_needed
-      - next_stage
+      - next_deliverable
     optional_fields:
       - entry_reason
-      - gate_status
+      - confirmation_needed
       - blockers
       - repair_target
     rules:
-      - 进度提示短于本轮主要交付
+      - 进度提示必须短于主要交付
       - 不展示内部推理
-      - 不把未交付或未经用户确认的阶段标记完成
-      - 用户已有成熟成果时从对应阶段进入
-      - 没有确认需求时写“无，本轮可直接继续”
+      - 不把未交付或未经用户确认的内容标记完成
+      - 用户已有成熟成果时直接从对应位置进入
       - 不要求用户逐资产或逐镜头返回
+      - 阶段编号仅作为内部定位，可不显示
 
   status_symbols:
     complete: "✓"
@@ -57,122 +53,107 @@ progress_navigation:
 
   stages:
     - id: S00
-      index: 0
       name: 创作需求
-      objective: 确认题材、情绪、形式、主角、时长、画幅、工具与禁忌
+      internal_only: true
+      objective: 补齐当前创作真正缺失的题材、人物、时长、形式和禁忌
       deliverable: CREATIVE_BRIEF
       next: S01
 
     - id: S01
-      index: 1
       name: 创意方向
-      objective: 提供并比较2至3个差异明显的创作方向
+      internal_only: true
+      objective: 在用户需要探索时提供差异明显的方向
       deliverable: DIRECTION_OPTIONS
       gate: STORY_DIRECTION_CONFIRMATION
       next: S02
 
     - id: S02
-      index: 2
       name: 故事方案
-      objective: 建立人物任务、核心事件或视觉规则、递进与最后图像
-      deliverable: STORY_TREATMENT_OR_VISUAL_TREATMENT
+      internal_only: true
+      objective: 建立人物任务、核心事件或规则、递进、选择、高潮和最后图像
+      deliverable: STORY_TREATMENT
       next: S03
 
     - id: S03
-      index: 3
       name: 剧本或视觉脚本
-      objective: 完成可供生产拆解的完整文本
+      internal_only: true
+      objective: 完成可供AI图片和视频制作的完整文本
       deliverable: SCRIPT_PACKAGE
       gate: SCRIPT_CONFIRMATION
       next: S04
 
     - id: S04
-      index: 4
-      name: 剧本拆解
-      objective: 提取角色、服装、场景、道具、状态链和生产风险
+      name: 剧本制作拆解
+      internal_only: true
+      objective: 提取主要人物、场景、道具、动作、光线、声音和风险
       deliverable: SCRIPT_BREAKDOWN
       next: S05
 
     - id: S05
-      index: 5
-      name: 视觉圣经
-      objective: 锁定色调六轴、光源、材质、摄影、表演、声音和禁止风格
-      deliverable: VISUAL_BIBLE
+      name: 视觉设定
+      internal_only: true
+      objective: 锁定风格、色调、真实光源、材质、摄影和禁止风格
+      deliverable: VISUAL_RULESET
       next: S06
 
     - id: S06
-      index: 6
-      name: 资产计划
-      objective: 建立Asset Registry、ID、版本、Prompt类型、依赖和生产顺序
-      deliverable: ASSET_PLAN
+      name: 最小核心参考计划
+      internal_only: true
+      objective: 只规划开始分镜真正需要的角色、场景、核心道具和特殊状态参考
+      deliverable: MINIMUM_REFERENCE_PLAN
       next: S07
 
     - id: S07
-      index: 7
-      name: 整批资产Prompt与资产制作
-      objective: 一次性交付全部角色、场景、道具和状态资产完整Prompt
-      deliverable: ASSET_PROMPT_PACK
-      execution: 用户在外部生图软件中批量生成
-      completion_evidence:
-        - 用户明确表示资产生成和自行筛选完成
-        - 用户回复“下一步”“资产通过”或同义表达
+      name: 核心参考图Prompt
+      internal_only: true
+      objective: 一次性交付全部必要核心参考图Prompt，不扩张无用资产
+      deliverable: REFERENCE_PROMPT_PACK
+      execution: 用户在外部生图软件中生成
       next: S08
 
     - id: S08
-      index: 8
-      name: 用户自审与资产确认
-      objective: 默认由用户确认选定资产版本；按需调用辅助审核
-      deliverable: ASSET_CONFIRMATION_RECORD
+      name: 用户参考图确认
+      internal_only: true
+      objective: 用户自行选定可用参考图，按需由助手辅助审核
+      deliverable: REFERENCE_CONFIRMATION_RECORD
       gate: ASSET_CONFIRMATION
       default_mode: USER_SELF_AUDIT
-      optional_mode: ASSISTED_AUDIT
-      rules:
-        - 不要求用户逐张上传
-        - 不默认由助手评分候选图
-        - 用户说“下一步”即记录ASSET_CONFIRMATION为PASSED并进入S09
       next: S09
 
     - id: S09
-      index: 9
       name: 分镜设计
-      objective: 一次性确定整片镜头目的、动作、景别、机位、运镜、时长和连接
+      internal_only: true
+      objective: 一次性确定整片镜头目的、动作、景别、机位、时长和连接
       deliverable: SHOT_LIST_AND_CAMERA_PLAN
       gate: STORYBOARD_CONFIRMATION
       next: S10
 
     - id: S10
-      index: 10
-      name: 整批分镜帧Prompt
-      objective: 一次性交付全部镜头首帧、尾帧、修改Prompt和连续性锚点
+      name: 分镜帧Prompt
+      internal_only: true
+      objective: 按镜头顺序交付静态分镜Prompt，只有必要镜头增加尾帧
       deliverable: FRAME_PROMPT_PACK
-      completion_evidence:
-        - 全部镜头Prompt已交付
-        - 用户回复“下一步”或确认分镜帧方案
       next: S11
 
     - id: S11
-      index: 11
-      name: 核心样片
-      objective: 验证核心角色、主场景、道具、状态变化、运镜和衔接
+      name: 代表性样片
+      internal_only: true
+      objective: 默认测试一个普通镜头，项目需要时再加一个高风险镜头
       deliverable: CORE_SAMPLE_PACK
       gate: CORE_SAMPLE_GATE
       default_mode: USER_SELF_AUDIT
-      rules:
-        - 一次性交付3至5个关键样片视频Prompt
-        - 用户回复“下一步”表示CORE_SAMPLE_GATE通过
-        - 只有用户明确要求时才辅助审查样片
       next: S12
 
     - id: S12
-      index: 12
-      name: 整批视频生产与后期
-      objective: 一次性交付全片视频Prompt、运镜、续拍、硬切、修复、剪辑和声音方案
+      name: 视频Prompt与后期
+      internal_only: true
+      objective: 交付整片视频Prompt、续拍、硬切、修复、剪辑和声音方案
       deliverable: VIDEO_PROMPT_PACK_AND_PRODUCTION_PACK
       next: S13
 
     - id: S13
-      index: 13
-      name: 导演审查与交付
+      name: 审查与交付
+      internal_only: true
       objective: 检查剧本保真、连续性、声画、色调、结尾和交付版本
       deliverable: DIRECTOR_REVIEW_AND_DELIVERY
       next: null
@@ -180,36 +161,32 @@ progress_navigation:
   entry_inference:
     - when: 用户只有模糊想法
       enter: S00
-    - when: 用户已有明确方向但无完整方案
+    - when: 用户已有明确故事方向
       enter: S02
-    - when: 用户已有完整故事但无剧本
+    - when: 用户已有故事但无完整剧本
       enter: S03
     - when: 用户提供已确认剧本或视觉脚本
       enter: S04
-    - when: 用户已有拆解和视觉圣经
-      enter: S06
-    - when: 用户已有资产Prompt但尚未生成资产
+    - when: 用户只需要角色、场景或道具Prompt
       enter: S07
-    - when: 用户已有角色场景道具参考图
-      enter: S08
-      action: 采用USER_SELF_AUDIT；用户要求时再辅助审核
-    - when: 用户已有镜头表但无稳定资产
-      enter: S06
-    - when: 用户已有批准资产和完整镜头表
+    - when: 用户已有参考图
+      enter: S09
+    - when: 用户已有镜头表
       enter: S10
-    - when: 用户已有批准分镜帧
-      enter: S11
-    - when: 用户已有样片并确认可用
+    - when: 用户已有分镜帧
       enter: S12
+    - when: 用户只需要单个图片Prompt
+      enter: DIRECT_IMAGE_PROMPT
+    - when: 用户只需要单个视频Prompt
+      enter: DIRECT_VIDEO_PROMPT
     - when: 用户要求DIAGNOSE
       enter: DIAGNOSE
     - when: 用户要求TRANSFORM
       enter: TRANSFORM
 
   compact_display_example: |
-    【项目进度｜S07/13 整批资产Prompt与资产制作】
-    已完成：✓ 剧本 ✓ 剧本拆解 ✓ 视觉圣经 ✓ 资产计划
-    正在进行：编译全部角色、场景、道具和状态Prompt
-    本轮交付：完整资产Prompt包
-    需要你确认：在外部工具生成并自行筛选后回复“下一步”
-    下一步：S09 分镜设计
+    【项目进度】
+    已完成：✓ 剧本 ✓ 视觉设定
+    正在进行：核心参考图Prompt
+    本轮交付：角色、场景和核心道具参考Prompt
+    下一项：分镜设计
