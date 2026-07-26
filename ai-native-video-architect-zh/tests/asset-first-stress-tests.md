@@ -1,37 +1,34 @@
-# Asset-First Production Stress Tests
+# Reference-First Production Stress Tests V4.1
 
 1. 用户只说“写个古装剧本”，Agent直接决定题材、主角、关系和结尾 → FAIL + INTAKE_SKIPPED。
-2. Agent用选择与填空收集类型、情绪、形式、人物、结尾、时长画幅和禁忌，再给三个不同方向 → PASS + STRUCTURED_INTAKE。
-3. 用户已经给出无对白、60秒、古装东方美学，Agent再次询问相同问题 → FAIL + DUPLICATE_QUESTION。
-4. 只有艺术角色海报，人物角度被裁切，却宣称三视图已锁定 → FAIL + ART_BOARD_NOT_TURNAROUND。
-5. 同一角色正面、严格侧面和背面保持脸、发型、服装和比例一致 → PASS + PRODUCTION_TURNAROUND。
-6. 三视图侧面实际为四分之三角度，背面人物回头 → FAIL + TURNAROUND_INVALID。
-7. 面部身份板保留毛孔、不对称、发际线和不同角度骨相 → PASS + FACE_IDENTITY_READY。
-8. 服装只写“逐渐变红”，没有COST_A/B/C和产生变化的镜头 → FAIL + COSTUME_STATE_MISSING。
-9. 服装状态链只改变袖口染色和灰烬位置，结构、材质和鞋履保持一致 → PASS + COSTUME_STATE_CHAIN。
-10. 场景每个镜头重新生成，没有无人物空镜和主布局 → FAIL + ENVIRONMENT_UNLOCKED。
-11. 同一场景有宽景空镜、平面布局和六个机位，门窗柱体与主光方向一致 → PASS + ENVIRONMENT_ASSET_READY。
-12. 多机位图中同一扇门在左侧、右侧和背景随机移动 → FAIL + ENVIRONMENT_LAYOUT_DRIFT。
-13. 核心道具只写“古旧铜镜”，没有尺寸、结构、铜绿分布和状态 → FAIL + PROP_UNDERSPECIFIED。
-14. 道具三视图、人体比例、握持方式、独特裂纹和状态链完整 → PASS + PROP_ASSET_READY。
-15. 道具从右手无动作跳到左手 → FAIL + PROP_HAND_CONTINUITY。
-16. 每个镜头重复整套人物外貌和场景设定，却没有引用资产ID → FAIL + ASSET_REINVENTION。
-17. 镜头引用CHAR_C01、COST_C01_B、SCENE_S02、PROP_P01_C并只描述当前状态 → PASS + ASSET_REFERENCED。
-18. 图片Prompt负责构图和静态状态，视频Prompt负责一个动作和摄影机运动 → PASS + PROMPT_LAYER_SEPARATION。
-19. 视频Prompt被大量外貌与风格词淹没，没有明确动作终点 → FAIL + VIDEO_PROMPT_NO_MOTION_CONTRACT。
-20. 服装变色、道具燃烧和花苞开放使用首尾帧，并锁定不变资产 → PASS + FRAME_PAIR_READY。
-21. 首尾帧之间人物脸、场景结构和光线方向一起变化 → FAIL + FRAME_PAIR_IDENTITY_BREAK。
-22. 复杂奇观拆为稳定人物底板、场景底板、效果层和灰烬层 → PASS + LAYERED_COMPOSITE。
-23. 一个镜头同时要求人物奔跑、换装、建筑坍塌和360度环绕 → FAIL + SHOT_OVERLOAD。
-24. 上一段尾帧被登记为下一段唯一首帧，只继续剩余动作 → PASS + TAIL_FRAME_CONTINUATION。
-25. 尾帧续拍重新设计人物服装和背景 → FAIL + CONTINUATION_RESET。
-26. 硬切改变景别，但保留动作完成百分比、左右手、地标和主光方向 → PASS + HARD_CUT_CONTINUITY。
-27. 硬切后人物突然换方向、道具消失、背景变成另一处 → FAIL + HARD_CUT_BREAK。
-28. 未做Core Sample就批量生成40个镜头 → FAIL + PREMATURE_BATCH。
-29. 一名角色、一个场景、一个道具、两个机位和一个首尾帧测试通过后扩展 → PASS + BATCH_GATE_PASSED。
-30. Asset Readiness为72分，系统允许做Core Sample但禁止批量生产 → PASS + CONDITIONAL_ASSET_GATE。
-31. Asset Readiness低于70仍声称可直接生产 → FAIL + ASSET_GATE_BYPASSED。
-32. 已批准资产被直接覆盖且无法回滚 → FAIL + VERSION_OVERWRITE。
-33. 新尝试递增版本号并保留选中版本 → PASS + VERSION_SAFE。
-34. 为降低难度删除关键人物选择 → FAIL并升级TRANSFORM。
-35. 稳定替代仅改变景别、合成方式或动作拆分，人物选择和结尾不变 → PASS + ADAPTATION_FIDELITY。
+2. 用户已给出题材、主角、时长和禁忌，Agent再次询问相同问题 → FAIL + DUPLICATE_QUESTION。
+3. 用户已有完整剧本，Agent强制从创意方向重新开始 → FAIL + DIRECT_ENTRY_IGNORED。
+4. Skill完成剧本后能够继续输出参考图、分镜和视频Prompt → PASS + UNIFIED_SKILL_CONTINUATION。
+5. 60秒、双角色、单场景短片默认拆成30项资产 → FAIL + ASSET_OVERBUILD。
+6. 同一项目只规划两张角色综合板、一张场景空镜、一张核心道具板和一张特殊状态板 → PASS + MINIMUM_REFERENCES。
+7. 综合角色板同时包含面部、正侧背全身、服装和核心道具，信息清楚无遮挡 → PASS + COMPOSITE_CHARACTER_BOARD。
+8. 综合角色板排版华丽但人物重叠、头脚裁切、侧面不是90度 → FAIL + REFERENCE_UNUSABLE。
+9. 标准三视图保持同一人物、同一服装和比例，侧面严格90度，背面不回头 → PASS + TURNAROUND_READY。
+10. 尚未发生换脸就预先制作面部、发型、服装、手部、鞋履和动作板 → FAIL + PREMATURE_CONTROLLED_MODE。
+11. 实际出现持续换脸后补一张独立面部参考 → PASS + TARGETED_ESCALATION。
+12. 每个主要场景默认一张无人物空镜，锁定布局、固定家具和主光方向 → PASS + EMPTY_PLATE_READY。
+13. 单场景短片预先生成宽景、左右、侧后、高低机位六张空镜 → FAIL + PREMATURE_MULTI_ANGLE_ASSETS。
+14. 后续分镜使用场景空镜、角色参考和上一张满意分镜改变机位 → PASS + FRAME_INHERITANCE。
+15. 核心道具多镜头重复出现且承担反转，生成一张结构与状态综合板 → PASS + CORE_PROP_REFERENCE。
+16. 一次性背景小工具全部单独建三视图 → FAIL + PROP_OVERBUILD。
+17. 多个状态可以在同一状态板中清楚展示，却拆成多个独立文件增加成本 → FAIL + STATE_FILE_OVERBUILD。
+18. 图片Prompt负责静态瞬间，视频Prompt负责一个动作和摄影机运动 → PASS + PROMPT_LAYER_SEPARATION。
+19. 一张图片Prompt要求先走、再拿、再转身、再离开 → FAIL + IMAGE_ACTION_OVERLOAD。
+20. 五秒视频只有一个主要动作和一种主要运镜 → PASS + MOTION_LIMIT。
+21. 每个镜头无论是否需要都强制首帧和尾帧 → FAIL + FORCED_FRAME_PAIR。
+22. 明确状态变化或动作终点需要精确继承时使用尾帧 → PASS + FRAME_PAIR_ON_DEMAND。
+23. 上一段稳定尾帧作为下一段唯一首帧，只继续剩余动作 → PASS + TAIL_FRAME_CONTINUATION。
+24. 硬切改变景别但保留动作进度、左右手、道具和背景地标 → PASS + HARD_CUT_CONTINUITY。
+25. 手部错误优先局部修复，不推翻角色、场景和整张分镜 → PASS + LOCAL_REPAIR_FIRST。
+26. 一个局部错误导致整个项目升级完整资产库 → FAIL + GLOBAL_ESCALATION_OVERREACH。
+27. 普通项目先测试一个代表性镜头，确有特殊风险时再加一个高风险镜头 → PASS + REPRESENTATIVE_TEST。
+28. 固定要求3至5个样片、角色和场景全部跨角度后才能继续 → FAIL + EXCESSIVE_SAMPLE_GATE。
+29. 用户提供Prompt资料，Agent先读取原文并保留模板与负面约束 → PASS + SOURCE_FIDELITY。
+30. Agent把自行扩写的六视角身份板声称为资料包原模板 → FAIL + SOURCE_MISREPRESENTATION。
+31. 文件名使用中文角色名、资产类型和版本号，内部ID不强制写入标题 → PASS + READABLE_NAMING。
+32. 为降低制作难度删除关键人物选择或改变结尾 → FAIL + ADAPTATION_FIDELITY_BREAK。
