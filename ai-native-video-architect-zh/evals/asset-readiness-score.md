@@ -1,80 +1,87 @@
-# Asset Readiness Score
+# Asset Readiness Score V4.0
 
-## 适用性
+## 使用方式
 
-当任务要求角色一致、场景一致、道具一致、具体分镜、首尾帧、图生视频、批量生成或正式Production Pack时，适用性为HIGH。
+本评分器用于两种情况：
 
-概念探索、纯文字剧本或一次性无角色环境镜头可为LOW或NOT_APPLICABLE。
+1. 用户明确请求助手审核资产；
+2. S11核心样片失败，需要定位身份、结构或状态问题。
+
+默认流程为`USER_SELF_AUDIT`，不得在用户没有请求时强迫逐图评分或逐张上传。
 
 ## 评分
 
-总分100。
+总分100：
 
-### 1. Character Identity — 20
+- Character Identity：20；
+- Costume and Character States：15；
+- Environment Structure and Multi-Angle：20；
+- Prop Identity and State Chain：15；
+- Frame Readiness：15；
+- Continuity and Versioning：15。
 
-- 正、侧、背是否同一人物；
-- 面部不同角度是否保持年龄、骨相和辨识特征；
-- 发型和身体比例是否清楚；
-- 是否避免过度美颜和AI标准脸。
+## 检查项
 
-### 2. Costume and Character States — 15
+### Character Identity
 
-- 服装内外层、袖口、下摆和鞋履是否清楚；
-- 剧情变化是否建立状态版本；
-- 磨损、湿度、伤痕和污渍是否有连续性。
+- 正、严格侧面、背面是否为同一人物；
+- 年龄、骨相、发际线和稳定标记是否一致；
+- 是否避免网红脸、塑料皮肤和随机美化。
 
-### 3. Environment Structure — 20
+### Costume and States
 
-- 是否有主布局、出入口和固定地标；
-- 是否有无人物空镜；
-- 多机位是否对应同一空间；
-- 主光、时间和天气是否稳定。
+- 内外层、领口、袖口、下摆和鞋履是否清楚；
+- 污渍、湿度、破损和剧情状态是否有固定版本。
 
-### 4. Prop Identity and States — 15
+### Environment
 
-- 核心道具是否有尺寸、结构、材质和独特标记；
-- 是否有合理持有和使用逻辑；
-- 状态变化是否建立版本与产生镜头。
+- 主布局、出入口、固定地标和轴线是否清楚；
+- 无人物空镜与多机位是否对应同一空间；
+- 时间、天气、主光方向和色调六轴是否稳定。
 
-### 5. Frame Readiness — 15
+### Props
 
-- 关键镜头是否定义首帧和结束状态；
-- 需要精确变化的镜头是否准备尾帧；
-- 首帧是否为动作留下空间；
-- 视频Prompt是否只承担运动。
+- 尺寸、人体比例、结构、材料和独特标记是否稳定；
+- 左右手、握持、放置和状态链是否清楚。
 
-### 6. Continuity and Versioning — 15
+### Frame Readiness
 
-- 是否有资产ID与版本；
-- 镜头是否引用明确资产；
-- 左右手、方向、道具位置和动作进度是否可追踪；
-- 已批准版本是否避免被覆盖。
+- 需要的首帧与尾帧是否定义准确静态瞬间；
+- 复杂变化是否拆为首尾帧、硬切或分层；
+- 是否为动作留下空间。
+
+### Continuity and Versioning
+
+- 资产ID、版本、文件命名和批准状态是否可追踪；
+- 镜头是否引用批准资产；
+- 动作完成百分比、视线、站位和背景地标是否可继承。
 
 ## 状态
 
-- 85—100：PASS，可进入正式分镜帧或视频生成；
-- 70—84：CONDITIONAL，可做Core Sample，不可批量生产；
-- 0—69：FAIL，返回资产设计；
+- 85—100：PASS；
+- 70—84：CONDITIONAL，可继续做Core Sample；
+- 0—69：FAIL；
 - 任一硬失败存在：FAIL。
+
+评分结果用于帮助用户定位问题，不取代用户最终选择。
 
 ## 硬失败
 
-- AF1：三视图明显为不同人物；
-- AF2：核心服装在资产板中结构或颜色已漂移；
-- AF3：同一场景不同机位无法对应同一布局；
-- AF4：核心道具在不同图中尺寸、结构或独特标记改变；
-- AF5：作品依赖状态变化，却没有状态时间线；
-- AF6：没有资产参考却批量生成多镜头并声称角色/场景已锁定；
-- AF7：每个镜头重新描述资产，未引用固定版本；
-- AF8：首尾帧之间改变了不允许变化的人物、场景或道具；
-- AF9：艺术角色板被误当成唯一生产三视图，关键结构被裁切或遮挡；
-- AF10：已批准资产被无版本号覆盖，无法回滚。
+- 三视图明显不是同一人物；
+- 核心服装结构或颜色在资产板中已经漂移；
+- 同一场景多机位无法对应同一布局；
+- 核心道具尺寸、结构或独特标记改变；
+- 故事依赖状态变化却没有状态链；
+- 每镜重新发明人物、场景或道具；
+- 首尾帧改变禁止变化项；
+- 已批准版本无编号覆盖，无法回滚。
 
 ## 输出
 
 ```yaml
 status: PASS | CONDITIONAL | FAIL
 applicability: HIGH | MEDIUM | LOW | NOT_APPLICABLE
+review_mode: ASSISTED_AUDIT
 score:
 dimensions:
   character_identity:
@@ -86,6 +93,5 @@ dimensions:
 hard_failures: []
 evidence: []
 must_fix: []
-ready_for_storyboard_frames: true | false
-ready_for_video_generation: true | false
+user_final_decision_required: true
 ```
