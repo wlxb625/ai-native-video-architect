@@ -1,4 +1,4 @@
-version: 4.1.0
+version: 4.2.0
 
 modes:
   story_director:
@@ -7,11 +7,11 @@ modes:
     required_modules: [core/story.md]
     optional_modules: [controllers/high-concept-scifi.md, controllers/visual-narrative.md, controllers/camera-language.md, controllers/post-script-production.md]
     constraints:
-      - 剧本确认后可直接继续下游Prompt生产
+      - 剧本确认后可继续下游Prompt生产
       - 已有剧本时不强制重走创作阶段
 
   visual_director:
-    description: 通过动作、空间、物件和声画变化让观众推断故事。
+    description: 通过动作、空间、物件、灯光和声画变化让观众推断故事。
     triggers: [视觉叙事, 无对白, 意识流, 氛围, 超现实, visual, cinematic]
     required_modules: [controllers/visual-narrative.md, controllers/camera-language.md]
     optional_modules: [controllers/style-reference.md, controllers/sound-design.md, controllers/post-script-production.md]
@@ -28,7 +28,7 @@ modes:
       - 高成本镜头先做代表性测试
 
   experimental_director:
-    description: 形式、感知、重复、声音和图像关系优先。
+    description: 形式、感知、重复、声音、灯光和图像关系优先。
     triggers: [实验, 抽象, 梦境, 诗性, 非线性, experimental, abstract]
     required_modules: [controllers/visual-narrative.md, controllers/camera-language.md]
     optional_modules: [controllers/style-reference.md, controllers/sound-design.md, controllers/post-script-production.md]
@@ -37,8 +37,8 @@ modes:
       - 可使用完整视觉脚本代替传统对白剧本
 
   production_director:
-    description: 把已确认剧本、参考图或分镜转成生图Prompt、分镜帧Prompt、视频Prompt、衔接和后期方案。
-    triggers: [制作, 分镜, prompt, 提示词, 生图, 图生视频, 角色一致, 场景一致, 首尾帧, 运镜, 续拍, 硬切, ComfyUI, Kling, Runway, Veo, Sora]
+    description: 把已确认剧本、参考图或分镜转成核心参考图Prompt、分镜帧Prompt和导演级视频Prompt，控制摄影机、逐镜灯光、焦点、尾帧、连续性和后期。
+    triggers: [制作, 分镜, prompt, 提示词, 生图, 图生视频, 首尾帧, 运镜, 打光, 灯光, 焦点, 景深, 续拍, 硬切, ComfyUI, Kling, Runway, Veo, Sora]
     required_modules:
       - controllers/post-script-production.md
       - prompt-engineering/image-prompt-compiler.md
@@ -57,17 +57,19 @@ modes:
     constraints:
       - 已有剧本时直接进入剧本后制作
       - 普通短片默认使用最少必要参考图
-      - 用户默认自行在外部工具生成和筛选
-      - 只有生成失败或用户明确要求时才升级细分资产
+      - 每镜必须选择合适生成模式并建立END_FRAME_CONTRACT
+      - 下一镜依赖精确尾态时不得只使用无控制单首帧
+      - 每镜视频Prompt必须包含逐镜灯光、焦点景深、曝光和摄影机终点
+      - 只有生成失败或用户明确要求时才升级细分参考资产
 
 routing:
   preserve_existing_operation_modes: [CREATE, TRANSFORM, DIAGNOSE, ADAPT]
   selection_rules:
-    - 先判断用户已有想法、大纲、剧本、参考图、分镜图或视频片段
+    - 先判断用户已有想法、大纲、剧本、参考图、镜头表、分镜图或视频片段
     - 直接从用户当前需要的交付物开始
-    - 先选择操作模式再选择导演模式
-    - 剧本由本Skill完成后可继续完成生图、分镜和视频Prompt
+    - 剧本由本Skill完成后可继续完成生图、分镜和导演级视频Prompt
     - 用户已有成熟成果时不重复前置工作
+    - 普通短片默认使用最少必要参考图
     - 进度显示仅在用户要求、任务跨度较大或需要说明状态时启用
     - 用户说下一步表示继续下一个相关交付物
     - 只有用户明确请求时才逐图辅助审核
