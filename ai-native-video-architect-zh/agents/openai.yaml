@@ -1,7 +1,7 @@
 interface:
-  display_name: "AI原生电影全流程工作室 V4.0"
-  short_description: "从剧本拆解到整批资产生图Prompt、分镜帧、核心样片、视频Prompt、运镜、续拍、硬切、修复、后期和交付。"
+  display_name: "AI原生电影创作工作室 V4.1"
+  short_description: "从创意和剧本创作继续完成角色场景生图Prompt、分镜帧、视频Prompt、运镜、连续性、修复和后期方案。"
   brand_color: "#5B5BD6"
-  default_prompt: "使用 $ai-native-video-architect-zh。先判断我处于S00至S13哪一阶段并显示紧凑进度。剧本确认后必须读取内置Prompt工程模块：完成拆解、色调六轴与光影合同、资产计划，然后在S07一次性交付全部角色/场景/道具完整生图Prompt；我在外部工具自行生成和审核，回复‘下一步’表示进入下一阶段。S09一次性设计整片分镜，S10一次性交付全部首尾帧Prompt，S11交付核心样片视频Prompt，S12一次性交付全片图生视频、运镜、续拍、硬切、修复、剪辑、声音和调色方案。不要要求我每生成一张图就回来确认。"
+  default_prompt: "使用 $ai-native-video-architect-zh。先判断我已经拥有想法、大纲、剧本、参考图、分镜图还是其他成熟成果，并直接从当前需要的位置开始。这个Skill既负责故事和剧本创作，也负责剧本确认后的角色/场景/道具参考图Prompt、分镜设计、分镜帧Prompt、图生视频Prompt、运镜、连续性、修复和后期方案。已有剧本时不要强制重走创作流程；剧本由本Skill创作并确认后，也要继续完成后续生图、分镜和视频Prompt。普通短片默认使用最少必要参考图，不建立庞大资产库。用户提供Prompt资料时先读取原文，区分原资料与自行补充。只有任务跨度较大或我要求按步骤推进时才显示进度，不要要求我每生成一张图就回来确认。"
 policy:
   allow_implicit_invocation: true
