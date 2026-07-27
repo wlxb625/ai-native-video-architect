@@ -12,6 +12,7 @@ progress:
 
 post_script_prompt_engineering:
   orchestrator: controllers/post-script-production.md
+  production_execution_controller: controllers/production-execution.md
   required_modules:
     - prompt-engineering/image-prompt-compiler.md
     - prompt-engineering/visual-style-color-light.md
@@ -20,12 +21,16 @@ post_script_prompt_engineering:
     - prompt-engineering/video-prompt-compiler.md
     - prompt-engineering/camera-movement-library.md
     - prompt-engineering/continuity-repair-system.md
+    - evals/shot-output-acceptance-score.md
+    - templates/production-runbook.md
   default_review_mode: USER_SELF_AUDIT
   default_reference_strategy: MINIMUM_VIABLE_REFERENCES
   default_character_reference: SINGLE_IDENTITY_ANCHOR
   expand_assets_only_after_failure_or_shot_need: true
   asset_prompt_contract: EXECUTABLE_INTEGRATED_POSITIVE_PROMPT
   video_quality_contract: DIRECTOR_GRADE_VIDEO_PROMPT
+  production_status_protocol: [DESIGN_READY, PROMPT_READY, REFERENCE_READY, SAMPLE_VALIDATED, BATCH_GENERATION_READY, EDIT_READY, DELIVERY_READY]
+  actual_media_required_for: [SAMPLE_VALIDATED, EDIT_READY, DELIVERY_READY]
 
 workflow:
   S00_creative_brief:
@@ -57,7 +62,7 @@ workflow:
     required_for_narrative: [scene_heading, location_and_time, characters, observable_action, dialogue_if_any, props, scene_exit_state]
     required_for_visual_script: [subject, initial_state, observable_action, environment_change, prop_change, emotional_change, final_state, next_scene_connection]
     gate: SCRIPT_CONFIRMATION
-    rule: 剧本由本Skill完成并确认后，可继续调用同一Skill完成后续Prompt生产。
+    rule: 剧本由本Skill完成并确认后，可继续调用同一Skill完成后续生产。
     output: SCRIPT_PACKAGE
     next: S04
 
@@ -65,8 +70,8 @@ workflow:
     name: 剧本制作拆解
     internal_stage: true
     modules: [controllers/post-script-production.md]
-    required: [main_characters, visible_costume_and_state_changes, main_environments, core_props, primary_actions, light_and_time_changes, sound_and_edit_connections, indispensable_generation_risks]
-    traceability_rule: 每项参考图和镜头要求必须来自剧本或明确导演需求。
+    required: [main_characters, visible_costume_and_state_changes, main_environments, core_props, primary_actions, light_and_time_changes, sound_and_edit_connections, indispensable_generation_risks, inherited_end_states, post_only_elements]
+    traceability_rule: 每项参考图、镜头和后期要求必须来自剧本或明确导演需求。
     output: SCRIPT_BREAKDOWN
     next: S05
 
@@ -89,6 +94,7 @@ workflow:
       - special_state_reference_only_when_plot_requires_precise_change
       - optional_full_body_face_hand_or_multiview_based_on_need
       - on_demand_assets_list
+      - post_only_elements_list
     rule: 普通短片优先少量核心参考；不默认密集多视图，也不机械固定每个角色多张。
     output: MINIMUM_REFERENCE_PLAN
     next: S07
@@ -97,16 +103,7 @@ workflow:
     name: 核心参考图Prompt
     internal_stage: true
     modules: [prompt-engineering/image-prompt-compiler.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/asset-prompt-system.md, templates/asset-prompt-block.md]
-    required_per_reference:
-      - name
-      - filename
-      - asset_form_and_reason
-      - source_template
-      - reference_inputs_and_roles
-      - internal_director_check
-      - integrated_positive_prompt
-      - negative_prompt
-      - output_rules
+    required_per_reference: [name, filename, asset_form_and_reason, source_template, reference_inputs_and_roles, internal_director_check, integrated_positive_prompt, negative_prompt, output_rules]
     integrated_prompt_rule: 摄影机、光学、灯光、色彩和材质必须融合进最终正向Prompt；不得要求用户自行拼接外部合同。
     character_form_rule: 默认单张身份主参考；全身、手部、三视图和综合板按镜头需要、模型能力或用户资料模板选择。
     batch_rule: 一次性交付全部必要核心参考图Prompt，不为完整而增加无用资产。
@@ -114,14 +111,23 @@ workflow:
     output: REFERENCE_PROMPT_PACK
     next: S08
 
-  S08_user_reference_confirmation:
-    name: 用户参考图确认
+  S08_canonical_reference_selection:
+    name: 唯一母参考选择
     internal_stage: true
+    modules: [controllers/production-execution.md, templates/production-runbook.md]
     default_mode: USER_SELF_AUDIT
     optional_mode: ASSISTED_AUDIT
     gate: ASSET_CONFIRMATION
+    required:
+      - one_selected_canonical_version_per_long_lived_character_environment_prop_or_state
+      - selected_file_exists_before_reference_ready
+      - locked_features_and_known_limitations
+      - rejected_candidate_reasons_when_reviewed
+      - no_mixing_of_similar_character_candidates
+    candidate_guidance: 外部成本允许时每项核心参考建议2至4个候选，但不是硬性配额。
+    status_rule: Prompt完成但没有真实选定图时只能标记PROMPT_READY；选定唯一母参考后才能标记REFERENCE_READY。
     user_confirmation_phrases: [下一步, 已经选好了, 参考图完成, 进入分镜]
-    output: REFERENCE_CONFIRMATION_RECORD
+    output: CANONICAL_REFERENCE_RECORD
     next: S09
 
   S09_shot_design:
@@ -134,50 +140,73 @@ workflow:
     next: S10
 
   S10_storyboard_frame_prompt_pack:
-    name: 分镜帧Prompt
+    name: 分镜首尾帧与控制架构
     internal_stage: true
     modules: [prompt-engineering/image-prompt-compiler.md, prompt-engineering/storyboard-frame-system.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/continuity-repair-system.md, templates/storyboard-frame-prompt-block.md]
     required_per_shot: [reference_images, inherited_state, static_start_moment, foreground_midground_background, camera_and_lens, focus_depth_and_exposure, per_shot_lighting, integrated_positive_prompt, negative_prompt, output_rules, end_frame_contract, continuity_anchors]
     integrated_prompt_rule: 摄影、焦点、曝光、逐镜灯光和材质必须写入最终分镜正向Prompt。
-    conditional_per_shot: [prebuilt_end_frame, image_edit_prompt, local_repair_prompt, stable_alternative]
+    conditional_per_shot: [prebuilt_end_frame, bridge_frame, image_edit_prompt, local_repair_prompt, stable_alternative]
     generation_order:
-      first_frame: 角色参考 + 场景空镜 + 道具参考 + 当前镜头要求
-      later_frames: 角色参考 + 场景空镜 + 上一张满意分镜 + 当前镜头要求
+      first_frame: 唯一角色母参考 + 母场景 + 道具参考 + 当前镜头要求
+      later_frames: 唯一母参考 + 上一张已选定控制帧 + 当前镜头要求
     tail_frame_rule: 下一镜依赖准确姿势、视线、手部、道具、焦点或构图，或当前动作终点承担信息时，预生成尾帧；否则仍须建立END_FRAME_CONTRACT并抽取稳定尾帧。
     output: FRAME_PROMPT_PACK
     next: S11
 
   S11_representative_test:
-    name: 代表性样片测试
+    name: 代表性样片门槛
     internal_stage: true
-    modules: [prompt-engineering/video-prompt-compiler.md, prompt-engineering/camera-movement-library.md, prompt-engineering/continuity-repair-system.md, templates/video-shot-prompt-block.md]
-    required: [one_representative_normal_shot]
-    optional: [one_high_risk_shot_when_needed]
-    checks: [end_frame_reachability, identity_and_prop_continuity, camera_endpoint, focus_stability, lighting_stability, editability]
+    modules: [controllers/production-execution.md, prompt-engineering/video-prompt-compiler.md, prompt-engineering/camera-movement-library.md, prompt-engineering/continuity-repair-system.md, templates/video-shot-prompt-block.md, evals/shot-output-acceptance-score.md]
+    required: [one_representative_normal_shot_from_the_actual_film]
+    optional: [one_real_high_risk_shot_when_project_contains_mirror_transformation_complex_hands_sync_occlusion_or_complex_camera]
+    checks: [start_frame_fidelity, end_frame_reachability, identity_and_prop_continuity, action_physics, camera_endpoint, focus_stability, lighting_stability, editability]
+    real_media_required_for_pass: true
+    no_media_status: SAMPLE_PLAN_READY
+    pass_status: SAMPLE_VALIDATED
+    batch_gate_rule: 普通样片和必要高风险样片存在硬失败时不得批量生成整片。
     default_review_mode: USER_SELF_AUDIT
     gate: CORE_SAMPLE_GATE
-    output: CORE_SAMPLE_PACK
+    output: CORE_SAMPLE_PACK_AND_ACCEPTANCE_RECORD
     next: S12
 
-  S12_video_prompt_and_post:
-    name: 导演级视频Prompt与后期
+  S12_video_prompt_and_production_runbook:
+    name: 导演级视频Prompt与生产执行包
     internal_stage: true
-    modules: [prompt-engineering/video-prompt-compiler.md, prompt-engineering/camera-movement-library.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/continuity-repair-system.md, templates/video-shot-prompt-block.md]
+    modules: [controllers/production-execution.md, prompt-engineering/video-prompt-compiler.md, prompt-engineering/camera-movement-library.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/continuity-repair-system.md, templates/video-shot-prompt-block.md, templates/production-runbook.md]
     required_per_shot: [generation_mode, input_control_frames, scene_space_and_composition, start_state, timeline_action_beats, action_physics, camera_contract, optical_contract, lighting_contract, material_and_environment_motion, end_frame_contract, next_shot_inheritance, sound, preserve, negative_constraints]
     generation_modes: [SINGLE_START_FRAME, FIRST_LAST_FRAME, TAIL_FRAME_CONTINUATION, TWO_SEGMENT_HARD_CUT, OCCLUSION_SWITCH, LAYERED_COMPOSITE]
     single_start_frame_rule: 只允许低幅度运动且下一镜不依赖准确尾态；仍须抽取符合END_FRAME_CONTRACT的稳定尾帧。
-    project_outputs: [video_prompt_pack, control_frame_plan, continuation_and_hard_cut_plan, editing_plan, sound_plan, color_and_lighting_continuity, version_naming]
+    project_outputs:
+      - video_prompt_pack
+      - current_production_status_and_evidence
+      - canonical_reference_record
+      - representative_test_record
+      - control_frame_dependency_graph
+      - shot_generation_queue
+      - candidate_version_and_naming_protocol
+      - shot_ledger
+      - failure_layer_diagnosis
+      - asset_upgrade_log
+      - continuation_and_hard_cut_plan
+      - editing_plan
+      - sound_plan
+      - color_and_lighting_continuity
+      - post_text_and_composite_plan
     repair_order: [simplify_prompt, repair_start_or_end_frame, simplify_action, fixed_camera, shorten_clip, add_control_frame_or_tail_continuation, occlusion_switch_or_layered_composite, add_new_reference_last]
-    output: VIDEO_PROMPT_PACK_AND_PRODUCTION_PACK
+    output: VIDEO_PROMPT_PACK_AND_PRODUCTION_RUNBOOK
     next: S13
 
-  S13_review_and_delivery:
-    name: 审查与交付
+  S13_actual_output_review_and_delivery:
+    name: 实际镜头验收、剪辑与交付
     internal_stage: true
-    checks: [script_fidelity, shot_purpose, reference_economy, integrated_prompt_completeness, character_environment_prop_continuity, end_frame_reachability, camera_focus_and_lighting_quality, sound_and_editing, final_image, delivery_completeness]
-    result_protocol: PASS | CONDITIONAL | FAIL
-    iteration_rule: 只重做薄弱层。
-    output: DIRECTOR_REVIEW_AND_DELIVERY
+    modules: [controllers/production-execution.md, evals/shot-output-acceptance-score.md, templates/production-runbook.md]
+    actual_media_required_for: [SAMPLE_VALIDATED, EDIT_READY, DELIVERY_READY]
+    checks: [script_fidelity, shot_purpose, reference_economy, integrated_prompt_completeness, character_environment_prop_continuity, start_and_end_frame_fidelity, action_physics, camera_focus_and_lighting_quality, editability, sound_and_post, final_image, delivery_completeness]
+    failure_layers: [REFERENCE_FAILURE, CONTROL_FRAME_FAILURE, PROMPT_FAILURE, MODEL_CAPABILITY_FAILURE, POST_PRODUCTION_FAILURE]
+    result_protocol: PLAN_ONLY | PASS | CONDITIONAL | FAIL
+    status_protocol: [DESIGN_READY, PROMPT_READY, REFERENCE_READY, SAMPLE_VALIDATED, BATCH_GENERATION_READY, EDIT_READY, DELIVERY_READY]
+    iteration_rule: 只重做薄弱层，未通过验收的片段不得进入最终时间线。
+    output: SHOT_ACCEPTANCE_REPORT_AND_DELIVERY_PACKAGE
     next: null
 
 entry_inference:
@@ -186,9 +215,12 @@ entry_inference:
   story_without_script: S03
   approved_script_or_visual_script: S04
   user_needs_reference_prompts: S07
-  user_has_reference_images: S09
+  user_has_reference_images: S08
+  user_has_canonical_references: S09
   user_has_shot_list: S10
-  user_has_storyboard_frames: S12
+  user_has_storyboard_frames: S11
+  user_has_video_prompts_but_no_media: S12
+  user_has_generated_clips: S13
   user_needs_single_image_prompt: DIRECT_IMAGE_PROMPT
   user_needs_single_video_prompt: DIRECT_VIDEO_PROMPT
   diagnosis_only: DIAGNOSE
@@ -203,9 +235,12 @@ output_levels:
   visual_rules: VISUAL_RULESET
   reference_plan: MINIMUM_REFERENCE_PLAN
   reference_prompts: REFERENCE_PROMPT_PACK
+  canonical_references: CANONICAL_REFERENCE_RECORD
   shot_design: SHOT_LIST_AND_CAMERA_PLAN
   frame_prompts: FRAME_PROMPT_PACK
-  representative_test: CORE_SAMPLE_PACK
+  representative_test: CORE_SAMPLE_PACK_AND_ACCEPTANCE_RECORD
   video_prompts: VIDEO_PROMPT_PACK
-  production: PRODUCTION_PACK
-  delivery: DIRECTOR_REVIEW_AND_DELIVERY
+  production: PRODUCTION_RUNBOOK
+  shot_review: SHOT_ACCEPTANCE_REPORT
+  editing: EDIT_READY_PACKAGE
+  delivery: DELIVERY_PACKAGE
