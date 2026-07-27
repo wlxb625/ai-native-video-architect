@@ -17,24 +17,24 @@ scores:
     minimum_for_storyboard_frames: 80
     advisory_only_under_user_self_audit: true
     weights: {main_character_identity: 25, main_environment_structure: 25, core_prop_or_special_state: 15, visual_rule_consistency: 20, frame_reusability: 15}
-    rule: 不以资产数量评分；少量参考能够稳定支持镜头即可通过。
+    rule: 不以资产数量或多视图数量评分；单张身份主参考能够稳定支持镜头即可通过，三视图和综合板按需使用。
 
   prompt_production_readiness:
     minimum: 85
     conditional_for_representative_test: 75
     evaluator: evals/prompt-production-readiness-score.md
     weights:
-      script_traceability: 10
-      source_template_fidelity: 8
-      reference_roles: 8
-      image_prompt_completeness: 10
-      frame_and_end_state_design: 12
-      generation_mode_selection: 10
-      camera_and_optics: 12
+      script_traceability: 8
+      source_template_fidelity: 7
+      reference_form_and_roles: 8
+      integrated_executable_image_prompt: 15
+      frame_and_end_state_design: 10
+      generation_mode_selection: 8
+      camera_and_optics: 10
       per_shot_lighting: 12
       video_timeline_and_physics: 10
-      continuity_and_transitions: 5
-      repair_and_fallback: 3
+      continuity_and_transitions: 7
+      repair_and_fallback: 5
 
   production:
     minimum: 80
@@ -58,8 +58,14 @@ status_rules:
   fail: hard failure exists or core layer cannot support requested format
 
 production_gates:
-  before_reference_prompts: [script confirmed or user supplied a complete script, visual rules sufficient for the requested images]
-  before_storyboard_frames: [minimum core references available or user explicitly accepts text-only generation, shot design confirmed]
+  before_reference_prompts:
+    - script confirmed or user supplied a complete script
+    - visual rules sufficient for the requested images
+    - character reference form selected by shot need and model capability
+    - final positive prompt will integrate camera lighting and material requirements
+  before_storyboard_frames:
+    - minimum core references available or user explicitly accepts text-only generation
+    - shot design confirmed
   before_video_prompts:
     - storyboard frame or other valid start image available
     - generation mode selected per shot
@@ -72,6 +78,9 @@ production_gates:
     - continuation strategy defined
 
 hard_failures:
+  - camera_lighting_or_material_only_outside_final_positive_prompt
+  - user_must_assemble_multiple_prompt_fragments
+  - dense_multiview_or_fixed_multi_asset_character_plan_without_need
   - single_start_frame_used_when_next_shot_requires_exact_tail_state
   - missing_end_frame_contract
   - missing_camera_endpoint
