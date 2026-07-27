@@ -22,7 +22,9 @@ post_script_prompt_engineering:
     - prompt-engineering/continuity-repair-system.md
   default_review_mode: USER_SELF_AUDIT
   default_reference_strategy: MINIMUM_VIABLE_REFERENCES
-  expand_assets_only_after_failure: true
+  default_character_reference: SINGLE_IDENTITY_ANCHOR
+  expand_assets_only_after_failure_or_shot_need: true
+  asset_prompt_contract: EXECUTABLE_INTEGRATED_POSITIVE_PROMPT
   video_quality_contract: DIRECTOR_GRADE_VIDEO_PROMPT
 
 workflow:
@@ -80,8 +82,14 @@ workflow:
     name: 最小核心参考计划
     internal_stage: true
     modules: [prompt-engineering/asset-prompt-system.md]
-    required: [one_character_board_or_turnaround_per_main_character, one_empty_plate_per_main_environment, core_prop_reference_only_when_cross_shot_stability_is_required, special_state_board_only_when_plot_requires_precise_change, on_demand_assets_list]
-    rule: 普通短片优先少量核心参考；细分资产默认按需升级。
+    required:
+      - one_identity_anchor_per_main_character_unless_shot_need_requires_more
+      - one_empty_plate_per_main_environment
+      - core_prop_reference_only_when_cross_shot_stability_is_required
+      - special_state_reference_only_when_plot_requires_precise_change
+      - optional_full_body_face_hand_or_multiview_based_on_need
+      - on_demand_assets_list
+    rule: 普通短片优先少量核心参考；不默认密集多视图，也不机械固定每个角色多张。
     output: MINIMUM_REFERENCE_PLAN
     next: S07
 
@@ -89,7 +97,18 @@ workflow:
     name: 核心参考图Prompt
     internal_stage: true
     modules: [prompt-engineering/image-prompt-compiler.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/asset-prompt-system.md, templates/asset-prompt-block.md]
-    required_per_reference: [name, filename, source_template, reference_inputs_and_roles, positive_prompt, negative_constraints, output_rules]
+    required_per_reference:
+      - name
+      - filename
+      - asset_form_and_reason
+      - source_template
+      - reference_inputs_and_roles
+      - internal_director_check
+      - integrated_positive_prompt
+      - negative_prompt
+      - output_rules
+    integrated_prompt_rule: 摄影机、光学、灯光、色彩和材质必须融合进最终正向Prompt；不得要求用户自行拼接外部合同。
+    character_form_rule: 默认单张身份主参考；全身、手部、三视图和综合板按镜头需要、模型能力或用户资料模板选择。
     batch_rule: 一次性交付全部必要核心参考图Prompt，不为完整而增加无用资产。
     source_rule: 用户提供Prompt资料时优先使用原模板，并区分自行补充内容。
     output: REFERENCE_PROMPT_PACK
@@ -118,7 +137,8 @@ workflow:
     name: 分镜帧Prompt
     internal_stage: true
     modules: [prompt-engineering/image-prompt-compiler.md, prompt-engineering/storyboard-frame-system.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/continuity-repair-system.md, templates/storyboard-frame-prompt-block.md]
-    required_per_shot: [reference_images, inherited_state, static_start_moment, foreground_midground_background, camera_and_lens, focus_depth_and_exposure, per_shot_lighting, positive_prompt, negative_prompt, output_rules, end_frame_contract, continuity_anchors]
+    required_per_shot: [reference_images, inherited_state, static_start_moment, foreground_midground_background, camera_and_lens, focus_depth_and_exposure, per_shot_lighting, integrated_positive_prompt, negative_prompt, output_rules, end_frame_contract, continuity_anchors]
+    integrated_prompt_rule: 摄影、焦点、曝光、逐镜灯光和材质必须写入最终分镜正向Prompt。
     conditional_per_shot: [prebuilt_end_frame, image_edit_prompt, local_repair_prompt, stable_alternative]
     generation_order:
       first_frame: 角色参考 + 场景空镜 + 道具参考 + 当前镜头要求
@@ -154,7 +174,7 @@ workflow:
   S13_review_and_delivery:
     name: 审查与交付
     internal_stage: true
-    checks: [script_fidelity, shot_purpose, reference_economy, character_environment_prop_continuity, end_frame_reachability, camera_focus_and_lighting_quality, sound_and_editing, final_image, delivery_completeness]
+    checks: [script_fidelity, shot_purpose, reference_economy, integrated_prompt_completeness, character_environment_prop_continuity, end_frame_reachability, camera_focus_and_lighting_quality, sound_and_editing, final_image, delivery_completeness]
     result_protocol: PASS | CONDITIONAL | FAIL
     iteration_rule: 只重做薄弱层。
     output: DIRECTOR_REVIEW_AND_DELIVERY
