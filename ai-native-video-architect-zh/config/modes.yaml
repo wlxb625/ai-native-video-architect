@@ -37,7 +37,7 @@ modes:
       - 可使用完整视觉脚本代替传统对白剧本
 
   production_director:
-    description: 把已确认剧本、参考图或分镜转成核心参考图Prompt、分镜帧Prompt和导演级视频Prompt，控制摄影机、逐镜灯光、焦点、尾帧、连续性和后期。
+    description: 把已确认剧本、参考图或分镜转成可直接复制的核心参考图Prompt、分镜帧Prompt和导演级视频Prompt，控制摄影机、逐镜灯光、焦点、尾帧、连续性和后期。
     triggers: [制作, 分镜, prompt, 提示词, 生图, 图生视频, 首尾帧, 运镜, 打光, 灯光, 焦点, 景深, 续拍, 硬切, ComfyUI, Kling, Runway, Veo, Sora]
     required_modules:
       - controllers/post-script-production.md
@@ -57,6 +57,8 @@ modes:
     constraints:
       - 已有剧本时直接进入剧本后制作
       - 普通短片默认使用最少必要参考图
+      - 角色默认先判断单张身份主参考是否足够，不默认密集多视图或固定多张
+      - 资产和分镜的摄影灯光材质必须融合进最终正向Prompt，不要求用户自行拼接
       - 每镜必须选择合适生成模式并建立END_FRAME_CONTRACT
       - 下一镜依赖精确尾态时不得只使用无控制单首帧
       - 每镜视频Prompt必须包含逐镜灯光、焦点景深、曝光和摄影机终点
@@ -70,6 +72,7 @@ routing:
     - 剧本由本Skill完成后可继续完成生图、分镜和导演级视频Prompt
     - 用户已有成熟成果时不重复前置工作
     - 普通短片默认使用最少必要参考图
+    - 最终正向Prompt必须可以直接复制执行
     - 进度显示仅在用户要求、任务跨度较大或需要说明状态时启用
     - 用户说下一步表示继续下一个相关交付物
     - 只有用户明确请求时才逐图辅助审核
