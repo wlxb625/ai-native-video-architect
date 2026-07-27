@@ -7,7 +7,7 @@
     "AGENT.md", "README.md", "SKILL.md", "agents/openai.yaml",
     "audit/cross-file-consistency-audit.md",
     "config/modes.yaml", "config/progress-navigation.yaml", "config/scoring.yaml", "config/workflow.yaml",
-    "controllers/ai-production.md", "controllers/asset-first-production.md", "controllers/post-script-production.md",
+    "controllers/ai-production.md", "controllers/asset-first-production.md", "controllers/post-script-production.md", "controllers/production-execution.md",
     "controllers/camera-language.md", "controllers/comedy.md", "controllers/detailed-storyboard.md",
     "controllers/director-agent.md", "controllers/emotion.md", "controllers/high-concept-scifi.md",
     "controllers/horror.md", "controllers/production-management.md", "controllers/realism.md",
@@ -18,7 +18,7 @@
     "evals/asset-readiness-score.md", "evals/camera-language-score.md",
     "evals/character-agency-check.md", "evals/dialogue-check.md", "evals/director-package-score.md",
     "evals/drama-score.md", "evals/high-concept-score.md", "evals/mechanism-overuse-check.md",
-    "evals/production-score.md", "evals/prompt-production-readiness-score.md", "evals/propagation-score.md",
+    "evals/production-score.md", "evals/prompt-production-readiness-score.md", "evals/shot-output-acceptance-score.md", "evals/propagation-score.md",
     "evals/semantic-hard-gate.md", "evals/transform-fidelity-score.md", "evals/twist-legality-check.md",
     "evals/visual-narrative-score.md",
     "modes/adapt.md", "modes/create.md", "modes/diagnose.md", "modes/transform.md",
@@ -35,11 +35,11 @@
     "templates/camera-shot-plan.md", "templates/character-asset-pack.md", "templates/concept-brief.md",
     "templates/detailed-storyboard.md", "templates/diagnosis-report.md", "templates/director-package.md",
     "templates/environment-asset-pack.md", "templates/frame-generation-pack.md",
-    "templates/production-pack.md", "templates/progress-status.md", "templates/prop-asset-pack.md",
+    "templates/production-pack.md", "templates/production-runbook.md", "templates/progress-status.md", "templates/prop-asset-pack.md",
     "templates/standard-script.md", "templates/storyboard-frame-prompt-block.md",
     "templates/transform-contract.md", "templates/video-shot-prompt-block.md",
     "templates/visual-bible.md", "templates/visual-narrative-board.md",
-    "tests/asset-first-stress-tests.md", "tests/post-script-prompt-pipeline-stress-tests.md",
+    "tests/asset-first-stress-tests.md", "tests/post-script-prompt-pipeline-stress-tests.md", "tests/production-execution-stress-tests.md",
     "tests/progress-navigation-stress-tests.md", "tests/stress-test-suite.md"
   ],
   "operation_modes": ["CREATE", "TRANSFORM", "DIAGNOSE", "ADAPT"],
@@ -47,7 +47,7 @@
   "paths": ["COMMERCIAL", "LITERARY", "EXPERIMENTAL", "HYBRID"],
   "specialized_controllers": [
     "HIGH_CONCEPT_SCIFI", "VISUAL_NARRATIVE", "CAMERA_LANGUAGE", "ASSET_FIRST_PRODUCTION",
-    "POST_SCRIPT_PRODUCTION", "IMAGE_PROMPT_COMPILER", "ASSET_PROMPT_SYSTEM",
+    "POST_SCRIPT_PRODUCTION", "PRODUCTION_EXECUTION", "IMAGE_PROMPT_COMPILER", "ASSET_PROMPT_SYSTEM",
     "STORYBOARD_FRAME_SYSTEM", "VIDEO_PROMPT_COMPILER", "CAMERA_MOVEMENT_LIBRARY",
     "CONTINUITY_REPAIR_SYSTEM", "DETAILED_STORYBOARD", "AI_PRODUCTION",
     "STYLE_REFERENCE", "VIRALITY", "PRODUCTION_MANAGEMENT", "SOUND_DESIGN", "DIRECTOR_AGENT"
@@ -55,15 +55,16 @@
   "output_levels": [
     "CREATIVE_BRIEF", "DIRECTION_OPTIONS", "STORY_TREATMENT", "SCRIPT_PACKAGE",
     "SCRIPT_BREAKDOWN", "VISUAL_RULESET", "DEVELOPMENT_PACKAGE",
-    "MINIMUM_REFERENCE_PLAN", "ASSET_PLAN", "REFERENCE_PROMPT_PACK", "ASSET_PROMPT_PACK",
-    "ASSET_PACK", "SHOT_LIST_AND_CAMERA_PLAN", "FRAME_PROMPT_PACK", "CORE_SAMPLE_PACK",
-    "VIDEO_PROMPT_PACK", "REPAIR_PACK", "POST_PRODUCTION_PLAN", "PRODUCTION_PACK",
-    "DIRECTOR_REVIEW_AND_DELIVERY"
+    "MINIMUM_REFERENCE_PLAN", "REFERENCE_PROMPT_PACK", "CANONICAL_REFERENCE_RECORD",
+    "SHOT_LIST_AND_CAMERA_PLAN", "FRAME_PROMPT_PACK", "CORE_SAMPLE_PACK_AND_ACCEPTANCE_RECORD",
+    "VIDEO_PROMPT_PACK", "PRODUCTION_RUNBOOK", "SHOT_ACCEPTANCE_REPORT", "EDIT_READY_PACKAGE", "DELIVERY_PACKAGE"
   ],
   "video_generation_modes": ["SINGLE_START_FRAME", "FIRST_LAST_FRAME", "TAIL_FRAME_CONTINUATION", "TWO_SEGMENT_HARD_CUT", "OCCLUSION_SWITCH", "LAYERED_COMPOSITE"],
   "video_contracts": ["CAMERA_CONTRACT", "OPTICAL_CONTRACT", "LIGHTING_CONTRACT", "END_FRAME_CONTRACT"],
+  "production_status_protocol": ["DESIGN_READY", "PROMPT_READY", "REFERENCE_READY", "SAMPLE_VALIDATED", "BATCH_GENERATION_READY", "EDIT_READY", "DELIVERY_READY"],
+  "failure_layers": ["REFERENCE_FAILURE", "CONTROL_FRAME_FAILURE", "PROMPT_FAILURE", "MODEL_CAPABILITY_FAILURE", "POST_PRODUCTION_FAILURE"],
   "progress_stages": ["S00", "S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S11", "S12", "S13"],
   "confirmation_gates": ["STORY_DIRECTION_CONFIRMATION", "SCRIPT_CONFIRMATION", "ASSET_CONFIRMATION", "STORYBOARD_CONFIRMATION", "CORE_SAMPLE_GATE"],
   "interaction_contracts": ["DIRECT_ENTRY", "USER_SELF_AUDIT", "NEXT_MEANS_NEXT_DELIVERABLE"],
-  "status_protocol": ["PASS", "CONDITIONAL", "FAIL"]
+  "status_protocol": ["PLAN_ONLY", "PASS", "CONDITIONAL", "FAIL"]
 }
