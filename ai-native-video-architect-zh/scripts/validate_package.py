@@ -51,6 +51,9 @@ require_tokens("SKILL.md", [
     "AI Native Film Studio V4.2",
     "剧本确认后，同一个Skill应继续完成下游工作",
     "最小核心参考",
+    "独立身份主参考图",
+    "资产Prompt双层合同",
+    "摄影、灯光和材质没有写入最终正向Prompt",
     "单首帧图生视频",
     "首尾帧视频",
     "抽尾帧续拍",
@@ -62,6 +65,8 @@ require_tokens("SKILL.md", [
 require_tokens("AGENT.md", [
     "AI Native Film Studio V4.2",
     "用户当前已经有什么成熟成果",
+    "资产Prompt双层合同",
+    "独立身份主参考图",
     "导演级视频Prompt合同",
     "结束帧合同",
     "逐镜灯光合同",
@@ -73,6 +78,10 @@ for rel in ["config/modes.yaml", "config/workflow.yaml", "config/scoring.yaml", 
 
 require_tokens("config/workflow.yaml", [
     "MINIMUM_VIABLE_REFERENCES",
+    "SINGLE_IDENTITY_ANCHOR",
+    "EXECUTABLE_INTEGRATED_POSITIVE_PROMPT",
+    "integrated_positive_prompt",
+    "用户自行拼接外部合同",
     "DIRECTOR_GRADE_VIDEO_PROMPT",
     "end_frame_contract",
     "camera_contract",
@@ -81,6 +90,32 @@ require_tokens("config/workflow.yaml", [
     "SINGLE_START_FRAME",
     "FIRST_LAST_FRAME",
     "OCCLUSION_SWITCH",
+])
+
+require_tokens("prompt-engineering/asset-prompt-system.md", [
+    "先做最少参考",
+    "导演控制层",
+    "模型执行层",
+    "完整正向Prompt",
+    "单张独立身份主参考图",
+    "标准人物三视图",
+    "综合角色板",
+    "场景空镜",
+    "道具三视图",
+    "LEAN（默认）",
+    "CONTROLLED（失败后升级）",
+    "用户资料包原生模板",
+    "下一张分镜使用",
+    "要求用户自行把多个字段拼成可用Prompt",
+])
+
+require_tokens("templates/asset-prompt-block.md", [
+    "默认使用轻量资产块",
+    "【内部导演检查】",
+    "【完整正向Prompt｜直接复制】",
+    "摄影机、焦段、机位、角度、焦点和景深",
+    "不能只写人物或场景描述",
+    "默认先生成一张独立的角色身份主参考",
 ])
 
 require_tokens("prompt-engineering/video-prompt-compiler.md", [
@@ -115,6 +150,10 @@ require_tokens("templates/storyboard-frame-prompt-block.md", [
 ])
 
 require_tokens("evals/prompt-production-readiness-score.md", [
+    "参考形式与职责",
+    "图片Prompt执行完整度",
+    "最终正向Prompt",
+    "要求用户把多个合同或统一前缀自行拼接",
     "生成模式与尾帧控制",
     "摄影机与光学合同",
     "逐镜灯光合同",
@@ -127,6 +166,11 @@ require_tokens("tests/post-script-prompt-pipeline-stress-tests.md", [
     "END_FRAME_CONTRACT",
     "PER_SHOT_LIGHTING",
     "PROMPT_DETAIL_DENSITY",
+    "EXECUTABLE_POSITIVE_PROMPT",
+    "NO_USER_SIDE_PROMPT_ASSEMBLY",
+    "CHARACTER_REFERENCE_FORM",
+    "MULTIVIEW_ON_DEMAND",
+    "STORYBOARD_INTEGRATED_PROMPT",
 ])
 
 manifest_path = ROOT / "manifest.json"
