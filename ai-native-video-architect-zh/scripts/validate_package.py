@@ -97,7 +97,7 @@ require_tokens("prompt-engineering/asset-prompt-system.md", [
     "导演控制层",
     "模型执行层",
     "完整正向Prompt",
-    "单张独立身份主参考图",
+    "一张独立身份主参考图",
     "标准人物三视图",
     "综合角色板",
     "场景空镜",
