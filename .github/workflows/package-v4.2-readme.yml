@@ -1,6 +1,8 @@
 name: Package Refreshed AI Native Video Architect Skill
 
 on:
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
