@@ -1,0 +1,62 @@
+name: Materialize V4.4 package
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.migration/v44/**'
+      - '.github/workflows/materialize-v44.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Rebuild and verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .migration/v44/chunk-*.b64 > /tmp/v44-package.b64
+          base64 --decode /tmp/v44-package.b64 > /tmp/v44-package.zip
+          echo 'b0d1eba6060bf7c37d42d320dde315c101f690b5320e571a91f5ea9b7dbcc1db  /tmp/v44-package.zip' | sha256sum --check
+          rm -rf /tmp/v44-unpacked
+          mkdir -p /tmp/v44-unpacked
+          unzip -q /tmp/v44-package.zip -d /tmp/v44-unpacked
+          test -f /tmp/v44-unpacked/ai-native-video-architect-zh/SKILL.md
+          test -f /tmp/v44-unpacked/ai-native-video-architect-zh/scripts/validate_package.py
+
+      - name: Replace Skill source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf ai-native-video-architect-zh
+          cp -a /tmp/v44-unpacked/ai-native-video-architect-zh ./ai-native-video-architect-zh
+          cp /tmp/v44-unpacked/ai-native-video-architect-zh/README.md ./README.md
+          rm -rf .migration
+          rm -f .github/workflows/materialize-v44.yml
+          python ai-native-video-architect-zh/scripts/validate_package.py
+          python ai-native-video-architect-zh/scripts/verify_contract.py
+          python ai-native-video-architect-zh/tests/test_meaning_gate.py
+
+      - name: Commit materialized source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Publish V4.4 visual prompt density revision'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
