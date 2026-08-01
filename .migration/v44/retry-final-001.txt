@@ -1,0 +1,1 @@
+Run the self-repairing V4.4 source materialization and require full archive verification.
