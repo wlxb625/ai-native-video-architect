@@ -1,0 +1,22 @@
+{
+  "old_s03_schema_rejected": true,
+  "old_evaluation_schema_rejected": true,
+  "regression_gate_decision": "FAIL",
+  "reasons": [
+    "drama_score score 72 < 80",
+    "hard failure in climax_force_check: ['CLIMAX_IS_ONLY_CLOSING_RITUAL', 'VALUES_NOT_COMPARABLE', 'NO_ESCALATING_PRESSURE', 'OUTCOME_PREDETERMINED', 'EMOTIONAL_RESOLUTION_MISLABELED_AS_CLIMAX']",
+    "climax_force_check status FAIL != PASS",
+    "climax_force_check score 51 < 80",
+    "climax_force_check.pressure_and_escalation 8 < 15",
+    "climax_force_check.value_collision 7 < 15",
+    "climax_force_check.audience_uncertainty 6 < 14",
+    "climax_force_check.audiovisual_peak_and_state_change 14 < 15"
+  ],
+  "must_fix": [
+    "重建高潮前的升级链和真正两难，使行动改变现实关系而非只清除象征物。",
+    "增加至少两次同一压力的升级",
+    "让保留与放弃分别保护两个真实价值",
+    "使高潮结果在行动前不可预定",
+    "让高潮后出现新的现实或关系后果，再进入结尾"
+  ]
+}

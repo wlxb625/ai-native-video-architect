@@ -1,0 +1,395 @@
+contract_version: '0.5'
+initial_stage: S00
+stages:
+  S00:
+    name: 创作需求结构化
+    source_stage: S00_creative_brief
+    instruction_files:
+    - SKILL.md
+    - modes/create.md
+    - templates/concept-brief.md
+    output_schema: schemas/s00-brief.schema.json
+    next_on_submit: S01
+  S01:
+    name: 多候选故事方向与概念筛选
+    source_stage: S01_story_direction
+    instruction_files:
+    - core/story.md
+    - modes/create.md
+    - templates/concept-brief.md
+    - config/scoring.yaml
+    - evals/character-age-fit-check.md
+    - evals/meaning-and-thematic-necessity-check.md
+    output_schema: schemas/s01-concepts.schema.json
+    deterministic_checks:
+    - candidate_count
+    - diversity
+    - history_fingerprint
+    gate: G01_CONCEPT
+  S02:
+    name: 故事方案与节拍表
+    source_stage: S02_story_treatment
+    instruction_files:
+    - core/story.md
+    - controllers/visual-narrative.md
+    - templates/beat-sheet.md
+    - evals/drama-score.md
+    - evals/visual-narrative-score.md
+    - evals/character-agency-check.md
+    - evals/mechanism-overuse-check.md
+    - evals/climax-force-check.md
+    - evals/character-age-fit-check.md
+    - evals/meaning-and-thematic-necessity-check.md
+    output_schema: schemas/s02-treatment.schema.json
+    gate: G02_TREATMENT
+  S03:
+    name: 正式剧本或视觉脚本
+    source_stage: S03_script_or_visual_script
+    instruction_files:
+    - core/story.md
+    - core/dialogue.md
+    - templates/standard-script.md
+    - evals/drama-score.md
+    - evals/visual-narrative-score.md
+    - evals/character-agency-check.md
+    - evals/mechanism-overuse-check.md
+    - evals/dialogue-check.md
+    - evals/twist-legality-check.md
+    - evals/climax-force-check.md
+    - evals/character-age-fit-check.md
+    - evals/meaning-and-thematic-necessity-check.md
+    output_schema: schemas/s03-script.schema.json
+    gate: G03_SCRIPT
+  S04:
+    name: 剧本制作拆解
+    source_stage: S04_script_breakdown
+    instruction_files:
+    - config/workflow.yaml
+    - controllers/post-script-production.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S05
+    required_coverage_keys:
+    - characters
+    - visible_states
+    - locations
+    - props
+    - actions
+    - light_changes
+    - sound_connections
+    - inherited_end_states
+    - post_only_elements
+    - character_age_and_life_stage
+    content_must_be_nonempty: true
+  S05:
+    name: 视觉圣经
+    source_stage: S05_visual_bible
+    instruction_files:
+    - templates/visual-bible.md
+    - controllers/style-reference.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S06
+    required_coverage_keys:
+    - character_lock
+    - environment_lock
+    - prop_lock
+    - aspect_ratio
+    - style
+    - colors
+    - real_light_sources
+    - materials
+    - camera_tendency
+    - forbidden_drift
+    - age_and_life_stage_lock
+    content_must_be_nonempty: true
+  S06:
+    name: 规划资产表
+    source_stage: S06_planned_reference_registry
+    instruction_files:
+    - prompt-engineering/asset-prompt-system.md
+    - templates/asset-registry.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S07
+    required_coverage_keys:
+    - character_identity_anchors
+    - main_environment_empty_plates
+    - necessary_prop_references
+    - necessary_state_references
+    - used_by_shots_placeholder
+    - age_identity_anchors
+    content_must_be_nonempty: true
+  S07:
+    name: 基础资产Prompt
+    source_stage: S07_reference_prompt_pack
+    instruction_files:
+    - prompt-engineering/asset-prompt-system.md
+    - templates/asset-prompt-block.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S08
+    required_coverage_keys:
+    - asset_id
+    - purpose
+    - used_by_shots
+    - positive_prompt
+    - negative_prompt
+    - output_rules
+    content_must_be_nonempty: true
+  S08:
+    name: 完整Shot表
+    source_stage: S08_complete_shot_list
+    instruction_files:
+    - controllers/camera-director.md
+    - controllers/lighting-director.md
+    - controllers/performance-director.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S09
+    required_coverage_keys:
+    - shot_id
+    - scene_id
+    - narrative_purpose
+    - visual_description
+    - duration
+    - director_intent
+    - camera_direction
+    - lighting_direction
+    - performance_direction_or_non_character_performance
+    - emotion_curve_or_environment_rhythm
+    - input_state
+    - primary_action
+    - exact_end_state
+    - camera_and_composition
+    - continuity_in
+    - continuity_out
+    - risk_and_fallback
+    - age_specific_physicality_and_performance
+    content_must_be_nonempty: true
+  S09:
+    name: Shot与CF绑定
+    source_stage: S09_shot_cf_binding
+    instruction_files:
+    - prompt-engineering/shot-cf-binding-system.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S10
+    required_coverage_keys:
+    - reference_bindings
+    - frame_source_mode
+    - start_cf
+    - end_cf
+    - generation_mode
+    content_must_be_nonempty: true
+  S10:
+    name: 控制帧Prompt
+    source_stage: S10_frame_prompt_pack
+    instruction_files:
+    - prompt-engineering/image-prompt-compiler.md
+    - prompt-engineering/storyboard-frame-system.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S11
+    required_coverage_keys:
+    - cf_id
+    - shot_id
+    - type
+    - reference_assets_and_roles
+    - visible_state
+    - positive_prompt
+    - negative_prompt
+    - output_rules
+    content_must_be_nonempty: true
+  S11:
+    name: 视频Prompt
+    source_stage: S11_video_prompt_pack
+    instruction_files:
+    - prompt-engineering/video-prompt-compiler.md
+    - prompt-engineering/performance-prompt-compiler.md
+    output_schema: schemas/generic-stage.schema.json
+    next_on_submit: S12
+    required_coverage_keys:
+    - shot_id
+    - generation_mode
+    - input_frames
+    - director_intent
+    - visual_space
+    - start_state
+    - performance_contract
+    - emotion_timeline
+    - timeline_action
+    - action_physics
+    - camera
+    - focus_and_exposure
+    - per_shot_lighting_and_emotional_function
+    - end_state
+    - next_shot_inheritance
+    - positive_prompt
+    - negative_prompt
+    content_must_be_nonempty: true
+  S12:
+    name: 完整性检查与返修
+    source_stage: S12_internal_validation_and_repair
+    instruction_files:
+    - evals/full-package-integrity-check.md
+    - evals/directing-coherence-check.md
+    - evals/performance-direction-score.md
+    - prompt-engineering/continuity-repair-system.md
+    - evals/camera-language-score.md
+    - evals/prompt-production-readiness-score.md
+    - evals/production-score.md
+    - evals/director-package-score.md
+    output_schema: schemas/generic-stage.schema.json
+    gate: G12_FULL_PACKAGE
+    required_coverage_keys:
+    - story_closure
+    - asset_coverage
+    - shot_completeness
+    - cf_binding
+    - image_source_coverage
+    - video_prompt_or_post_coverage
+    - camera_lighting_performance_coherence
+    - performance_direction_score
+    - emotion_intensity_continuity
+    - pairwise_continuity
+    - prompt_conflict
+    - generation_feasibility
+    - id_consistency
+    content_must_be_nonempty: true
+  S13:
+    name: 完整制作包交付
+    source_stage: S13_full_creation_delivery
+    instruction_files:
+    - templates/full-creation-package.md
+    output_schema: schemas/s13-full-package.schema.json
+    completion_stage: true
+gates:
+  G01_CONCEPT:
+    evaluation_schema: schemas/evaluation.schema.json
+    required_evaluators:
+      concept_score:
+        status: PASS
+        minimum_score: 80
+        minimum_subscores:
+          originality: 16
+      originality_history_check:
+        status: PASS
+      character_age_fit_check:
+        status: PASS
+        minimum_score: 80
+        minimum_subscores:
+          audience_identification_and_market_fit: 15
+          role_and_life_stage_credibility: 16
+          story_dependency_of_age: 15
+          no_forced_rejuvenation_or_aging: 16
+          age_specific_dramatic_value: 14
+      meaning_and_thematic_necessity_check: &id001
+        status: PASS
+        minimum_score: 80
+        minimum_subscores:
+          necessity_or_formal_intent: 15
+          conflict_or_pattern_logic: 15
+          belief_or_audience_experience: 14
+          climax_or_formal_culmination: 15
+          ending_residue_or_aftereffect: 14
+    pass: S02
+    conditional: S01
+    fail: S01
+  G02_TREATMENT:
+    evaluation_schema: schemas/evaluation.schema.json
+    required_evaluators:
+      drama_score:
+        status: PASS
+        minimum_score: 80
+      visual_narrative_score:
+        status: PASS
+        minimum_score: 80
+      character_agency_check:
+        status: PASS
+      mechanism_overuse_check:
+        allowed_statuses:
+        - PASS
+        - NOT_APPLICABLE
+      climax_force_check: &id002
+        status: PASS
+        minimum_score: 80
+        minimum_subscores:
+          pressure_and_escalation: 15
+          value_collision: 15
+          audience_uncertainty: 14
+          action_cost_and_irreversibility: 16
+          audiovisual_peak_and_state_change: 15
+      twist_legality_check:
+        allowed_statuses:
+        - PASS
+        - NOT_APPLICABLE
+      character_age_fit_check:
+        status: PASS
+        minimum_score: 80
+        minimum_subscores:
+          audience_identification_and_market_fit: 15
+          role_and_life_stage_credibility: 16
+          story_dependency_of_age: 15
+          no_forced_rejuvenation_or_aging: 16
+          age_specific_dramatic_value: 14
+      meaning_and_thematic_necessity_check: *id001
+    pass: S03
+    conditional: S02
+    fail: S01
+  G03_SCRIPT:
+    evaluation_schema: schemas/evaluation.schema.json
+    required_evaluators:
+      drama_score:
+        status: PASS
+        minimum_score: 80
+      visual_narrative_score:
+        status: PASS
+        minimum_score: 80
+      character_agency_check:
+        status: PASS
+      mechanism_overuse_check:
+        allowed_statuses:
+        - PASS
+        - NOT_APPLICABLE
+      dialogue_check:
+        allowed_statuses:
+        - PASS
+        - NOT_APPLICABLE
+      climax_force_check: *id002
+      twist_legality_check:
+        allowed_statuses:
+        - PASS
+        - NOT_APPLICABLE
+      character_age_fit_check:
+        status: PASS
+        minimum_score: 80
+        minimum_subscores:
+          audience_identification_and_market_fit: 15
+          role_and_life_stage_credibility: 16
+          story_dependency_of_age: 15
+          no_forced_rejuvenation_or_aging: 16
+          age_specific_dramatic_value: 14
+      meaning_and_thematic_necessity_check: *id001
+    pass: S04
+    conditional: S03
+    fail: S02
+  G12_FULL_PACKAGE:
+    evaluation_schema: schemas/evaluation.schema.json
+    required_evaluators:
+      full_package_integrity_check:
+        status: PASS
+      directing_coherence_check:
+        status: PASS
+        minimum_score: 85
+      performance_direction_score:
+        status: PASS
+        minimum_score: 82
+      camera_language_score:
+        status: PASS
+        minimum_score: 80
+      prompt_production_readiness_score:
+        status: PASS
+        minimum_score: 85
+      production_score:
+        status: PASS
+        minimum_score: 80
+      director_package_score:
+        status: PASS
+        minimum_score: 85
+    pass: S13
+    conditional: S12
+    fail: S08

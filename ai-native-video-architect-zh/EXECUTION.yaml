@@ -1,0 +1,49 @@
+spec_version: '0.5'
+kind: contract-skill
+name: ai-native-video-architect-zh
+domain_skill_version: 4.4.0
+contract_version: 0.5.0-alpha
+execution_mode: enforced_when_scripts_available
+fallback_mode: fail_closed_soft_contract
+entrypoint:
+  required_first_read:
+  - constitution/immutable.yaml
+  - contracts/execution-protocol.md
+  - evals/climax-force-check.md
+  - evals/character-age-fit-check.md
+  - evals/meaning-and-thematic-necessity-check.md
+  - config/workflow.yaml
+  - config/scoring.yaml
+  activation_command: python scripts/contract_runner.py start
+  prepare_command: python scripts/contract_runner.py prepare
+  submit_command: python scripts/contract_runner.py submit
+  evaluate_command: python scripts/contract_runner.py evaluate
+  finalize_command: python scripts/contract_runner.py finalize
+state:
+  directory: .execution/tasks
+  controlled_by: contract_runner
+  model_may_edit_state: false
+  resume_supported: true
+priority:
+- IMMUTABLE_CONSTITUTION
+- ADAPTIVE_POLICY
+- TASK_PLAN
+- USER_REQUEST
+- MODEL_DECISION
+instruction_loading:
+  mode: stage_scoped
+  expose_only_current_stage: true
+  prohibit_future_stage_drafting: true
+integrity:
+  manifest: constitution/integrity.json
+  fail_on_mismatch: true
+adaptive_policy:
+  default: adaptive/default-policy.yaml
+  schema: adaptive/policy.schema.json
+  ai_access: propose_patch_only
+  patch_command: python scripts/apply_policy_patch.py
+workflow: contracts/workflow.enforced.yaml
+completion:
+  receipt_required: true
+  status: CONTRACT_COMPLETE
+  final_artifact_release_only_after_receipt: true

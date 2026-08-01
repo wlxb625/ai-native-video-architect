@@ -1,4 +1,4 @@
-# Post-Script Prompt Pipeline Stress Tests V4.2
+# Post-Script Prompt Pipeline Stress Tests V4.4
 
 ## T01 SOURCE_MODULE_REQUIRED
 
@@ -259,3 +259,68 @@ FAIL：因为默认单图策略而禁止所有三视图，或没有稳定依据�
 PASS：最终分镜正向Prompt中再次包含这些信息，用户复制一次即可生成。
 
 FAIL：分镜正向Prompt只写构图动作，关键摄影和灯光留在外部说明。
+
+## T36 ABSTRACT_AESTHETIC_GROUNDING
+
+用户要求画面“空灵、宿命、史诗、电影感”。
+
+PASS：把这些词转译为主体状态、画面大形、空间尺度、主辅强调色、真实光源、明暗节奏、材质和背景结构。
+
+FAIL：只在Prompt结尾堆“唯美、震撼、电影感、史诗感、8K”。
+
+## T37 BACKGROUND_AS_SECOND_VISUAL_SUBJECT
+
+剧情关键帧中人物处于巨浪、厂房、走廊或城市空间。
+
+PASS：背景有明确功能、大形、近中远层次、方向、局部高潮及与人物的呼应或对抗。
+
+FAIL：人物写得极细，背景只写“海边有雾”“昏暗房间”“城市夜景”。
+
+## T38 TECHNICAL_ASSET_CLARITY_EXCEPTION
+
+用户需要人物身份主参考、三视图或道具结构板。
+
+PASS：优先身份、比例、结构、材质中性和可复用背景，不强制灾变背景或复杂戏剧光。
+
+FAIL：把所有资产图都写成高冲击电影海报，导致身份和结构不可用。
+
+## T39 IMAGE_TO_VIDEO_FIRST_FRAME_PROTECTION
+
+用户上传一张人物、服装和构图已经确认的首帧。
+
+PASS：Prompt首先锁定面部、年龄、骨相、发型发饰、服装结构、人体比例、主体位置、构图、场景、色调和光源，只允许规定运动。
+
+FAIL：视频Prompt重新描述并重新设计人物、服装或背景。
+
+## T40 SINGLE_CORE_VISUAL_EVENT
+
+6秒图生视频镜头。
+
+PASS：只有一个核心视觉事件，例如浪幕升起；人物微动作、纱、红带、运镜和光线都服务该事件。
+
+FAIL：同时安排复杂舞蹈、巨浪砸下、红带爆发、镜头高速环绕、人物睁眼流泪和道具破碎。
+
+## T41 MATERIAL_MOTION_CHOREOGRAPHY
+
+首帧包含内外层薄纱、头发、红带、水雾和浪幕。
+
+PASS：分别写动力、延迟、方向、速度、幅度、重量和前中远景速度差。
+
+FAIL：全部写成“随风自然飘动”，同速同向无层次。
+
+## T42 BACKGROUND_EVENT_TIMELINE
+
+背景承担第二视觉主体。
+
+PASS：写清背景初始状态、形成过程、中段扩大、视觉高潮和最终停点，并避免遮挡关键信息。
+
+FAIL：只写“背景海浪翻涌、雾气流动”。
+
+## T43 TEMPORAL_CLIMAX_AND_HOLD
+
+6秒镜头需要视觉高潮。
+
+PASS：前段稳定起势，中段形成主事件，最后1—2秒完成大形或动作停点并稳定保持。
+
+FAIL：所有元素以同样速度漂满6秒，结尾没有明确变化或停住。
+

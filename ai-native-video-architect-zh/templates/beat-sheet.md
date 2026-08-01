@@ -7,6 +7,17 @@ project_title:
 primary_path:
 duration:
 core_promise:
+
+protagonist_age_audit:
+  protagonist_name:
+  approximate_age:
+  age_band:
+  role_or_life_stage:
+  audience_identification_strategy:
+  why_this_age:
+  what_breaks_if_younger:
+  what_breaks_if_older:
+  age_specific_dramatic_value:
 climax_type:
 ending_type:
 

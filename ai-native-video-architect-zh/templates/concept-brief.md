@@ -56,6 +56,23 @@ high_concept:
   worldbuilding_budget:
   removed_or_merged_ideas: []
 
+
+character_age_strategy:
+  market_context:
+  target_audience:
+  default_strategy: YOUTH_PRIORITY_WITH_STORY_FIT_OVERRIDE
+  protagonist_name:
+  approximate_age:
+  age_band: CHILD | TEEN | YOUNG_ADULT | MIDDLE_AGED | OLDER_ADULT | AGELESS_OR_NONHUMAN
+  role_or_life_stage:
+  youth_priority_applies:
+  decision: YOUNG_SELECTED | OLDER_SELECTED_FOR_STORY_FIT | AGE_SPECIFIC_SELECTED | AGE_NEUTRAL | AGELESS_OR_NONHUMAN
+  why_this_age:
+  what_breaks_if_younger:
+  what_breaks_if_older:
+  required_experience_years:
+  plausible_experience_start_age:
+
 primary_subject:
 characters: []
 primary_agency_type:
@@ -155,3 +172,4 @@ next_template:
 - 高概念项目在`one_sentence_concept`、`core_mechanism`、`primary_task`、`impossible_choice`与`final_afterimage`未成立前，不进入完整剧本。
 - `hero_shots`默认3—5项，不能把所有场景都标为核心镜头。
 - `removed_or_merged_ideas`必须记录主动舍弃的好点子，防止后续又无意塞回剧本。
+- 短视频和网文默认先考虑年轻主角，但必须比较年龄反事实；中老年更适合职业资历、关系历史、人生阶段或主题时，禁止强行年轻化。

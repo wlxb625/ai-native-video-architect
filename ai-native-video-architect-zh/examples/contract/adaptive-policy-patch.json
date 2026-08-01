@@ -1,0 +1,11 @@
+{
+  "operation": "add",
+  "path": "preferences.rejected_patterns",
+  "value": "dialogue_as_climax",
+  "scope": "domain",
+  "evidence": {
+    "source": "explicit_user_feedback",
+    "text": "不要再用谈心充当高潮"
+  },
+  "confidence": 0.99
+}

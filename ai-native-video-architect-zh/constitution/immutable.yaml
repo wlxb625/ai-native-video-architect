@@ -1,0 +1,196 @@
+constitution_version: '0.5'
+layer: IMMUTABLE_CONSTITUTION
+mutable_by_model: false
+core_obligations:
+- 必须从当前状态指定的阶段开始，不得越级。
+- 必须加载当前阶段列出的规则、模板和评分器。
+- 阶段产物必须先通过Schema与确定性检查。
+- 设有门禁的阶段必须取得有效评估结果后才能迁移。
+- 任一硬失败覆盖总分，禁止用其他高分抵消。
+- 缺少可定位证据的评分项不得判为通过。
+- 生成者不得用自我声明替代独立评估产物。
+- 返修只能修改must_fix指向的问题，不得破坏must_protect。
+- 未取得完成凭证时不得把产物标记为最终成品。
+- 若宿主不能运行契约脚本，必须明确标记SOFT_CONTRACT，禁止声称强执行完成。
+- 高潮不得仅凭“存在一次选择、一次不可逆动作或一次母题回收”判定成立。
+- 当任务要求强戏剧峰值时，必须同时验证压力升级、价值冲突、结果悬念、人物行动、现场支付的代价与高潮后的不可回退状态。
+- 情绪收束、告别仪式或象征性清除若没有升级压力和状态翻转，不得标记为强戏剧高潮。
+- 第二层策略不得降低候选数量、差异性、评分门槛、高潮档位或其他第一层执行下限。
+- NOT_APPLICABLE必须由产物中的适用性声明支持，不得由评估器自行选择以逃避检查。
+- 完整制作包不得以空content、空coverage或自报高分通过。
+- 短视频与网文等以年轻受众为主的商业内容，在用户未指定年龄且故事不存在更强年龄需求时，应优先考虑青少年或青年主角，以提高进入速度与代入感。
+- 年轻主角优先只是默认搜索方向，不是硬性年龄配额；人物年龄必须服从职业资历、人生阶段、关系历史、身体条件、时代背景、主题与情节因果。
+- 当中年或老年人物更适合故事时，不得为了市场标签强行年轻化；当年轻人物更自然时，也不得为了制造厚重感无必要地老化。
+- 每个入围概念必须说明为何选择该年龄，以及改成更年轻或更年长会损失什么；年龄选择缺少故事依据时不得通过人物年龄适配门禁。
+- 不得让人物年龄与其声明的必要从业年限、关系历史或人生阶段产生明显矛盾。
+- 除抽象、无厘头和纯形式实验外，叙事作品必须具有可由人物、冲突、高潮与结尾共同证明的主题意义，不得在成稿后补一句口号冒充主题。
+- 主题意义必须落在真实的人类困境、可理解的价值冲突、人物原有信念的受压或改变，以及高潮行动对问题作出的回答上。
+- 抽象、无厘头和纯形式实验可以不采用传统主题论证，但必须声明形式目的、观众体验、内部模式逻辑与非随机性证明，不得用“实验”逃避创作必要性。
+- 意义门禁的例外只适用于明确的ABSTRACT、ABSURDIST或FORMAL_EXPERIMENT作品；普通商业、文学、悬疑、古风、现实主义、类型叙事不得自行声明豁免。
+protected_paths:
+- execution.workflow
+- execution.transitions
+- execution.gates
+- execution.completion
+- execution.integrity
+- constitution
+- scoring.minimums
+- scoring.hard_failures
+- permissions
+- adaptive_policy.allowed_patch_paths
+- execution_minimums
+- adaptive_policy.execution_parameters
+- applicability_rules
+- production_coverage_minimums
+conflict_resolution:
+  rule: HIGHER_LAYER_WINS
+  on_conflict: reject_lower_rule
+  record_conflict: true
+role_separation:
+  generator:
+    may_create: true
+    may_revise: true
+    may_assign_final_gate_status: false
+  evaluator:
+    receives:
+    - artifact
+    - evaluator_rules
+    - history_fingerprints
+    must_not_receive:
+    - generator_self_score
+    - generator_claimed_quality
+    objective: find_reasons_not_to_pass
+  runner:
+    owns:
+    - state_transition
+    - schema_validation
+    - deterministic_checks
+    - gate_decision
+    - completion_receipt
+fail_closed:
+  missing_required_module: FAIL
+  invalid_schema: FAIL
+  missing_evaluation: FAIL
+  missing_evidence: FAIL
+  integrity_mismatch: FAIL
+  invalid_transition: FAIL
+  hard_failure_detected: FAIL
+revision:
+  maximum_rounds_per_gate: 2
+  on_exhaustion: CONTRACT_FAILED
+creative_non_substitution:
+- 评分表存在不等于评分已执行。
+- 出现视觉母题不等于视觉叙事成立。
+- 出现一次选择不等于高潮成立。
+- 结尾留白不等于情绪余留成立。
+- 使用专业术语不构成执行凭证。
+- 动作不可逆不等于戏剧高潮有力。
+- 视觉母题完成不等于戏剧压力完成。
+- 安静克制不等于可以取消峰值级差。
+- 年轻受众不等于所有角色必须年轻。
+- 职业名称年轻化不等于人物年龄适配。
+- 中老年主角不等于缺少短视频吸引力，关键在入口、行动和冲突。
+- 写出主题句不等于作品具有意义。
+- 好人反抗坏人不等于形成复杂的人类困境。
+- 高潮证明主角完全正确不等于主题成立。
+- 抽象、无厘头或实验标签不等于可以随机拼接。
+- 形式新奇不等于具有创作必要性。
+climax_contract:
+  default_profile: STRONG_DRAMATIC_PEAK
+  profiles:
+  - STRONG_DRAMATIC_PEAK
+  - QUIET_PEAK
+  - ANTI_CLIMAX
+  - SPECTACLE_PEAK
+  strong_peak_requires:
+  - at_least_two_escalation_steps
+  - two_competing_values
+  - active_pressure_source
+  - point_of_no_return
+  - non_obvious_outcome
+  - on_screen_cost_payment
+  - irreversible_external_or_relational_change
+  - clear_audiovisual_level_change
+  hard_failures:
+  - EMOTIONAL_RESOLUTION_MISLABELED_AS_CLIMAX
+  - CLIMAX_IS_ONLY_CLOSING_RITUAL
+  - VALUES_NOT_COMPARABLE
+  - NO_ESCALATING_PRESSURE
+  - OUTCOME_PREDETERMINED
+  - COST_ONLY_STATED_NOT_PAID
+  - CLIMAX_REMOVABLE_WITHOUT_ENDING_CHANGE
+  - NO_POST_CLIMAX_STATE_DELTA
+execution_minimums:
+  internal_candidate_count: 10
+  shortlist_count: 3
+  maximum_same_relationship_ratio: 0.4
+  minimum_distinct_settings: 4
+  minimum_distinct_climax_action_types: 4
+  default_climax_profile: STRONG_DRAMATIC_PEAK
+  minimum_climax_force_score: 80
+  minimum_climax_escalation_steps: 2
+character_age_contract:
+  default_strategy: YOUTH_PRIORITY_WITH_STORY_FIT_OVERRIDE
+  young_priority_contexts:
+  - SHORT_VIDEO
+  - WEB_FICTION
+  young_bands:
+  - TEEN
+  - YOUNG_ADULT
+  allowed_bands:
+  - CHILD
+  - TEEN
+  - YOUNG_ADULT
+  - MIDDLE_AGED
+  - OLDER_ADULT
+  - AGELESS_OR_NONHUMAN
+  principle: STORY_FIT_OVERRIDES_MARKET_DEFAULT
+  requires:
+  - explicit_age_choice
+  - audience_alignment
+  - role_and_life_stage_credibility
+  - younger_counterfactual
+  - older_counterfactual
+  - experience_plausibility
+  hard_failures:
+  - FORCED_REJUVENATION
+  - UNNECESSARY_AGING
+  - AGE_ROLE_CREDIBILITY_BREAK
+  - AGE_SELECTED_WITHOUT_STORY_REASON
+  - YOUTH_DEFAULT_IGNORED_WITHOUT_REASON
+meaning_contract:
+  default_profile: THEMATIC_MEANING_REQUIRED
+  profiles:
+  - THEMATIC_MEANING_REQUIRED
+  - FORMAL_ABSURDIST_EXCEPTION
+  exception_genre_basis:
+  - ABSTRACT
+  - ABSURDIST
+  - FORMAL_EXPERIMENT
+  standard_requires:
+  - human_question
+  - two_understandable_values
+  - protagonist_initial_belief
+  - belief_pressure_or_change
+  - climax_thematic_answer
+  - ending_residue_or_question
+  - contemporary_relevance
+  - why_worth_telling
+  exception_requires:
+  - formal_intent
+  - audience_experience
+  - pattern_logic
+  - formal_culmination
+  - anti_randomness_proof
+  - why_exception_applies
+  hard_failures:
+  - THEME_ADDED_AFTER_PLOT
+  - GOOD_PERSON_VS_BAD_PERSON_ONLY
+  - NO_COMPETING_VALUES
+  - PROTAGONIST_BELIEF_UNCHANGED
+  - CLIMAX_DOES_NOT_ANSWER_THEME
+  - GENRE_DEVICE_WITHOUT_HUMAN_MEANING
+  - ENDING_ONLY_PROVES_HERO_WAS_RIGHT
+  - EXPERIMENT_LABEL_USED_AS_ESCAPE
+  - RANDOMNESS_WITHOUT_FORMAL_LOGIC
+  - NO_CREATIVE_NECESSITY

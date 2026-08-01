@@ -204,3 +204,15 @@ shot_transform:
 - 用完全不同的机制替换原作独特机制；
 - 改变高潮由谁选择、谁行动和谁承担代价；
 - 为了降低制作难度，用解释替代原作核心视觉证据。
+
+## V4.4 全套制作衔接
+
+用户要求完整制作包、所有镜头Prompt或外部平台实测时，改写稿确认后立即进入`ADAPT → FULL_CREATION_PACKAGE`。
+
+- 使用规划资产ID完成全部Shot和CF；
+- 参考图未真实生成不阻塞Prompt；
+- 每个Shot必须有可见描述、导演意图、摄影方向、逐镜灯光、非空参考绑定、图片来源和视频Prompt或POST_ONLY方案；
+- 人物镜头必须有表演方向、情绪曲线和可继承的结束强度；
+- 输出前读取`evals/directing-coherence-check.md`、`evals/performance-direction-score.md`和`evals/full-package-integrity-check.md`。
+
+不得只交付改写稿后停止。

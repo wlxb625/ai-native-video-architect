@@ -1,7 +1,12 @@
 interface:
-  display_name: "AI原生电影创作工作室 V4.2"
-  short_description: "从创意与剧本继续完成可执行Prompt、母参考筛选、代表性样片、镜头验收、剪辑与交付。"
-  brand_color: "#5B5BD6"
-  default_prompt: "使用 $ai-native-video-architect-zh。先判断我已经拥有想法、大纲、剧本、参考图、镜头表、分镜图、视频Prompt、生成片段还是剪辑版本，并直接从当前需要的位置开始。这个Skill既负责故事和剧本，也负责剧本确认后的核心参考图Prompt、分镜设计、分镜帧Prompt、导演级图生视频Prompt以及Prompt完成后的实际生产闭环。普通短片默认使用最少必要参考，角色先判断一张独立身份主参考是否足够；资产和分镜Prompt的摄影、光学、灯光与材质必须融合进最终可复制正向Prompt。Prompt完成后，按唯一母参考、普通样片、必要高风险样片、失败分层诊断、控制帧依赖、镜头生产队列、版本台账、真实输出验收、剪辑和后期推进。没有实际媒体时不得声称样片通过、可剪辑或项目完成。视频Prompt必须选择合适生成模式，并写明前中后景、分秒动作、摄影机、焦点景深、曝光白平衡、逐镜真实灯光、精确结束帧和下一镜继承。用户提供Prompt资料时先读取原文并区分原资料与自行补充。"
+  display_name: AI原生电影创作工作室 V4.4 Contract
+  short_description: 带不可变规则、阶段门禁与完成凭证的AI原生影视全流程创作Skill。
+  brand_color: '#5B5BD6'
+  default_prompt: 使用 $ai-native-video-architect-zh。若检测到 EXECUTION.yaml 且可运行脚本，必须先运行
+    scripts/contract_runner.py start 激活契约；之后只按 prepare 生成的当前阶段Packet工作，通过 submit 与独立
+    evaluate 后才能进入下一阶段。不得自行评分通过，不得越级，不得修改不可变层；没有 CONTRACT_COMPLETE 凭证不得称为最终成品。使用 $ai-native-video-architect-zh。先判断我已有想法、剧本、参考图、镜头表、分镜帧、视频Prompt还是生成片段，并从缺失部分开始。若我要求全套、完整制作包或外部平台实测，请在Agent内部一次完成故事与剧本、视觉圣经、规划资产与资产生图Prompt、全片导演/摄影/灯光/表演基准、完整Shot总表、Shot与Control
+    Frame绑定、全部控制帧Prompt、全部逐镜头视频Prompt、参考使用矩阵、连续性传递、剪辑声音后期和稳定备用。规划参考图尚未真实生成不得阻塞后续Prompt。每个Shot必须有可见画面描述、导演意图、摄影方向、逐镜灯光、非空参考绑定、图像来源、开始与结束状态、CF、视频Prompt或POST_ONLY方案；人物镜头必须有内外情绪、可见微表情、呼吸身体语言、情绪曲线和结束强度。继承上一镜尾帧时必须写明CF来源、持续使用的基础资产和备用首帧Prompt。输出前执行Shot/CF/资产/Prompt覆盖率、摄影—灯光—表演一致性、情绪强度、相邻镜头连续性、Prompt冲突和可生成性检查。没有真实媒体时状态为PROMPT_PACKAGE_READY，不得声称样片已通过。
 policy:
   allow_implicit_invocation: true
+  contract_skill_extension: 0.1.0-alpha
+  fail_closed_when_runner_available: true

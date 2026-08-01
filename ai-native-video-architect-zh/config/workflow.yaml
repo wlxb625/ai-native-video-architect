@@ -1,246 +1,176 @@
-version: 4.2.0
+version: 4.4.0
 
-progress:
-  config: config/progress-navigation.yaml
-  template: templates/progress-status.md
-  show_before_primary_output: false
-  show_when_requested: true
-  show_for_long_multistage_tasks: true
-  infer_entry_point_from_user_materials: true
-  next_means_next_relevant_deliverable: true
-  interaction_contracts: [DIRECT_ENTRY, USER_SELF_AUDIT, NEXT_MEANS_NEXT_DELIVERABLE]
-
-post_script_prompt_engineering:
-  orchestrator: controllers/post-script-production.md
-  production_execution_controller: controllers/production-execution.md
+workflow_contract:
+  default_full_delivery: FULL_CREATION_PACKAGE
+  no_external_asset_gate_for_prompt_package: true
+  planned_reference_status: PLANNED_REFERENCE
+  actual_reference_status: ACTUAL_REFERENCE
+  design_ready_status: PROMPT_PACKAGE_READY
+  actual_media_required_only_for: [SAMPLE_VALIDATED, EDIT_READY, DELIVERY_READY]
+  internal_repair_rounds: 2
   required_modules:
-    - prompt-engineering/image-prompt-compiler.md
-    - prompt-engineering/visual-style-color-light.md
+    - controllers/agent-full-creation.md
+    - controllers/post-script-production.md
+    - controllers/camera-director.md
+    - controllers/lighting-director.md
+    - controllers/performance-director.md
+    - references/emotion-library.md
+    - prompt-engineering/performance-prompt-compiler.md
     - prompt-engineering/asset-prompt-system.md
+    - prompt-engineering/shot-cf-binding-system.md
+    - prompt-engineering/image-prompt-compiler.md
     - prompt-engineering/storyboard-frame-system.md
     - prompt-engineering/video-prompt-compiler.md
-    - prompt-engineering/camera-movement-library.md
     - prompt-engineering/continuity-repair-system.md
-    - evals/shot-output-acceptance-score.md
-    - templates/production-runbook.md
-  default_review_mode: USER_SELF_AUDIT
-  default_reference_strategy: MINIMUM_VIABLE_REFERENCES
-  default_character_reference: SINGLE_IDENTITY_ANCHOR
-  expand_assets_only_after_failure_or_shot_need: true
-  asset_prompt_contract: EXECUTABLE_INTEGRATED_POSITIVE_PROMPT
-  video_quality_contract: DIRECTOR_GRADE_VIDEO_PROMPT
-  production_status_protocol: [DESIGN_READY, PROMPT_READY, REFERENCE_READY, SAMPLE_VALIDATED, BATCH_GENERATION_READY, EDIT_READY, DELIVERY_READY]
-  actual_media_required_for: [SAMPLE_VALIDATED, EDIT_READY, DELIVERY_READY]
+    - evals/full-package-integrity-check.md
+    - templates/full-creation-package.md
 
 workflow:
   S00_creative_brief:
     name: 创作需求
-    internal_stage: true
-    required_when_missing: [genre_or_content_domain, target_emotion, narrative_form, protagonist_or_subject, duration, aspect_ratio, forbidden_content]
-    skip_when_user_materials_are_sufficient: true
+    required_when_missing: [genre_or_content_domain, duration, aspect_ratio, protagonist_or_subject, narrative_form, forbidden_content]
     output: CREATIVE_BRIEF
     next: S01
 
-  S01_direction_options:
-    name: 创意方向
-    internal_stage: true
-    required_when_user_needs_exploration: [two_or_three_distinct_directions, protagonist, core_rule_or_conflict, visual_identity, ending_direction]
-    gate: STORY_DIRECTION_CONFIRMATION
-    output: DIRECTION_OPTIONS
+  S01_story_direction:
+    name: 故事方向
+    required: [protagonist_task, core_conflict_or_rule, progression, key_choice, ending_direction]
+    output: STORY_DIRECTION
     next: S02
 
   S02_story_treatment:
     name: 故事方案
-    internal_stage: true
-    required: [one_sentence_story, protagonist_task, central_event_or_rule, progression, key_choice, climax, final_image]
+    required: [one_sentence_story, observable_progression, climax_action, final_image]
     output: STORY_TREATMENT
     next: S03
 
   S03_script_or_visual_script:
     name: 剧本或视觉脚本
-    internal_stage: true
-    required_for_narrative: [scene_heading, location_and_time, characters, observable_action, dialogue_if_any, props, scene_exit_state]
-    required_for_visual_script: [subject, initial_state, observable_action, environment_change, prop_change, emotional_change, final_state, next_scene_connection]
-    gate: SCRIPT_CONFIRMATION
-    rule: 剧本由本Skill完成并确认后，可继续调用同一Skill完成后续生产。
+    required_for_narrative: [scene_heading, time_and_location, characters, observable_action, dialogue_or_silence, props, sound, scene_exit_state]
+    required_for_visual_script: [subject, initial_state, observable_action, environment_change, prop_change, final_state, next_scene_connection]
     output: SCRIPT_PACKAGE
     next: S04
 
   S04_script_breakdown:
     name: 剧本制作拆解
-    internal_stage: true
-    modules: [controllers/post-script-production.md]
-    required: [main_characters, visible_costume_and_state_changes, main_environments, core_props, primary_actions, light_and_time_changes, sound_and_edit_connections, indispensable_generation_risks, inherited_end_states, post_only_elements]
-    traceability_rule: 每项参考图、镜头和后期要求必须来自剧本或明确导演需求。
+    required: [characters, visible_states, locations, props, actions, light_changes, sound_connections, inherited_end_states, post_only_elements]
     output: SCRIPT_BREAKDOWN
     next: S05
 
-  S05_visual_rules:
-    name: 视觉设定
-    internal_stage: true
-    modules: [prompt-engineering/visual-style-color-light.md]
-    required: [aspect_ratio, visual_style, primary_secondary_accent_colors, color_temperature_saturation_contrast, real_light_sources_and_directions, material_rules, camera_tendency, forbidden_look]
-    output: VISUAL_RULESET
+  S05_visual_bible:
+    name: 视觉圣经
+    required: [character_lock, environment_lock, prop_lock, aspect_ratio, style, colors, real_light_sources, materials, camera_tendency, forbidden_drift]
+    output: VISUAL_BIBLE
     next: S06
 
-  S06_minimum_reference_plan:
-    name: 最小核心参考计划
-    internal_stage: true
-    modules: [prompt-engineering/asset-prompt-system.md]
+  S06_planned_reference_registry:
+    name: 规划资产表
     required:
-      - one_identity_anchor_per_main_character_unless_shot_need_requires_more
-      - one_empty_plate_per_main_environment
-      - core_prop_reference_only_when_cross_shot_stability_is_required
-      - special_state_reference_only_when_plot_requires_precise_change
-      - optional_full_body_face_hand_or_multiview_based_on_need
-      - on_demand_assets_list
-      - post_only_elements_list
-    rule: 普通短片优先少量核心参考；不默认密集多视图，也不机械固定每个角色多张。
-    output: MINIMUM_REFERENCE_PLAN
+      - character_identity_anchors
+      - main_environment_empty_plates
+      - necessary_prop_references
+      - necessary_state_references
+      - used_by_shots_placeholder
+    status: PLANNED_REFERENCE
+    rule: 规划资产尚未真实生成时仍继续全部下游Prompt设计。
+    output: PLANNED_REFERENCE_REGISTRY
     next: S07
 
   S07_reference_prompt_pack:
-    name: 核心参考图Prompt
-    internal_stage: true
-    modules: [prompt-engineering/image-prompt-compiler.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/asset-prompt-system.md, templates/asset-prompt-block.md]
-    required_per_reference: [name, filename, asset_form_and_reason, source_template, reference_inputs_and_roles, internal_director_check, integrated_positive_prompt, negative_prompt, output_rules]
-    integrated_prompt_rule: 摄影机、光学、灯光、色彩和材质必须融合进最终正向Prompt；不得要求用户自行拼接外部合同。
-    character_form_rule: 默认单张身份主参考；全身、手部、三视图和综合板按镜头需要、模型能力或用户资料模板选择。
-    batch_rule: 一次性交付全部必要核心参考图Prompt，不为完整而增加无用资产。
-    source_rule: 用户提供Prompt资料时优先使用原模板，并区分自行补充内容。
+    name: 基础资产生图Prompt
+    required_per_asset: [asset_id, purpose, used_by_shots, positive_prompt, negative_prompt, output_rules]
     output: REFERENCE_PROMPT_PACK
     next: S08
 
-  S08_canonical_reference_selection:
-    name: 唯一母参考选择
-    internal_stage: true
-    modules: [controllers/production-execution.md, templates/production-runbook.md]
-    default_mode: USER_SELF_AUDIT
-    optional_mode: ASSISTED_AUDIT
-    gate: ASSET_CONFIRMATION
-    required:
-      - one_selected_canonical_version_per_long_lived_character_environment_prop_or_state
-      - selected_file_exists_before_reference_ready
-      - locked_features_and_known_limitations
-      - rejected_candidate_reasons_when_reviewed
-      - no_mixing_of_similar_character_candidates
-    candidate_guidance: 外部成本允许时每项核心参考建议2至4个候选，但不是硬性配额。
-    status_rule: Prompt完成但没有真实选定图时只能标记PROMPT_READY；选定唯一母参考后才能标记REFERENCE_READY。
-    user_confirmation_phrases: [下一步, 已经选好了, 参考图完成, 进入分镜]
-    output: CANONICAL_REFERENCE_RECORD
+  S08_complete_shot_list:
+    name: 完整Shot总表与导演设计
+    required_per_shot: [shot_id, scene_id, narrative_purpose, visual_description, duration, director_intent, camera_direction, lighting_direction, performance_direction_or_non_character_performance, emotion_curve_or_environment_rhythm, input_state, primary_action, exact_end_state, camera_and_composition, continuity_in, continuity_out, risk_and_fallback]
+    completeness_rule: 所有可剪辑镜头都必须进入Shot表，包括过渡、空镜、插入镜头和POST_ONLY镜头。
+    output: COMPLETE_SHOT_LIST
     next: S09
 
-  S09_shot_design:
-    name: 分镜设计
-    internal_stage: true
-    required_per_shot: [shot_goal, references, input_state, static_start_moment, primary_action, shot_size, lens_or_equivalent, camera_height_and_distance, angle_axis_and_screen_direction, foreground_midground_background, composition, movement_and_motivation, focus_plan, lighting_plan, duration, exact_end_state, next_shot_inheritance, sound_relation, edit_connection, risk]
-    batch_rule: 一次性完成整片镜头表，相似镜头合并，每镜一个主要重点。
-    gate: STORYBOARD_CONFIRMATION
-    output: SHOT_LIST_AND_CAMERA_PLAN
+  S09_shot_cf_binding:
+    name: Shot与Control Frame绑定
+    required_per_shot: [reference_bindings, frame_source_mode, start_cf, end_cf, optional_bridge_cfs, generation_mode]
+    cf_definition: Control Frame
+    cf_belongs_to_one_shot: true
+    allowed_frame_source_modes: [NEW_START_FRAME, PREVIOUS_TAIL_INHERITANCE, FIRST_LAST_FRAME, EXISTING_USER_FRAME, TEXT_TO_VIDEO, POST_ONLY]
+    output: SHOT_CF_BINDING_MAP
     next: S10
 
-  S10_storyboard_frame_prompt_pack:
-    name: 分镜首尾帧与控制架构
-    internal_stage: true
-    modules: [prompt-engineering/image-prompt-compiler.md, prompt-engineering/storyboard-frame-system.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/continuity-repair-system.md, templates/storyboard-frame-prompt-block.md]
-    required_per_shot: [reference_images, inherited_state, static_start_moment, foreground_midground_background, camera_and_lens, focus_depth_and_exposure, per_shot_lighting, integrated_positive_prompt, negative_prompt, output_rules, end_frame_contract, continuity_anchors]
-    integrated_prompt_rule: 摄影、焦点、曝光、逐镜灯光和材质必须写入最终分镜正向Prompt。
-    conditional_per_shot: [prebuilt_end_frame, bridge_frame, image_edit_prompt, local_repair_prompt, stable_alternative]
-    generation_order:
-      first_frame: 唯一角色母参考 + 母场景 + 道具参考 + 当前镜头要求
-      later_frames: 唯一母参考 + 上一张已选定控制帧 + 当前镜头要求
-    tail_frame_rule: 下一镜依赖准确姿势、视线、手部、道具、焦点或构图，或当前动作终点承担信息时，预生成尾帧；否则仍须建立END_FRAME_CONTRACT并抽取稳定尾帧。
+  S10_frame_prompt_pack:
+    name: 全部控制帧生图Prompt
+    required_per_generated_cf: [cf_id, shot_id, type, reference_assets_and_roles, visible_state, positive_prompt, negative_prompt, output_rules]
+    inheritance_rule: PREVIOUS_TAIL_INHERITANCE必须给继承CF、持续使用资产、允许变化和备用首帧Prompt。
+    no_tail_rule: 不预生成尾帧时必须给TEXT_CONTRACT_ONLY结束帧合同。
     output: FRAME_PROMPT_PACK
     next: S11
 
-  S11_representative_test:
-    name: 代表性样片门槛
-    internal_stage: true
-    modules: [controllers/production-execution.md, prompt-engineering/video-prompt-compiler.md, prompt-engineering/camera-movement-library.md, prompt-engineering/continuity-repair-system.md, templates/video-shot-prompt-block.md, evals/shot-output-acceptance-score.md]
-    required: [one_representative_normal_shot_from_the_actual_film]
-    optional: [one_real_high_risk_shot_when_project_contains_mirror_transformation_complex_hands_sync_occlusion_or_complex_camera]
-    checks: [start_frame_fidelity, end_frame_reachability, identity_and_prop_continuity, action_physics, camera_endpoint, focus_stability, lighting_stability, editability]
-    real_media_required_for_pass: true
-    no_media_status: SAMPLE_PLAN_READY
-    pass_status: SAMPLE_VALIDATED
-    batch_gate_rule: 普通样片和必要高风险样片存在硬失败时不得批量生成整片。
-    default_review_mode: USER_SELF_AUDIT
-    gate: CORE_SAMPLE_GATE
-    output: CORE_SAMPLE_PACK_AND_ACCEPTANCE_RECORD
+  S11_video_prompt_pack:
+    name: 全部逐镜头生视频Prompt
+    required_per_generated_shot: [shot_id, generation_mode, input_frames, director_intent, visual_space, start_state, performance_contract, emotion_timeline, timeline_action, action_physics, camera, focus_and_exposure, per_shot_lighting_and_emotional_function, end_state, next_shot_inheritance, positive_prompt, negative_prompt]
+    post_only_rule: POST_ONLY镜头必须有素材来源、后期操作、时长和剪辑说明。
+    output: VIDEO_PROMPT_PACK
     next: S12
 
-  S12_video_prompt_and_production_runbook:
-    name: 导演级视频Prompt与生产执行包
-    internal_stage: true
-    modules: [controllers/production-execution.md, prompt-engineering/video-prompt-compiler.md, prompt-engineering/camera-movement-library.md, prompt-engineering/visual-style-color-light.md, prompt-engineering/continuity-repair-system.md, templates/video-shot-prompt-block.md, templates/production-runbook.md]
-    required_per_shot: [generation_mode, input_control_frames, scene_space_and_composition, start_state, timeline_action_beats, action_physics, camera_contract, optical_contract, lighting_contract, material_and_environment_motion, end_frame_contract, next_shot_inheritance, sound, preserve, negative_constraints]
-    generation_modes: [SINGLE_START_FRAME, FIRST_LAST_FRAME, TAIL_FRAME_CONTINUATION, TWO_SEGMENT_HARD_CUT, OCCLUSION_SWITCH, LAYERED_COMPOSITE]
-    single_start_frame_rule: 只允许低幅度运动且下一镜不依赖准确尾态；仍须抽取符合END_FRAME_CONTRACT的稳定尾帧。
-    project_outputs:
-      - video_prompt_pack
-      - current_production_status_and_evidence
-      - canonical_reference_record
-      - representative_test_record
-      - control_frame_dependency_graph
-      - shot_generation_queue
-      - candidate_version_and_naming_protocol
-      - shot_ledger
-      - failure_layer_diagnosis
-      - asset_upgrade_log
-      - continuation_and_hard_cut_plan
-      - editing_plan
-      - sound_plan
-      - color_and_lighting_continuity
-      - post_text_and_composite_plan
-    repair_order: [simplify_prompt, repair_start_or_end_frame, simplify_action, fixed_camera, shorten_clip, add_control_frame_or_tail_continuation, occlusion_switch_or_layered_composite, add_new_reference_last]
-    output: VIDEO_PROMPT_PACK_AND_PRODUCTION_RUNBOOK
+  S12_internal_validation_and_repair:
+    name: 内部闭环检查与返修
+    checks:
+      - story_closure
+      - asset_coverage
+      - shot_completeness
+      - cf_binding
+      - image_source_coverage
+      - video_prompt_or_post_coverage
+      - camera_lighting_performance_coherence
+      - performance_direction_score
+      - emotion_intensity_continuity
+      - pairwise_continuity
+      - prompt_conflict
+      - generation_feasibility
+      - id_consistency
+    max_repair_rounds: 2
+    gate: FULL_PACKAGE_INTEGRITY_PASS
+    output: INTERNAL_VALIDATION_SUMMARY
     next: S13
 
-  S13_actual_output_review_and_delivery:
-    name: 实际镜头验收、剪辑与交付
-    internal_stage: true
-    modules: [controllers/production-execution.md, evals/shot-output-acceptance-score.md, templates/production-runbook.md]
-    actual_media_required_for: [SAMPLE_VALIDATED, EDIT_READY, DELIVERY_READY]
-    checks: [script_fidelity, shot_purpose, reference_economy, integrated_prompt_completeness, character_environment_prop_continuity, start_and_end_frame_fidelity, action_physics, camera_focus_and_lighting_quality, editability, sound_and_post, final_image, delivery_completeness]
-    failure_layers: [REFERENCE_FAILURE, CONTROL_FRAME_FAILURE, PROMPT_FAILURE, MODEL_CAPABILITY_FAILURE, POST_PRODUCTION_FAILURE]
-    result_protocol: PLAN_ONLY | PASS | CONDITIONAL | FAIL
-    status_protocol: [DESIGN_READY, PROMPT_READY, REFERENCE_READY, SAMPLE_VALIDATED, BATCH_GENERATION_READY, EDIT_READY, DELIVERY_READY]
-    iteration_rule: 只重做薄弱层，未通过验收的片段不得进入最终时间线。
-    output: SHOT_ACCEPTANCE_REPORT_AND_DELIVERY_PACKAGE
+  S13_full_creation_delivery:
+    name: 完整制作提示词包
+    template: templates/full-creation-package.md
+    required_sections: [project_overview, script, visual_bible, directing_and_performance_bible, reference_prompts, shot_table, shot_cards, cf_list, reference_matrix, continuity_and_emotion_handoff, editing_sound_post, risk_fallback, external_generation_order, integrity_summary]
+    status_without_media: PROMPT_PACKAGE_READY
+    output: FULL_CREATION_PACKAGE
     next: null
 
 entry_inference:
   vague_idea: S00
   clear_story_direction: S02
-  story_without_script: S03
   approved_script_or_visual_script: S04
-  user_needs_reference_prompts: S07
-  user_has_reference_images: S08
-  user_has_canonical_references: S09
-  user_has_shot_list: S10
-  user_has_storyboard_frames: S11
-  user_has_video_prompts_but_no_media: S12
-  user_has_generated_clips: S13
-  user_needs_single_image_prompt: DIRECT_IMAGE_PROMPT
-  user_needs_single_video_prompt: DIRECT_VIDEO_PROMPT
+  needs_full_package: S04
+  needs_reference_prompts_only: S07
+  has_shot_list: S09
+  has_storyboard_frames: S11
+  has_generated_media: OPTIONAL_ACTUAL_MEDIA_REVIEW
+  single_image_prompt: DIRECT_IMAGE_PROMPT
+  single_video_prompt: DIRECT_VIDEO_PROMPT
   diagnosis_only: DIAGNOSE
   transform_existing_work: TRANSFORM
 
-output_levels:
-  creative_brief: CREATIVE_BRIEF
-  direction_options: DIRECTION_OPTIONS
-  story_treatment: STORY_TREATMENT
-  script_package: SCRIPT_PACKAGE
-  script_breakdown: SCRIPT_BREAKDOWN
-  visual_rules: VISUAL_RULESET
-  reference_plan: MINIMUM_REFERENCE_PLAN
-  reference_prompts: REFERENCE_PROMPT_PACK
-  canonical_references: CANONICAL_REFERENCE_RECORD
-  shot_design: SHOT_LIST_AND_CAMERA_PLAN
-  frame_prompts: FRAME_PROMPT_PACK
-  representative_test: CORE_SAMPLE_PACK_AND_ACCEPTANCE_RECORD
-  video_prompts: VIDEO_PROMPT_PACK
-  production: PRODUCTION_RUNBOOK
-  shot_review: SHOT_ACCEPTANCE_REPORT
-  editing: EDIT_READY_PACKAGE
-  delivery: DELIVERY_PACKAGE
+coverage_invariants:
+  equal_counts:
+    - shot_count
+    - shot_card_count
+    - shot_visual_description_count
+    - shot_director_intent_count
+    - shot_camera_direction_count
+    - shot_lighting_direction_count
+    - character_shot_performance_direction_count
+    - shot_reference_binding_count
+    - shot_start_state_count
+    - shot_end_state_count
+    - shot_video_prompt_or_post_plan_count
+  generated_shot_requires_image_source: true
+  referenced_asset_ids_must_exist: true
+  referenced_cf_ids_must_exist: true
+  cf_belongs_to_exactly_one_shot: true
+  shot_ids_consistent_across_outputs: true

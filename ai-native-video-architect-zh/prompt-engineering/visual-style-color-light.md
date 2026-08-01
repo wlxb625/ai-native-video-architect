@@ -1,5 +1,8 @@
 # Visual Style, Color and Lighting Compiler
 
+V4.4逐镜灯光设计同时读取`controllers/lighting-director.md`。灯光必须说明可读性目标和情绪功能，并与`controllers/performance-director.md`的关键表演区域一致。
+
+
 ## 色调不是单一滤镜
 
 每个项目必须以六个核心维度建立色调：
@@ -89,6 +92,10 @@ shot_lighting_contract:
   shadow_detail:
   atmosphere_and_volume:
   exposure:
+  visibility_goal:
+  emotional_function:
+  performance_readability:
+  allowed_change_during_shot:
   continuity_statement:
   forbidden_changes:
 ```
@@ -120,7 +127,9 @@ shot_lighting_contract:
 + 辅光与实景灯
 + 光比
 + 高光与暗部
-+ 情绪目的
++ 可读性目标与情绪功能
++ 表演关键区域
++ 镜头内允许的有动机变化
 + 连续性
 ```
 
@@ -264,6 +273,8 @@ exposure_and_focus:
 - 只写“真实光照、电影感、冷色调”；
 - 未说明主体亮区、阴影和暗部；
 - 首尾帧主光方向、色温或曝光不一致；
+- 表演依赖眼神、嘴、手或身体变化，但灯光让关键区域不可读；
+- 灯光为了情绪无原因变色、闪烁或自动跟随人物；
 - 视频中出现曝光闪烁、阴影漂移和色温跳变；
 - 点缀色大面积泛滥；
 - 夜景主体完全不可读；

@@ -1,0 +1,169 @@
+{
+  "task_id": "REGRESSION-EQUAL-PAINT",
+  "stage_id": "S03",
+  "overall_status": "FAIL",
+  "evaluation_context": {
+    "generator_context_id": "legacy-generator",
+    "evaluator_context_id": "regression-evaluator-v02",
+    "artifact_sha256": "36703db441bac1fc9920088aae3319695d37f22470df9e56504e3b3bbc800eaf",
+    "generator_rationale_visible": false
+  },
+  "results": [
+    {
+      "evaluator": "drama_score",
+      "status": "CONDITIONAL",
+      "score": 72,
+      "subscores": {},
+      "evidence": [
+        {
+          "ref_id": "SC03",
+          "criterion": "压力进入",
+          "finding": "自动喷涂与交接建立期限，但后续没有持续收紧人物退路。"
+        },
+        {
+          "ref_id": "SC05-SC06",
+          "criterion": "峰值成立性",
+          "finding": "覆盖脚印完成意义收束，但选择结果高度可预测，两个价值并不对等。"
+        }
+      ],
+      "hard_failures": [],
+      "must_fix": [
+        "重建高潮前的升级链和真正两难，使行动改变现实关系而非只清除象征物。"
+      ],
+      "must_protect": [
+        "少对白",
+        "脚印与白线的视觉母题"
+      ]
+    },
+    {
+      "evaluator": "visual_narrative_score",
+      "status": "PASS",
+      "score": 90,
+      "subscores": {
+        "character_world_relation": 18,
+        "action_carries_information": 18,
+        "motif_progression": 19,
+        "reinterpretation": 18,
+        "emotional_residue": 17
+      },
+      "evidence": [
+        {
+          "ref_id": "SC01-SC06-SC08",
+          "criterion": "视觉母题",
+          "finding": "脚印、缺口和完整白线完成清晰变义与回收。"
+        }
+      ],
+      "hard_failures": [],
+      "must_fix": [],
+      "must_protect": [
+        "保留视觉母题链"
+      ]
+    },
+    {
+      "evaluator": "character_agency_check",
+      "status": "PASS",
+      "score": 84,
+      "subscores": {},
+      "evidence": [
+        {
+          "ref_id": "SC06",
+          "criterion": "人物行动",
+          "finding": "覆盖动作由方晴主动完成，人物能动性成立。"
+        }
+      ],
+      "hard_failures": [],
+      "must_fix": [],
+      "must_protect": [
+        "高潮行动仍由方晴完成"
+      ]
+    },
+    {
+      "evaluator": "mechanism_overuse_check",
+      "status": "NOT_APPLICABLE",
+      "score": null,
+      "subscores": {},
+      "evidence": [
+        {
+          "ref_id": "SC03",
+          "criterion": "现实机制",
+          "finding": "自动喷涂车是现实压力，不构成机制滥用。"
+        }
+      ],
+      "hard_failures": [],
+      "must_fix": [],
+      "must_protect": []
+    },
+    {
+      "evaluator": "dialogue_check",
+      "status": "PASS",
+      "score": 95,
+      "subscores": {},
+      "evidence": [
+        {
+          "ref_id": "SC03",
+          "criterion": "对白",
+          "finding": "对白没有代替高潮或解释关系。"
+        }
+      ],
+      "hard_failures": [],
+      "must_fix": [],
+      "must_protect": [
+        "保持少对白"
+      ]
+    },
+    {
+      "evaluator": "climax_force_check",
+      "status": "FAIL",
+      "score": 51,
+      "subscores": {
+        "pressure_and_escalation": 8,
+        "value_collision": 7,
+        "audience_uncertainty": 6,
+        "action_cost_and_irreversibility": 16,
+        "audiovisual_peak_and_state_change": 14
+      },
+      "counterfactual_challenges": {
+        "removable_without_changing_ending": true,
+        "choice_has_obvious_correct_answer": true,
+        "cost_paid_on_screen": true,
+        "climax_distinct_from_resolution": false,
+        "pressure_escalates_before_action": false,
+        "post_climax_state_cannot_return": true
+      },
+      "evidence": [
+        {
+          "ref_id": "SC03-SC05",
+          "criterion": "压力升级",
+          "finding": "主管和机器都没有进一步施压，方晴拥有充足时间完成早已确定的覆盖。"
+        },
+        {
+          "ref_id": "SC05-SC06",
+          "criterion": "价值冲突",
+          "finding": "完成公共合规工作明显优于继续保留私人违规痕迹，选择两端不对等。"
+        },
+        {
+          "ref_id": "SC06-SC08",
+          "criterion": "高潮与收束区分",
+          "finding": "覆盖动作同时承担决定、告别和结尾回收，更像关闭仪式，没有新的冲突结果。"
+        }
+      ],
+      "hard_failures": [
+        "CLIMAX_IS_ONLY_CLOSING_RITUAL",
+        "VALUES_NOT_COMPARABLE",
+        "NO_ESCALATING_PRESSURE",
+        "OUTCOME_PREDETERMINED",
+        "EMOTIONAL_RESOLUTION_MISLABELED_AS_CLIMAX"
+      ],
+      "must_fix": [
+        "增加至少两次同一压力的升级",
+        "让保留与放弃分别保护两个真实价值",
+        "使高潮结果在行动前不可预定",
+        "让高潮后出现新的现实或关系后果，再进入结尾"
+      ],
+      "must_protect": [
+        "脚印—缺口—白线的视觉母题",
+        "方晴亲自完成关键动作"
+      ]
+    }
+  ]
+}

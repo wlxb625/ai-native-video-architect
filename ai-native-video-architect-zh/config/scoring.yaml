@@ -1,41 +1,77 @@
-version: 4.2.0
-
+version: 4.4.0
 scores:
   concept:
     minimum: 80
-    weights: {one_sentence_strength: 20, mechanism_unity: 20, character_task_and_choice: 20, originality: 20, retellability: 20}
-
+    weights:
+      one_sentence_strength: 20
+      mechanism_unity: 20
+      character_task_and_choice: 20
+      originality: 20
+      retellability: 20
   visual_narrative:
     minimum: 80
-    weights: {character_world_relation: 20, action_carries_information: 20, motif_progression: 20, reinterpretation: 20, emotional_residue: 20}
-
+    weights:
+      character_world_relation: 20
+      action_carries_information: 20
+      motif_progression: 20
+      reinterpretation: 20
+      emotional_residue: 20
   camera_language:
-    minimum: 75
-    weights: {shot_purpose: 20, reveal_order: 20, movement_motivation: 20, visual_priority: 20, editability: 20}
-
+    minimum: 80
+    evaluator: evals/camera-language-score.md
+    weights:
+      director_intent: 18
+      audience_position: 16
+      reveal_order: 16
+      movement_motivation: 16
+      performance_readability: 18
+      editability: 16
+  performance_direction:
+    minimum: 82
+    evaluator: evals/performance-direction-score.md
+    weights:
+      objective_and_contradiction: 15
+      observable_micro_expression: 15
+      body_and_breathing: 15
+      timeline_and_intensity: 20
+      camera_readability: 10
+      lighting_readability: 10
+      continuity: 10
+      restraint: 5
+  directing_coherence:
+    minimum: 85
+    evaluator: evals/directing-coherence-check.md
+    required:
+    - director_intent
+    - camera_direction
+    - lighting_direction
+    - performance_direction_or_non_character_performance
   reference_readiness:
     minimum_for_storyboard_frames: 80
     advisory_only_under_user_self_audit: true
-    weights: {main_character_identity: 25, main_environment_structure: 25, core_prop_or_special_state: 15, visual_rule_consistency: 20, frame_reusability: 15}
+    weights:
+      main_character_identity: 25
+      main_environment_structure: 25
+      core_prop_or_special_state: 15
+      visual_rule_consistency: 20
+      frame_reusability: 15
     rule: 不以资产数量或多视图数量评分；单张身份主参考能够稳定支持镜头即可通过，三视图和综合板按需使用。
-
   prompt_production_readiness:
     minimum: 85
     conditional_for_representative_test: 75
     evaluator: evals/prompt-production-readiness-score.md
     weights:
-      script_traceability: 8
-      source_template_fidelity: 7
-      reference_form_and_roles: 8
-      integrated_executable_image_prompt: 15
-      frame_and_end_state_design: 10
-      generation_mode_selection: 8
-      camera_and_optics: 10
+      script_traceability: 7
+      reference_form_and_roles: 7
+      integrated_executable_image_prompt: 12
+      frame_and_end_state_design: 9
+      director_intent_and_audience_relation: 9
+      performance_and_emotion_curve: 16
       per_shot_lighting: 12
-      video_timeline_and_physics: 10
+      camera_and_optics: 10
+      video_timeline_and_physics: 8
       continuity_and_transitions: 7
-      repair_and_fallback: 5
-
+      repair_and_fallback: 3
   actual_shot_acceptance:
     minimum_for_edit: 82
     evaluator: evals/shot-output-acceptance-score.md
@@ -52,7 +88,6 @@ scores:
       post_production_feasibility: 5
     no_media_status: PLAN_ONLY
     rule: 没有真实生成图片、视频或关键帧时不得给出PASS，也不得标记SAMPLE_VALIDATED、EDIT_READY或DELIVERY_READY。
-
   production:
     minimum: 80
     weights:
@@ -66,67 +101,135 @@ scores:
       camera_focus_and_lighting_stability: 12
       continuity_and_editing: 10
       failure_diagnosis_and_fallback: 6
-
   director_package:
     minimum: 85
-    weights: {concept: 12, visual_narrative: 12, cinematic_language: 10, emotional_arc: 8, reference_fit: 8, prompt_production: 18, actual_production_plan: 16, sound: 6, artistic_fit: 4, delivery_truthfulness: 6}
-
+    weights:
+      concept: 12
+      visual_narrative: 12
+      cinematic_language: 10
+      emotional_arc: 8
+      reference_fit: 8
+      prompt_production: 18
+      actual_production_plan: 16
+      sound: 6
+      artistic_fit: 4
+      delivery_truthfulness: 6
+  character_age_fit:
+    minimum: 80
+    evaluator: evals/character-age-fit-check.md
+    weights:
+      audience_identification_and_market_fit: 20
+      role_and_life_stage_credibility: 20
+      story_dependency_of_age: 20
+      no_forced_rejuvenation_or_aging: 20
+      age_specific_dramatic_value: 20
 status_rules:
   pass: score >= minimum and no hard failure
-  conditional: score within 10 points below minimum or contains solvable production risk
+  conditional: score within 10 points below minimum or contains solvable production
+    risk
   fail: hard failure exists or core layer cannot support requested format
-
 production_status_protocol:
-  allowed: [DESIGN_READY, PROMPT_READY, REFERENCE_READY, SAMPLE_VALIDATED, BATCH_GENERATION_READY, EDIT_READY, DELIVERY_READY]
-  prompt_ready_requires: [integrated_reference_prompts, frame_prompt_pack, video_prompt_pack_or_requested_subset]
-  reference_ready_requires: [real_selected_canonical_character_environment_and_required_prop_files]
-  sample_validated_requires: [real_normal_sample_pass, real_high_risk_sample_pass_or_not_required]
-  batch_generation_ready_requires: [sample_validated, dependency_graph, shot_queue, failure_strategy]
-  edit_ready_requires: [all_required_shots_have_at_least_one_passed_version, all_bridge_and_layer_assets_available]
-  delivery_ready_requires: [edit_complete, sound_complete, text_complete, color_complete, final_qc_complete]
-
+  allowed:
+  - DESIGN_READY
+  - PROMPT_READY
+  - REFERENCE_READY
+  - SAMPLE_VALIDATED
+  - BATCH_GENERATION_READY
+  - EDIT_READY
+  - DELIVERY_READY
+  prompt_ready_requires:
+  - integrated_reference_prompts
+  - frame_prompt_pack
+  - video_prompt_pack_or_requested_subset
+  reference_ready_requires:
+  - real_selected_canonical_character_environment_and_required_prop_files
+  sample_validated_requires:
+  - real_normal_sample_pass
+  - real_high_risk_sample_pass_or_not_required
+  batch_generation_ready_requires:
+  - sample_validated
+  - dependency_graph
+  - shot_queue
+  - failure_strategy
+  edit_ready_requires:
+  - all_required_shots_have_at_least_one_passed_version
+  - all_bridge_and_layer_assets_available
+  delivery_ready_requires:
+  - edit_complete
+  - sound_complete
+  - text_complete
+  - color_complete
+  - final_qc_complete
 production_gates:
   before_reference_prompts:
-    - script confirmed or user supplied a complete script
-    - visual rules sufficient for the requested images
-    - character reference form selected by shot need and model capability
-    - final positive prompt will integrate camera lighting and material requirements
+  - script confirmed or user supplied a complete script
+  - visual rules sufficient for the requested images
+  - character reference form selected by shot need and model capability
+  - final positive prompt will integrate camera lighting and material requirements
   before_storyboard_frames:
-    - canonical references selected or user explicitly accepts text-only planning status
-    - shot design confirmed
+  - canonical references selected or user explicitly accepts text-only planning status
+  - shot design confirmed
   before_representative_sample:
-    - actual canonical references available
-    - representative shot start and end frames available
-    - generation mode and end frame contract defined
+  - actual canonical references available
+  - representative shot start and end frames available
+  - generation mode and end frame contract defined
   before_batch_video_generation:
-    - normal representative shot passed with real media
-    - high risk representative shot passed or documented as not required
-    - end frame reachability verified
-    - identity prop lighting and focus stability checked
-    - continuation strategy defined
-    - shot dependency graph and ledger created
+  - normal representative shot passed with real media
+  - high risk representative shot passed or documented as not required
+  - end frame reachability verified
+  - identity prop lighting and focus stability checked
+  - continuation strategy defined
+  - shot dependency graph and ledger created
   before_edit_ready:
-    - each required shot has a passed selected candidate
-    - failed or conditional shots repaired or explicitly excluded
-    - hard cut continuation and layered composite materials complete
+  - each required shot has a passed selected candidate
+  - failed or conditional shots repaired or explicitly excluded
+  - hard cut continuation and layered composite materials complete
   before_delivery_ready:
-    - final timeline reviewed
-    - post text sound color and export checked
-
+  - final timeline reviewed
+  - post text sound color and export checked
 hard_failures:
-  - camera_lighting_or_material_only_outside_final_positive_prompt
-  - user_must_assemble_multiple_prompt_fragments
-  - dense_multiview_or_fixed_multi_asset_character_plan_without_need
-  - single_start_frame_used_when_next_shot_requires_exact_tail_state
-  - missing_end_frame_contract
-  - missing_camera_endpoint
-  - missing_focus_depth_or_exposure
-  - missing_real_light_source_direction_and_illuminated_areas
-  - light_focus_or_exposure_drift_inside_one_shot
-  - video_prompt_is_only_action_summary
-  - sample_claimed_passed_without_actual_media
-  - prompt_pack_claimed_edit_ready_or_delivery_ready
-  - multiple_character_candidates_mixed_without_canonical_selection
-  - batch_generation_started_after_failed_representative_sample
-  - failed_shot_added_to_final_timeline
-  - model_capability_problem_handled_by_unbounded_asset_expansion
+- camera_lighting_or_material_only_outside_final_positive_prompt
+- user_must_assemble_multiple_prompt_fragments
+- dense_multiview_or_fixed_multi_asset_character_plan_without_need
+- single_start_frame_used_when_next_shot_requires_exact_tail_state
+- missing_end_frame_contract
+- missing_camera_endpoint
+- missing_focus_depth_or_exposure
+- missing_real_light_source_direction_and_illuminated_areas
+- light_focus_or_exposure_drift_inside_one_shot
+- video_prompt_is_only_action_summary
+- sample_claimed_passed_without_actual_media
+- prompt_pack_claimed_edit_ready_or_delivery_ready
+- multiple_character_candidates_mixed_without_canonical_selection
+- batch_generation_started_after_failed_representative_sample
+- failed_shot_added_to_final_timeline
+- model_capability_problem_handled_by_unbounded_asset_expansion
+full_package_integrity:
+  status_required: PROMPT_PACKAGE_READY
+  equal_counts:
+  - shot_count
+  - shot_card_count
+  - director_intent_count
+  - camera_direction_count
+  - lighting_direction_count
+  - character_performance_direction_count
+  - reference_binding_count
+  - start_state_count
+  - end_state_count
+  - video_prompt_or_post_plan_count
+  hard_failures:
+  - shot_without_visual_description
+  - missing_director_intent
+  - missing_camera_direction
+  - missing_lighting_direction
+  - character_shot_without_performance_direction
+  - emotion_label_without_observable_cues
+  - emotion_intensity_jump
+  - performance_not_readable_by_camera_or_light
+  - empty_reference_binding
+  - orphan_cf
+  - undefined_cf_reference
+  - undefined_asset_reference
+  - generated_shot_without_image_source
+  - generated_shot_without_video_prompt
+  - inconsistent_shot_ids

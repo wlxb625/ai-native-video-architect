@@ -3,28 +3,29 @@ import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "4.2.0"
+VERSION = "4.4.0"
 
 REQUIRED = [
-    "SKILL.md", "AGENT.md", "README.md", "manifest.json", "agents/openai.yaml",
+    "VERSION", "CONTRACT_VERSION", "EXECUTION.yaml", "SKILL.md", "AGENT.md", "README.md", "manifest.json", "agents/openai.yaml",
+    "constitution/immutable.yaml", "constitution/integrity.json", "contracts/execution-protocol.md", "contracts/workflow.enforced.yaml",
+    "adaptive/default-policy.yaml", "adaptive/policy.schema.json",
+    "schemas/s00-brief.schema.json", "schemas/s01-concepts.schema.json", "schemas/s02-treatment.schema.json", "schemas/s03-script.schema.json",
+    "schemas/generic-stage.schema.json", "schemas/evaluation.schema.json", "schemas/policy-patch.schema.json",
+    "scripts/contract_runner.py", "scripts/apply_policy_patch.py", "scripts/verify_contract.py",
     "config/modes.yaml", "config/progress-navigation.yaml", "config/workflow.yaml", "config/scoring.yaml",
     "modes/create.md", "modes/transform.md", "modes/diagnose.md", "modes/adapt.md",
-    "controllers/post-script-production.md", "controllers/production-execution.md",
-    "prompt-engineering/image-prompt-compiler.md",
-    "prompt-engineering/visual-style-color-light.md",
-    "prompt-engineering/asset-prompt-system.md",
-    "prompt-engineering/storyboard-frame-system.md",
-    "prompt-engineering/video-prompt-compiler.md",
-    "prompt-engineering/camera-movement-library.md",
-    "prompt-engineering/continuity-repair-system.md",
-    "templates/asset-prompt-block.md",
-    "templates/storyboard-frame-prompt-block.md",
-    "templates/video-shot-prompt-block.md",
-    "templates/production-runbook.md",
-    "evals/prompt-production-readiness-score.md",
-    "evals/shot-output-acceptance-score.md",
-    "tests/post-script-prompt-pipeline-stress-tests.md",
-    "tests/production-execution-stress-tests.md",
+    "controllers/agent-full-creation.md", "controllers/post-script-production.md", "controllers/production-execution.md",
+    "controllers/camera-director.md", "controllers/lighting-director.md", "controllers/performance-director.md",
+    "prompt-engineering/asset-prompt-system.md", "prompt-engineering/shot-cf-binding-system.md",
+    "prompt-engineering/image-prompt-compiler.md", "prompt-engineering/storyboard-frame-system.md",
+    "prompt-engineering/video-prompt-compiler.md", "prompt-engineering/performance-prompt-compiler.md", "prompt-engineering/continuity-repair-system.md",
+    "references/agent-full-creation-principles.md", "references/emotion-library.md",
+    "templates/asset-prompt-block.md", "templates/shot-production-card.md",
+    "templates/storyboard-frame-prompt-block.md", "templates/video-shot-prompt-block.md",
+    "templates/full-creation-package.md", "templates/performance-direction-block.md",
+    "evals/prompt-production-readiness-score.md", "evals/full-package-integrity-check.md",
+    "evals/shot-output-acceptance-score.md", "evals/performance-direction-score.md", "evals/directing-coherence-check.md", "evals/climax-force-check.md", "evals/character-age-fit-check.md",
+    "tests/agent-full-creation-stress-tests.md", "tests/post-script-prompt-pipeline-stress-tests.md", "tests/directing-performance-stress-tests.md",
 ]
 
 errors: list[str] = []
@@ -44,200 +45,143 @@ def require_tokens(rel: str, tokens: list[str]) -> None:
         if token not in text:
             errors.append(f"{rel} missing token: {token}")
 
-
 skill = ROOT / "SKILL.md"
 if skill.exists() and not skill.read_text(encoding="utf-8").startswith("---\n"):
     errors.append("SKILL.md missing YAML frontmatter")
 
 require_tokens("SKILL.md", [
     "name: ai-native-video-architect-zh",
-    "AI Native Film Studio V4.2",
-    "剧本确认后，同一个Skill应继续完成下游工作",
-    "独立身份主参考图",
-    "资产Prompt双层合同",
-    "单首帧图生视频",
-    "首尾帧视频",
-    "抽尾帧续拍",
-    "逐镜灯光合同",
-    "END_FRAME_CONTRACT",
-    "母参考与生产状态合同",
-    "SAMPLE_VALIDATED",
-    "代表性样片与批量生成门槛",
-    "生产队列、候选版本与镜头验收",
-    "没有实际生成结果却声称样片已经通过",
-    "下一步",
+    "强执行契约入口",
+    "CONTRACT_COMPLETE",
+    "SOFT_CONTRACT",
+    "AI Native Film Studio V4.4",
+    "FULL_CREATION_PACKAGE",
+    "PLANNED_REFERENCE",
+    "ACTUAL_REFERENCE",
+    "固定表示 **Control Frame",
+    "Shot与CF的唯一关系",
+    "导演、摄影、灯光与表演控制",
+    "FULL_PERFORMANCE_PROMPT",
+    "Reference Binding合同",
+    "Frame Source合同",
+    "禁止空Prompt",
+    "镜头覆盖率不变量",
+    "内部检查与返修",
+    "PROMPT_PACKAGE_READY",
+    "参考图尚未生成就停止全套内容创作",
 ])
 
 require_tokens("AGENT.md", [
-    "AI Native Film Studio V4.2",
-    "用户当前已经有什么成熟成果",
-    "资产Prompt双层合同",
-    "独立身份主参考图",
-    "导演级视频Prompt合同",
-    "逐镜灯光合同",
-    "生产状态合同",
-    "唯一母参考合同",
-    "代表性样片门槛",
-    "生产队列与版本台账",
-    "没有实际生成结果时",
+    "AI Native Film Studio V4.4",
+    "Contract Skill强执行义务",
+    "CONTRACT_COMPLETE",
+    "FULL_CREATION_PACKAGE",
+    "PLANNED_REFERENCE",
+    "Shot合同",
+    "CF合同",
+    "参考绑定合同",
+    "Prompt覆盖合同",
+    "人物表演方向",
+    "情绪曲线",
+    "PROMPT_PACKAGE_READY",
 ])
 
 for rel in ["config/modes.yaml", "config/workflow.yaml", "config/scoring.yaml", "config/progress-navigation.yaml"]:
     require_tokens(rel, [f"version: {VERSION}"])
 
 require_tokens("config/workflow.yaml", [
-    "MINIMUM_VIABLE_REFERENCES",
-    "SINGLE_IDENTITY_ANCHOR",
-    "EXECUTABLE_INTEGRATED_POSITIVE_PROMPT",
-    "DIRECTOR_GRADE_VIDEO_PROMPT",
-    "production_execution_controller",
-    "production_status_protocol",
-    "S08_canonical_reference_selection",
-    "S11_representative_test",
-    "real_media_required_for_pass",
-    "SAMPLE_PLAN_READY",
-    "shot_generation_queue",
-    "shot_ledger",
-    "S13_actual_output_review_and_delivery",
-    "MODEL_CAPABILITY_FAILURE",
-    "DELIVERY_READY",
-    "SINGLE_START_FRAME",
-    "FIRST_LAST_FRAME",
-    "OCCLUSION_SWITCH",
+    "no_external_asset_gate_for_prompt_package: true",
+    "S06_planned_reference_registry",
+    "S08_complete_shot_list",
+    "camera_lighting_performance_coherence",
+    "performance_direction_score",
+    "emotion_intensity_continuity",
+    "S09_shot_cf_binding",
+    "S10_frame_prompt_pack",
+    "S11_video_prompt_pack",
+    "S12_internal_validation_and_repair",
+    "S13_full_creation_delivery",
+    "PREVIOUS_TAIL_INHERITANCE",
+    "PROMPT_PACKAGE_READY",
+    "coverage_invariants",
 ])
 
-require_tokens("controllers/production-execution.md", [
-    "Prompt完成不等于参考图完成",
-    "生产状态协议",
-    "唯一母参考选择",
-    "SAMPLE_PLAN_READY",
-    "失败分层诊断",
-    "MODEL_CAPABILITY_FAILURE",
-    "失败触发资产升级",
-    "依赖顺序",
-    "镜头生成队列",
-    "shot_run",
-    "候选版本和选择",
-    "镜头验收",
-    "剪辑与后期",
-    "DELIVERY_READY",
+require_tokens("controllers/agent-full-creation.md", [
+    "设计态与实物态",
+    "Shot编译",
+    "CF编译",
+    "参考解析",
+    "FINAL_PACKAGE_INTEGRITY_CHECK",
 ])
 
-require_tokens("templates/production-runbook.md", [
-    "current_status",
-    "canonical_references",
-    "representative_tests",
-    "sample_gate",
-    "failure_diagnosis",
-    "production_dependency_graph",
-    "shot_queue",
-    "shot_ledger",
-    "asset_upgrade_log",
-    "editing_plan",
-    "final_quality_control",
+require_tokens("prompt-engineering/shot-cf-binding-system.md", [
+    "Shot–CF–Prompt Binding System",
+    "CF不能脱离Shot独立存在",
+    "PREVIOUS_TAIL_INHERITANCE",
+    "空值处理",
+    "coverage_report",
 ])
 
-require_tokens("evals/shot-output-acceptance-score.md", [
-    "必须查看真实输出",
-    "PLAN_ONLY",
-    "首帧与尾帧忠实度",
-    "人物身份与服装连续性",
-    "场景、道具与手部交互",
-    "摄影机执行",
-    "焦点、景深与曝光",
-    "灯光与色彩连续性",
-    "动作时间轴与物理",
-    "可剪辑性与连接",
-    "没有真实生成结果却声称`PASS`",
+require_tokens("templates/shot-production-card.md", [
+    "【可见画面描述】",
+    "【导演意图】",
+    "【逐镜灯光方向】",
+    "【人物表演方向】",
+    "【情绪与表演时间轴】",
+    "【参考绑定】",
+    "【帧来源模式】",
+    "【Control Frames】",
+    "【图片Prompt交付】",
+    "【完整视频正向Prompt｜直接复制】",
 ])
 
-require_tokens("prompt-engineering/asset-prompt-system.md", [
-    "先做最少参考",
-    "导演控制层",
-    "模型执行层",
-    "完整正向Prompt",
-    "一张独立身份主参考图",
-    "标准人物三视图",
-    "综合角色板",
-    "场景空镜",
-    "道具三视图",
-    "LEAN（默认）",
-    "CONTROLLED（失败后升级）",
-    "要求用户自行把多个字段拼成可用Prompt",
+require_tokens("templates/full-creation-package.md", [
+    "规划资产与生图Prompt",
+    "Shot总表",
+    "逐镜头导演制作卡",
+    "CF清单",
+    "参考图使用矩阵",
+    "内部完整性检查摘要",
+    "导演与表演圣经",
+    "连续性与情绪传递表",
+])
+require_tokens("templates/performance-direction-block.md", ["【内外情绪】", "【情绪节拍】", "【结束表演状态】"])
+
+require_tokens("evals/full-package-integrity-check.md", [
+    "硬性计数",
+    "ID完整性",
+    "内容完整性",
+    "Prompt一致性",
+    "导演一致性",
+    "情绪强度",
+    "PROMPT_PACKAGE_READY",
 ])
 
-require_tokens("templates/asset-prompt-block.md", [
-    "默认使用轻量资产块",
-    "【内部导演检查】",
-    "【完整正向Prompt｜直接复制】",
-    "不能只写人物或场景描述",
-    "默认先生成一张独立的角色身份主参考",
+require_tokens("tests/agent-full-creation-stress-tests.md", [
+    "FULL_PACKAGE_NO_ASSET_GATE",
+    "SHOT_WITHOUT_PROMPT",
+    "CF_ORPHAN",
+    "INHERITED_FRAME_NOT_BLANK",
+    "POST_ONLY_COVERAGE",
+    "PAIRWISE_CONTINUITY",
+    "FULL_PACKAGE_STATUS",
 ])
 
-require_tokens("prompt-engineering/video-prompt-compiler.md", [
-    "导演级Prompt",
-    "先决定生成模式",
-    "结束帧合同",
-    "时间轴动作编译",
-    "摄影机合同",
-    "焦点、景深和曝光合同",
-    "逐镜灯光合同",
-    "不得为了“方便复制”压缩成几句通用话",
-])
 
-require_tokens("templates/video-shot-prompt-block.md", [
-    "【生成模式与选择理由】",
-    "【画面空间与构图】",
-    "【时长与时间轴】",
-    "【摄影机合同】",
-    "【焦点、景深与曝光】",
-    "【逐镜灯光合同】",
-    "【结束帧合同】",
-    "【下一镜继承】",
-])
+require_tokens("controllers/camera-director.md", ["director_intent", "观众位置", "运镜的情绪语法", "硬失败"])
+require_tokens("controllers/lighting-director.md", ["lighting_direction", "可读性", "情绪功能", "灯光与表演协同"])
+require_tokens("controllers/performance-director.md", ["performance_direction", "内外矛盾", "情绪节拍", "强度标尺", "哭戏控制"])
+require_tokens("references/emotion-library.md", ["压住恐惧", "隐忍悲伤", "单颗泪水", "隐忍愤怒", "释然"])
+require_tokens("prompt-engineering/performance-prompt-compiler.md", ["Performance Prompt Compiler V4.4", "FULL_PERFORMANCE_PROMPT", "长提示词模式", "哭戏编译"])
+require_tokens("evals/performance-direction-score.md", ["Performance Direction Score V4.4", "情绪只有标签", "摄影可读性", "灯光可读性"])
+require_tokens("evals/directing-coherence-check.md", ["Camera–Lighting–Performance Coherence Check V4.4", "导演意图", "表演终点与End CF不同"])
+require_tokens("tests/directing-performance-stress-tests.md", ["DIR-01", "DIR-06", "DIR-10"])
 
-require_tokens("templates/storyboard-frame-prompt-block.md", [
-    "【前景、中景、背景】",
-    "【焦点、景深与曝光】",
-    "【逐镜灯光设计】",
-    "【结束帧合同】",
-    "【尾帧是否预生成】",
-])
 
-require_tokens("evals/prompt-production-readiness-score.md", [
-    "参考形式与职责",
-    "图片Prompt执行完整度",
-    "最终正向Prompt",
-    "生成模式与尾帧控制",
-    "摄影机与光学合同",
-    "逐镜灯光合同",
-    "结束帧合同",
-])
-
-require_tokens("tests/post-script-prompt-pipeline-stress-tests.md", [
-    "SINGLE_START_FRAME_BOUNDARY",
-    "END_FRAME_CONTRACT",
-    "PER_SHOT_LIGHTING",
-    "PROMPT_DETAIL_DENSITY",
-    "EXECUTABLE_POSITIVE_PROMPT",
-    "CHARACTER_REFERENCE_FORM",
-    "STORYBOARD_INTEGRATED_PROMPT",
-])
-
-require_tokens("tests/production-execution-stress-tests.md", [
-    "STATUS_TRUTHFULNESS",
-    "CANONICAL_REFERENCE_SELECTION",
-    "REAL_NORMAL_SAMPLE",
-    "REAL_HIGH_RISK_SAMPLE",
-    "SAMPLE_REQUIRES_MEDIA",
-    "FAILED_SAMPLE_BLOCKS_BATCH",
-    "FAILURE_LAYER_CLASSIFICATION",
-    "FAILURE_TRIGGERED_ASSET_UPGRADE",
-    "DEPENDENCY_BASED_PRODUCTION_ORDER",
-    "SHOT_LEDGER_AND_SELECTION",
-    "ACTUAL_SHOT_ACCEPTANCE",
-    "DELIVERY_READY_GATE",
-])
+require_tokens("EXECUTION.yaml", ["kind: contract-skill", "execution_mode: enforced_when_scripts_available", "fail_closed_soft_contract", "final_artifact_release_only_after_receipt"])
+require_tokens("constitution/immutable.yaml", ["IMMUTABLE_CONSTITUTION", "HIGHER_LAYER_WINS", "missing_evidence: FAIL", "生成者不得用自我声明替代独立评估产物", "STORY_FIT_OVERRIDES_MARKET_DEFAULT"])
+require_tokens("contracts/workflow.enforced.yaml", ["G01_CONCEPT", "G02_TREATMENT", "G03_SCRIPT", "G12_FULL_PACKAGE", "history_fingerprint", "climax_force_check", "character_age_fit_check"])
+require_tokens("contracts/execution-protocol.md", ["ACTIVATION_RECEIPT", "prepare → submit → evaluate → finalize", "CONTRACT_COMPLETE"])
 
 manifest_path = ROOT / "manifest.json"
 if manifest_path.exists():
@@ -245,31 +189,19 @@ if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("version") != VERSION:
             errors.append(f"manifest version must be {VERSION}")
-
         listed = set(manifest.get("files", []))
         for rel in REQUIRED:
             if rel not in listed and rel != "manifest.json":
                 errors.append(f"manifest missing file: {rel}")
-
-        expected_modes = {
-            "SINGLE_START_FRAME", "FIRST_LAST_FRAME", "TAIL_FRAME_CONTINUATION",
-            "TWO_SEGMENT_HARD_CUT", "OCCLUSION_SWITCH", "LAYERED_COMPOSITE",
-        }
-        if not expected_modes.issubset(set(manifest.get("video_generation_modes", []))):
-            errors.append("manifest missing video generation modes")
-
-        expected_contracts = {"CAMERA_CONTRACT", "OPTICAL_CONTRACT", "LIGHTING_CONTRACT", "END_FRAME_CONTRACT"}
-        if not expected_contracts.issubset(set(manifest.get("video_contracts", []))):
-            errors.append("manifest missing video contracts")
-
-        expected_statuses = {"DESIGN_READY", "PROMPT_READY", "REFERENCE_READY", "SAMPLE_VALIDATED", "BATCH_GENERATION_READY", "EDIT_READY", "DELIVERY_READY"}
-        if not expected_statuses.issubset(set(manifest.get("production_status_protocol", []))):
-            errors.append("manifest missing production status protocol")
-
-        expected_failures = {"REFERENCE_FAILURE", "CONTROL_FRAME_FAILURE", "PROMPT_FAILURE", "MODEL_CAPABILITY_FAILURE", "POST_PRODUCTION_FAILURE"}
-        if not expected_failures.issubset(set(manifest.get("failure_layers", []))):
-            errors.append("manifest missing production failure layers")
-
+        for key, expected in {
+            "reference_statuses": {"PLANNED_REFERENCE", "ACTUAL_REFERENCE"},
+            "design_status_protocol": {"PROMPT_PACKAGE_READY"},
+            "frame_source_modes": {"NEW_START_FRAME", "PREVIOUS_TAIL_INHERITANCE", "FIRST_LAST_FRAME", "EXISTING_USER_FRAME", "TEXT_TO_VIDEO", "POST_ONLY"},
+            "control_frame_types": {"START", "END", "BRIDGE", "TEXT_CONTRACT_ONLY"},
+            "performance_modes": {"CHARACTER_PERFORMANCE", "NON_CHARACTER_PERFORMANCE", "FULL_PERFORMANCE_PROMPT"},
+        }.items():
+            if not expected.issubset(set(manifest.get(key, []))):
+                errors.append(f"manifest missing {key}")
         expected_stages = {f"S{i:02d}" for i in range(14)}
         if expected_stages != set(manifest.get("progress_stages", [])):
             errors.append("manifest progress stages must remain S00 through S13")
@@ -288,6 +220,9 @@ result = {
     "status": "FAIL" if errors else "PASS",
     "errors": errors,
 }
-
 print(json.dumps(result, ensure_ascii=False, indent=2))
 sys.exit(1 if errors else 0)
+
+require_tokens("evals/climax-force-check.md", ["STRONG_DRAMATIC_PEAK", "CLIMAX_IS_ONLY_CLOSING_RITUAL", "counterfactual_challenges"])
+
+require_tokens("evals/character-age-fit-check.md", ["YOUTH_PRIORITY_WITH_STORY_FIT_OVERRIDE", "FORCED_REJUVENATION", "AGE_ROLE_CREDIBILITY_BREAK"])

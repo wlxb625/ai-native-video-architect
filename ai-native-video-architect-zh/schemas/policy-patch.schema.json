@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["operation", "path", "value", "scope", "evidence", "confidence"],
+  "properties": {
+    "operation": {"enum": ["add", "replace", "remove"]},
+    "path": {"type": "string"},
+    "value": {},
+    "scope": {"enum": ["global", "domain", "project", "task"]},
+    "evidence": {"type": "object", "required": ["source", "text"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "additionalProperties": false
+}

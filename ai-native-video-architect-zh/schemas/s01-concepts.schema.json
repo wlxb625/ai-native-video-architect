@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "stage_id",
+    "task_id",
+    "candidates",
+    "shortlist",
+    "selected_concept_id",
+    "removed_or_merged_ideas"
+  ],
+  "properties": {
+    "stage_id": {
+      "const": "S01"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "concept_id",
+          "title",
+          "logline",
+          "primary_path",
+          "core_promise",
+          "protagonist_task",
+          "middle_change",
+          "climax_owner",
+          "climax_action",
+          "climax_cost",
+          "final_image",
+          "fingerprint",
+          "climax_profile",
+          "opposing_value_a",
+          "opposing_value_b",
+          "pressure_source",
+          "point_of_no_return",
+          "climax_escalation",
+          "irreversible_state_change",
+          "age_choice",
+          "meaning_contract"
+        ],
+        "properties": {
+          "concept_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "logline": {
+            "type": "string"
+          },
+          "primary_path": {
+            "enum": [
+              "COMMERCIAL",
+              "LITERARY",
+              "EXPERIMENTAL",
+              "HYBRID"
+            ]
+          },
+          "core_promise": {
+            "type": "string"
+          },
+          "protagonist_task": {
+            "type": "string"
+          },
+          "middle_change": {
+            "type": "string"
+          },
+          "climax_owner": {
+            "type": "string"
+          },
+          "climax_action": {
+            "type": "string"
+          },
+          "climax_cost": {
+            "type": "string"
+          },
+          "final_image": {
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": "object",
+            "required": [
+              "relationship_type",
+              "setting_type",
+              "conflict_engine",
+              "climax_action_type",
+              "final_image_type"
+            ],
+            "properties": {
+              "relationship_type": {
+                "type": "string"
+              },
+              "setting_type": {
+                "type": "string"
+              },
+              "conflict_engine": {
+                "type": "string"
+              },
+              "climax_action_type": {
+                "type": "string"
+              },
+              "final_image_type": {
+                "type": "string"
+              }
+            }
+          },
+          "climax_profile": {
+            "enum": [
+              "STRONG_DRAMATIC_PEAK",
+              "QUIET_PEAK",
+              "ANTI_CLIMAX",
+              "SPECTACLE_PEAK"
+            ]
+          },
+          "opposing_value_a": {
+            "type": "string",
+            "minLength": 2
+          },
+          "opposing_value_b": {
+            "type": "string",
+            "minLength": 2
+          },
+          "pressure_source": {
+            "type": "string",
+            "minLength": 2
+          },
+          "point_of_no_return": {
+            "type": "string",
+            "minLength": 2
+          },
+          "climax_escalation": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string",
+              "minLength": 2
+            }
+          },
+          "irreversible_state_change": {
+            "type": "string",
+            "minLength": 2
+          },
+          "age_choice": {
+            "type": "object",
+            "required": [
+              "protagonist_name",
+              "approximate_age",
+              "age_band",
+              "role_or_life_stage",
+              "target_market_context",
+              "youth_priority_applies",
+              "decision",
+              "why_this_age",
+              "what_breaks_if_younger",
+              "what_breaks_if_older",
+              "required_experience_years",
+              "plausible_experience_start_age"
+            ],
+            "properties": {
+              "protagonist_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "approximate_age": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 120
+              },
+              "age_band": {
+                "enum": [
+                  "CHILD",
+                  "TEEN",
+                  "YOUNG_ADULT",
+                  "MIDDLE_AGED",
+                  "OLDER_ADULT",
+                  "AGELESS_OR_NONHUMAN"
+                ]
+              },
+              "role_or_life_stage": {
+                "type": "string",
+                "minLength": 2
+              },
+              "target_market_context": {
+                "enum": [
+                  "SHORT_VIDEO",
+                  "WEB_FICTION",
+                  "FILM_OR_SERIES",
+                  "OTHER"
+                ]
+              },
+              "youth_priority_applies": {
+                "type": "boolean"
+              },
+              "decision": {
+                "enum": [
+                  "YOUNG_SELECTED",
+                  "OLDER_SELECTED_FOR_STORY_FIT",
+                  "AGE_SPECIFIC_SELECTED",
+                  "AGE_NEUTRAL",
+                  "AGELESS_OR_NONHUMAN"
+                ]
+              },
+              "why_this_age": {
+                "type": "string",
+                "minLength": 6
+              },
+              "what_breaks_if_younger": {
+                "type": "string",
+                "minLength": 4
+              },
+              "what_breaks_if_older": {
+                "type": "string",
+                "minLength": 4
+              },
+              "required_experience_years": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 80
+              },
+              "plausible_experience_start_age": {
+                "type": "integer",
+                "minimum": 3,
+                "maximum": 80
+              }
+            },
+            "additionalProperties": true
+          },
+          "meaning_contract": {
+            "type": "object",
+            "required": [
+              "profile",
+              "genre_basis"
+            ],
+            "properties": {
+              "profile": {
+                "enum": [
+                  "THEMATIC_MEANING_REQUIRED",
+                  "FORMAL_ABSURDIST_EXCEPTION"
+                ]
+              },
+              "genre_basis": {
+                "enum": [
+                  "STANDARD_NARRATIVE",
+                  "ABSTRACT",
+                  "ABSURDIST",
+                  "FORMAL_EXPERIMENT"
+                ]
+              },
+              "human_question": {
+                "type": "string"
+              },
+              "competing_value_a": {
+                "type": "string"
+              },
+              "competing_value_b": {
+                "type": "string"
+              },
+              "protagonist_initial_belief": {
+                "type": "string"
+              },
+              "belief_pressure_or_change": {
+                "type": "string"
+              },
+              "climax_thematic_answer": {
+                "type": "string"
+              },
+              "ending_residue_or_question": {
+                "type": "string"
+              },
+              "contemporary_relevance": {
+                "type": "string"
+              },
+              "why_worth_telling": {
+                "type": "string"
+              },
+              "generic_theme_risk": {
+                "type": "string"
+              },
+              "formal_intent": {
+                "type": "string"
+              },
+              "audience_experience": {
+                "type": "string"
+              },
+              "pattern_logic": {
+                "type": "string"
+              },
+              "formal_culmination": {
+                "type": "string"
+              },
+              "anti_randomness_proof": {
+                "type": "string"
+              },
+              "why_exception_applies": {
+                "type": "string"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "profile": {
+                      "const": "THEMATIC_MEANING_REQUIRED"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "human_question",
+                    "competing_value_a",
+                    "competing_value_b",
+                    "protagonist_initial_belief",
+                    "belief_pressure_or_change",
+                    "climax_thematic_answer",
+                    "ending_residue_or_question",
+                    "contemporary_relevance",
+                    "why_worth_telling",
+                    "generic_theme_risk"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "profile": {
+                      "const": "FORMAL_ABSURDIST_EXCEPTION"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "formal_intent",
+                    "audience_experience",
+                    "pattern_logic",
+                    "formal_culmination",
+                    "anti_randomness_proof",
+                    "why_exception_applies"
+                  ]
+                }
+              }
+            ],
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "shortlist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "selected_concept_id": {
+      "type": "string"
+    },
+    "removed_or_merged_ideas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,479 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "stage_id",
+    "task_id",
+    "concept_id",
+    "title",
+    "core_promise",
+    "beats",
+    "middle_audit",
+    "climax_audit",
+    "ending_audit",
+    "must_protect",
+    "climax_profile",
+    "uses_speculative_mechanism",
+    "uses_twist",
+    "protagonist_age_audit",
+    "meaning_audit"
+  ],
+  "properties": {
+    "stage_id": {
+      "const": "S02"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "concept_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "core_promise": {
+      "type": "string"
+    },
+    "beats": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "beat_id",
+          "role",
+          "entry_state",
+          "action_or_formal_event",
+          "result",
+          "primary_change_type",
+          "exit_state",
+          "audience_question_after"
+        ],
+        "properties": {
+          "beat_id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "entry_state": {},
+          "action_or_formal_event": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "primary_change_type": {
+            "type": "string"
+          },
+          "exit_state": {},
+          "audience_question_after": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "middle_audit": {
+      "type": "object",
+      "required": [
+        "what_repeats",
+        "what_changes",
+        "why_necessary"
+      ]
+    },
+    "climax_audit": {
+      "type": "object",
+      "required": [
+        "setup_beats",
+        "chooser",
+        "actor",
+        "value_a",
+        "value_b",
+        "pressure_source",
+        "escalation_beats",
+        "failed_or_closed_alternatives",
+        "point_of_no_return",
+        "cost",
+        "irreversible_external_or_relational_change",
+        "audience_uncertainty",
+        "result",
+        "aftermath_state"
+      ],
+      "properties": {
+        "setup_beats": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "chooser": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_a": {
+          "type": "string",
+          "minLength": 2
+        },
+        "value_b": {
+          "type": "string",
+          "minLength": 2
+        },
+        "pressure_source": {
+          "type": "string",
+          "minLength": 2
+        },
+        "escalation_beats": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "failed_or_closed_alternatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "point_of_no_return": {
+          "type": "string",
+          "minLength": 2
+        },
+        "cost": {
+          "type": "string",
+          "minLength": 2
+        },
+        "irreversible_external_or_relational_change": {
+          "type": "string",
+          "minLength": 2
+        },
+        "audience_uncertainty": {
+          "type": "string",
+          "minLength": 2
+        },
+        "result": {
+          "type": "string",
+          "minLength": 2
+        },
+        "aftermath_state": {
+          "type": "string",
+          "minLength": 2
+        }
+      }
+    },
+    "ending_audit": {
+      "type": "object",
+      "required": [
+        "completed",
+        "open",
+        "common_fact",
+        "final_action",
+        "final_image",
+        "final_sound"
+      ]
+    },
+    "must_protect": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "climax_profile": {
+      "enum": [
+        "STRONG_DRAMATIC_PEAK",
+        "QUIET_PEAK",
+        "ANTI_CLIMAX",
+        "SPECTACLE_PEAK"
+      ]
+    },
+    "uses_speculative_mechanism": {
+      "type": "boolean"
+    },
+    "uses_twist": {
+      "type": "boolean"
+    },
+    "protagonist_age_audit": {
+      "type": "object",
+      "required": [
+        "protagonist_name",
+        "approximate_age",
+        "age_band",
+        "role_or_life_stage",
+        "target_market_context",
+        "youth_priority_applies",
+        "decision",
+        "why_this_age",
+        "what_breaks_if_younger",
+        "what_breaks_if_older",
+        "required_experience_years",
+        "plausible_experience_start_age",
+        "age_continuity_source_concept_id",
+        "audience_identification_strategy",
+        "age_specific_dramatic_value"
+      ],
+      "properties": {
+        "protagonist_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approximate_age": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 120
+        },
+        "age_band": {
+          "enum": [
+            "CHILD",
+            "TEEN",
+            "YOUNG_ADULT",
+            "MIDDLE_AGED",
+            "OLDER_ADULT",
+            "AGELESS_OR_NONHUMAN"
+          ]
+        },
+        "role_or_life_stage": {
+          "type": "string",
+          "minLength": 2
+        },
+        "target_market_context": {
+          "enum": [
+            "SHORT_VIDEO",
+            "WEB_FICTION",
+            "FILM_OR_SERIES",
+            "OTHER"
+          ]
+        },
+        "youth_priority_applies": {
+          "type": "boolean"
+        },
+        "decision": {
+          "enum": [
+            "YOUNG_SELECTED",
+            "OLDER_SELECTED_FOR_STORY_FIT",
+            "AGE_SPECIFIC_SELECTED",
+            "AGE_NEUTRAL",
+            "AGELESS_OR_NONHUMAN"
+          ]
+        },
+        "why_this_age": {
+          "type": "string",
+          "minLength": 6
+        },
+        "what_breaks_if_younger": {
+          "type": "string",
+          "minLength": 4
+        },
+        "what_breaks_if_older": {
+          "type": "string",
+          "minLength": 4
+        },
+        "required_experience_years": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "plausible_experience_start_age": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 80
+        },
+        "age_continuity_source_concept_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience_identification_strategy": {
+          "type": "string",
+          "minLength": 4
+        },
+        "age_specific_dramatic_value": {
+          "type": "string",
+          "minLength": 4
+        }
+      },
+      "additionalProperties": true
+    },
+    "meaning_audit": {
+      "type": "object",
+      "required": [
+        "profile",
+        "genre_basis",
+        "source_concept_id"
+      ],
+      "properties": {
+        "profile": {
+          "enum": [
+            "THEMATIC_MEANING_REQUIRED",
+            "FORMAL_ABSURDIST_EXCEPTION"
+          ]
+        },
+        "genre_basis": {
+          "enum": [
+            "STANDARD_NARRATIVE",
+            "ABSTRACT",
+            "ABSURDIST",
+            "FORMAL_EXPERIMENT"
+          ]
+        },
+        "human_question": {
+          "type": "string"
+        },
+        "competing_value_a": {
+          "type": "string"
+        },
+        "competing_value_b": {
+          "type": "string"
+        },
+        "protagonist_initial_belief": {
+          "type": "string"
+        },
+        "belief_pressure_or_change": {
+          "type": "string"
+        },
+        "climax_thematic_answer": {
+          "type": "string"
+        },
+        "ending_residue_or_question": {
+          "type": "string"
+        },
+        "contemporary_relevance": {
+          "type": "string"
+        },
+        "why_worth_telling": {
+          "type": "string"
+        },
+        "generic_theme_risk": {
+          "type": "string"
+        },
+        "formal_intent": {
+          "type": "string"
+        },
+        "audience_experience": {
+          "type": "string"
+        },
+        "pattern_logic": {
+          "type": "string"
+        },
+        "formal_culmination": {
+          "type": "string"
+        },
+        "anti_randomness_proof": {
+          "type": "string"
+        },
+        "why_exception_applies": {
+          "type": "string"
+        },
+        "source_concept_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "theme_setup_beat_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "theme_test_beat_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "climax_answer_beat_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ending_residue_beat_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pattern_setup_beat_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "pattern_development_beat_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "formal_culmination_beat_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "THEMATIC_MEANING_REQUIRED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "profile",
+              "genre_basis",
+              "source_concept_id",
+              "human_question",
+              "competing_value_a",
+              "competing_value_b",
+              "protagonist_initial_belief",
+              "belief_pressure_or_change",
+              "climax_thematic_answer",
+              "ending_residue_or_question",
+              "contemporary_relevance",
+              "why_worth_telling",
+              "theme_setup_beat_ids",
+              "theme_test_beat_ids",
+              "climax_answer_beat_id",
+              "ending_residue_beat_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "FORMAL_ABSURDIST_EXCEPTION"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "profile",
+              "genre_basis",
+              "source_concept_id",
+              "formal_intent",
+              "audience_experience",
+              "pattern_logic",
+              "formal_culmination",
+              "anti_randomness_proof",
+              "why_exception_applies",
+              "pattern_setup_beat_ids",
+              "pattern_development_beat_ids",
+              "formal_culmination_beat_id"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

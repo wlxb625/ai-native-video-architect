@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["policy_version", "layer", "scope", "scope_id", "preferences", "creative_history", "execution_parameters", "allowed_patch_paths"],
+  "properties": {
+    "policy_version": {"type": "string"},
+    "layer": {"const": "ADAPTIVE_POLICY"},
+    "scope": {"enum": ["global", "domain", "project"]},
+    "scope_id": {"type": "string"},
+    "preferences": {"type": "object"},
+    "creative_history": {"type": "object"},
+    "execution_parameters": {"type": "object"},
+    "allowed_patch_paths": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

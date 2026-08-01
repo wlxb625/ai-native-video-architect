@@ -1,5 +1,11 @@
 # Asset Prompt System
 
+## V4.4 规划资产注册
+
+完整制作包允许先建立`PLANNED_REFERENCE`，无需等待图片真实生成。每个资产必须有唯一`asset_id`、用途、`used_by_shots`、完整正向Prompt、负面Prompt和输出规则。所有Shot引用的资产ID必须在资产表中定义。
+
+
+
 ## 目标
 
 为S07生成最少但足够稳定、能够被外部生图模型直接执行的角色、场景与核心道具参考。

@@ -1,80 +1,44 @@
-version: 4.2.0
+version: 4.4.0
 
 progress_navigation:
   enabled_by_default: false
   enable_when:
     - 用户明确要求按步骤推进
-    - 任务跨越多个交付阶段且需要说明当前状态
     - 用户询问当前进度
-    - 发生回退、阻塞或需要重新确认
+    - 任务发生阻塞或回退
   suppress_when:
-    - 用户只需要单个Prompt或单个修改
-    - 用户已有成熟成果并明确要求直接交付
-    - 进度提示会打断当前主要结果
+    - 用户要求全套一次完成
+    - 用户需要单个Prompt或单个修改
+    - 进度提示会打断主要交付
 
   semantic_contract:
     DIRECT_ENTRY: true
+    FULL_PACKAGE_WITHOUT_ASSET_GATE: true
     NEXT_MEANS_NEXT_DELIVERABLE: true
-    USER_SELF_AUDIT: true
     rules:
-      - 用户已有剧本、参考图、镜头表、分镜或视频时直接从对应交付物开始
-      - 当前交付完整后，用户说下一步表示继续下一个相关交付物
-      - 只有用户明确说下一个资产、下一张或逐项来时才在当前交付内部推进
-      - 用户默认在外部工具中自行生成和筛选
-      - 只有用户明确请求审核时才进入ASSISTED_AUDIT
-
-  display_contract:
-    title: 项目进度
-    required_fields: [current_work, completed_outputs, current_deliverable, next_deliverable]
-    optional_fields: [entry_reason, confirmation_needed, blockers, repair_target]
-    rules:
-      - 进度提示必须短于主要交付
-      - 不展示内部推理
-      - 不把未交付或未经确认的内容标记完成
-      - 不要求用户逐资产或逐镜头返回
-      - 阶段编号仅作为内部定位，可不显示
-
-  status_symbols:
-    complete: "✓"
-    current: "●"
-    pending: "○"
-    conditional: "△"
-    blocked: "!"
-    skipped: "—"
+      - 用户已有成果时直接从缺失部分开始
+      - 全套请求中规划参考图尚未生成不阻塞Shot、CF和视频Prompt
+      - 不要求用户逐资产或逐镜头确认
+      - 用户说下一步表示继续下一个相关交付物或进入真实生成结果审核
 
   stages:
-    - {id: S00, name: 创作需求, internal_only: true, objective: 补齐真正缺失的题材人物时长形式和禁忌, deliverable: CREATIVE_BRIEF, next: S01}
-    - {id: S01, name: 创意方向, internal_only: true, objective: 在需要探索时提供差异明显的方向, deliverable: DIRECTION_OPTIONS, gate: STORY_DIRECTION_CONFIRMATION, next: S02}
-    - {id: S02, name: 故事方案, internal_only: true, objective: 建立任务规则递进选择高潮和最后图像, deliverable: STORY_TREATMENT, next: S03}
-    - {id: S03, name: 剧本或视觉脚本, internal_only: true, objective: 完成可供AI图片和视频制作的完整文本, deliverable: SCRIPT_PACKAGE, gate: SCRIPT_CONFIRMATION, next: S04}
-    - {id: S04, name: 剧本制作拆解, internal_only: true, objective: 提取人物场景道具动作光线声音和风险, deliverable: SCRIPT_BREAKDOWN, next: S05}
-    - {id: S05, name: 视觉设定, internal_only: true, objective: 锁定风格色调真实光源材质摄影和禁止风格, deliverable: VISUAL_RULESET, next: S06}
-    - {id: S06, name: 最小核心参考计划, internal_only: true, objective: 只规划分镜真正需要的核心参考, deliverable: MINIMUM_REFERENCE_PLAN, next: S07}
-    - {id: S07, name: 核心参考图Prompt, internal_only: true, objective: 一次性交付必要参考图Prompt且不扩张无用资产, deliverable: REFERENCE_PROMPT_PACK, execution: 用户在外部生图软件中生成, next: S08}
-    - {id: S08, name: 用户参考图确认, internal_only: true, objective: 用户自行选定参考图并按需辅助审核, deliverable: REFERENCE_CONFIRMATION_RECORD, gate: ASSET_CONFIRMATION, default_mode: USER_SELF_AUDIT, next: S09}
-    - {id: S09, name: 分镜设计, internal_only: true, objective: 确定镜头目的动作摄影焦点逐镜灯光精确尾态和连接, deliverable: SHOT_LIST_AND_CAMERA_PLAN, gate: STORYBOARD_CONFIRMATION, next: S10}
-    - {id: S10, name: 分镜帧Prompt, internal_only: true, objective: 交付首帧结束帧合同及必要尾帧Prompt, deliverable: FRAME_PROMPT_PACK, next: S11}
-    - {id: S11, name: 代表性样片, internal_only: true, objective: 验证尾帧可达性人物道具摄影焦点灯光和剪辑可接性, deliverable: CORE_SAMPLE_PACK, gate: CORE_SAMPLE_GATE, default_mode: USER_SELF_AUDIT, next: S12}
-    - {id: S12, name: 导演级视频Prompt与后期, internal_only: true, objective: 交付生成模式分秒动作摄影光学逐镜灯光尾帧连续性修复剪辑和声音, deliverable: VIDEO_PROMPT_PACK_AND_PRODUCTION_PACK, next: S13}
-    - {id: S13, name: 审查与交付, internal_only: true, objective: 检查剧本保真参考经济性连续性尾帧摄影灯光声音和交付, deliverable: DIRECTOR_REVIEW_AND_DELIVERY, next: null}
-
-  entry_inference:
-    - {when: 用户只有模糊想法, enter: S00}
-    - {when: 用户已有明确故事方向, enter: S02}
-    - {when: 用户已有故事但无完整剧本, enter: S03}
-    - {when: 用户提供已确认剧本或视觉脚本, enter: S04}
-    - {when: 用户只需要角色场景或道具Prompt, enter: S07}
-    - {when: 用户已有参考图, enter: S09}
-    - {when: 用户已有镜头表, enter: S10}
-    - {when: 用户已有分镜帧, enter: S12}
-    - {when: 用户只需要单个图片Prompt, enter: DIRECT_IMAGE_PROMPT}
-    - {when: 用户只需要单个视频Prompt, enter: DIRECT_VIDEO_PROMPT}
-    - {when: 用户要求DIAGNOSE, enter: DIAGNOSE}
-    - {when: 用户要求TRANSFORM, enter: TRANSFORM}
+    - {id: S00, name: 创作需求, internal_only: true, deliverable: CREATIVE_BRIEF, next: S01}
+    - {id: S01, name: 故事方向, internal_only: true, deliverable: STORY_DIRECTION, next: S02}
+    - {id: S02, name: 故事方案, internal_only: true, deliverable: STORY_TREATMENT, next: S03}
+    - {id: S03, name: 剧本或视觉脚本, internal_only: true, deliverable: SCRIPT_PACKAGE, next: S04}
+    - {id: S04, name: 剧本制作拆解, internal_only: true, deliverable: SCRIPT_BREAKDOWN, next: S05}
+    - {id: S05, name: 视觉圣经, internal_only: true, deliverable: VISUAL_BIBLE, next: S06}
+    - {id: S06, name: 规划资产表, internal_only: true, deliverable: PLANNED_REFERENCE_REGISTRY, next: S07}
+    - {id: S07, name: 基础资产Prompt, internal_only: true, deliverable: REFERENCE_PROMPT_PACK, next: S08}
+    - {id: S08, name: 完整Shot表, internal_only: true, deliverable: COMPLETE_SHOT_LIST, next: S09}
+    - {id: S09, name: Shot与CF绑定, internal_only: true, deliverable: SHOT_CF_BINDING_MAP, next: S10}
+    - {id: S10, name: 控制帧Prompt, internal_only: true, deliverable: FRAME_PROMPT_PACK, next: S11}
+    - {id: S11, name: 视频Prompt, internal_only: true, deliverable: VIDEO_PROMPT_PACK, next: S12}
+    - {id: S12, name: 内部检查返修, internal_only: true, deliverable: INTERNAL_VALIDATION_SUMMARY, next: S13}
+    - {id: S13, name: 完整提示词包, internal_only: true, deliverable: FULL_CREATION_PACKAGE, next: null}
 
   compact_display_example: |
     【项目进度】
-    已完成：✓ 剧本 ✓ 视觉设定
-    正在进行：导演级视频Prompt
-    本轮交付：生成模式、摄影、灯光、焦点与尾帧合同
-    下一项：代表性样片验证或整片生产
+    已完成：✓ 剧本 ✓ 视觉资产规划 ✓ Shot与CF绑定
+    正在进行：逐镜头图片与视频Prompt内部校验
+    本轮交付：完整制作提示词包

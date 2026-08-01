@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["stage_id", "task_id", "artifact_type", "content", "coverage"],
+  "properties": {
+    "stage_id": {"type": "string"},
+    "task_id": {"type": "string"},
+    "artifact_type": {"type": "string"},
+    "content": {},
+    "coverage": {"type": "object"}
+  },
+  "additionalProperties": true
+}

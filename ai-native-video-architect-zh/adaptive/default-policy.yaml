@@ -1,0 +1,37 @@
+policy_version: '0.4'
+layer: ADAPTIVE_POLICY
+scope: domain
+scope_id: ai-native-video-architect-zh
+preferences:
+  preferred_patterns: []
+  rejected_patterns: []
+  preferred_tones: []
+  forbidden_content: []
+  reference_quality_examples:
+    positive: []
+    negative: []
+  preferred_protagonist_age_bands: []
+  rejected_age_treatments: []
+creative_history:
+  used_concepts: []
+  rejected_concepts: []
+execution_parameters:
+  internal_candidate_count: 10
+  shortlist_count: 3
+  maximum_same_relationship_ratio: 0.4
+  minimum_distinct_settings: 4
+  minimum_distinct_climax_action_types: 4
+  default_climax_profile: STRONG_DRAMATIC_PEAK
+  minimum_climax_force_score: 80
+  minimum_climax_escalation_steps: 2
+allowed_patch_paths:
+- preferences.preferred_patterns
+- preferences.rejected_patterns
+- preferences.preferred_tones
+- preferences.forbidden_content
+- preferences.reference_quality_examples.positive
+- preferences.reference_quality_examples.negative
+- creative_history.used_concepts
+- creative_history.rejected_concepts
+- preferences.preferred_protagonist_age_bands
+- preferences.rejected_age_treatments

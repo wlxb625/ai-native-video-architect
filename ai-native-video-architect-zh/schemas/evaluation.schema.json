@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "task_id",
+    "stage_id",
+    "overall_status",
+    "results",
+    "evaluation_context"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "stage_id": {
+      "type": "string"
+    },
+    "overall_status": {
+      "enum": [
+        "PASS",
+        "CONDITIONAL",
+        "FAIL"
+      ]
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "evaluator",
+          "status",
+          "evidence",
+          "hard_failures",
+          "must_fix",
+          "must_protect",
+          "subscores"
+        ],
+        "properties": {
+          "evaluator": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "CONDITIONAL",
+              "FAIL",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "subscores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "ref_id",
+                "criterion",
+                "finding"
+              ],
+              "properties": {
+                "ref_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "criterion": {
+                  "type": "string",
+                  "minLength": 4
+                },
+                "finding": {
+                  "type": "string",
+                  "minLength": 4
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "hard_failures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "must_fix": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "must_protect": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "counterfactual_challenges": {
+            "type": "object",
+            "properties": {
+              "removable_without_changing_ending": {
+                "type": "boolean"
+              },
+              "choice_has_obvious_correct_answer": {
+                "type": "boolean"
+              },
+              "cost_paid_on_screen": {
+                "type": "boolean"
+              },
+              "climax_distinct_from_resolution": {
+                "type": "boolean"
+              },
+              "pressure_escalates_before_action": {
+                "type": "boolean"
+              },
+              "post_climax_state_cannot_return": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "meaning_counterfactual_challenges": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "evaluation_context": {
+      "type": "object",
+      "required": [
+        "generator_context_id",
+        "evaluator_context_id",
+        "artifact_sha256",
+        "generator_rationale_visible",
+        "evaluation_nonce",
+        "evaluator_rules_sha256"
+      ],
+      "properties": {
+        "generator_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evaluator_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "generator_rationale_visible": {
+          "const": false
+        },
+        "evaluation_nonce": {
+          "type": "string",
+          "minLength": 16
+        },
+        "evaluator_rules_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,12 +1,15 @@
 # Camera Language Controller
 
+V4.4正式镜头设计先读取`controllers/camera-director.md`。当人物情绪或表演是主要信息时，同时读取`controllers/performance-director.md`和`references/emotion-library.md`。
+
+
 ## 目标
 
 把“画面里有什么”转化为“观众如何看见、何时理解、为什么产生情绪”。镜头语言不是装饰参数，而是信息与关系的组织方式。
 
 ## 六层镜头定义
 
-每个正式镜头至少定义：
+每个正式镜头先定义导演意图：叙事功能、情绪目标、观众位置、信息优先级、揭示顺序和切镜理由。然后至少定义：
 
 1. 景别：观众与人物或世界的距离；
 2. 机位：力量、脆弱、控制或失衡关系；
@@ -153,7 +156,12 @@ shot:
   material_detail:
   frame_rate:
   shutter_angle:
+  director_intent:
+  audience_position:
+  information_priority:
+  reveal_order:
   emotional_effect:
+  performance_readability:
   sound_relation:
   edit_connection:
   continuity_lock:

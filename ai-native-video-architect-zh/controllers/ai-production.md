@@ -1,4 +1,4 @@
-# AI Production Controller V4.0
+# AI Production Controller V4.4
 
 ## 目标
 
@@ -13,6 +13,11 @@
 - `controllers/post-script-production.md`
 - `controllers/asset-first-production.md`
 - `controllers/detailed-storyboard.md`
+- `controllers/camera-director.md`
+- `controllers/lighting-director.md`
+- `controllers/performance-director.md`
+- `references/emotion-library.md`
+- `prompt-engineering/performance-prompt-compiler.md`
 - `prompt-engineering/image-prompt-compiler.md`
 - `prompt-engineering/storyboard-frame-system.md`
 - `prompt-engineering/video-prompt-compiler.md`
@@ -68,6 +73,7 @@ production_protection:
 ```text
 参考职责
 + 主体和静态瞬间
++ 可见微表情、视线、姿态、重心和手部状态
 + 场景空间
 + 服饰道具
 + 景别机位构图
@@ -85,8 +91,9 @@ production_protection:
 ```text
 唯一首帧
 + 起始状态
-+ 一个主要动作
-+ 起势过程收住
++ 人物目标、内外矛盾和起始表演基线
++ 一个主要动作和一个主要情绪转折
++ 起势、微表情与情绪过程、收住
 + 速度方向幅度重心
 + 运镜起点方向速度终点
 + 允许环境动态
@@ -95,7 +102,7 @@ production_protection:
 + 禁止变化
 ```
 
-视频Prompt主要描述运动，不重新定义人物和场景。
+视频Prompt主要描述运动与表演随时间的变化，不重新定义人物和场景。
 
 ## 首尾帧
 
@@ -104,15 +111,15 @@ production_protection:
 ## 镜头策略
 
 - Establishing：空间建立；
-- Performance：表演和反应；
+- Performance：人物目标、内外矛盾、微表情、呼吸、身体语言和反应；
 - Interaction：人物与道具/人物；
 - Spectacle：前兆、发生、结果分层；
 - Symbol：低动作、高构图和声音；
 - Connector：视线、脚步、手部、门、光和道具连接。
 
-## 运镜
+## 导演、摄影、灯光和表演
 
-运镜必须有动机和终点。调用`camera-movement-library.md`。固定镜头是合法且常用选择。
+先建立导演意图和观众位置，再选择摄影参数。运镜必须有动机和终点，调用`camera-director.md`与`camera-movement-library.md`。逐镜灯光必须让关键表演区域可读。人物表演调用`performance-director.md`和`performance-prompt-compiler.md`，禁止只写情绪标签。固定镜头是合法且常用选择。
 
 ## 续拍
 

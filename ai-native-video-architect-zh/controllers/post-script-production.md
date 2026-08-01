@@ -1,241 +1,148 @@
-# Post-Script Production Orchestrator V4.2
+# Post-Script Production Orchestrator V4.4
 
 ## 目标
 
-本控制器负责剧本或视觉脚本确认后的完整生产流程。默认目标不是建立庞大影视资产库，也不是在写完Prompt后停止，而是用最少且真正稳定的参考完成可发布视频：
+剧本或视觉脚本成立后，在Agent内部完成外部平台制作所需的全部设计内容：
 
 ```text
-剧本确认
-→ 视觉规则与最小核心参考Prompt
-→ 唯一母参考选择
-→ 分镜首尾帧与生成模式
-→ 代表性样片门槛
-→ 按依赖批量生产
-→ 镜头验收与修复
-→ 剪辑、声音、文字、调色和交付
+剧本拆解
+→ 视觉规则
+→ 规划资产与资产Prompt
+→ 完整Shot表
+→ CF设计
+→ 图片Prompt
+→ 视频Prompt
+→ 内部连续性和覆盖率返修
+→ PROMPT_PACKAGE_READY
 ```
 
-剧本后的图片Prompt和视频Prompt必须是用户可直接执行的最终内容。Prompt完成后必须继续提供生产执行方法，但没有实际生成结果时不得虚构样片通过或成片完成。
+真实图片、样片和视频不是设计态完整包的前置条件。
 
 ## 必读模块
 
-- `controllers/production-execution.md`
-- `prompt-engineering/image-prompt-compiler.md`
-- `prompt-engineering/visual-style-color-light.md`
-- `prompt-engineering/asset-prompt-system.md`
-- `prompt-engineering/storyboard-frame-system.md`
-- `prompt-engineering/video-prompt-compiler.md`
-- `prompt-engineering/camera-movement-library.md`
-- `prompt-engineering/continuity-repair-system.md`
-- `evals/shot-output-acceptance-score.md`
-- `templates/production-runbook.md`
+- `controllers/agent-full-creation.md`；
+- `controllers/camera-director.md`；
+- `controllers/lighting-director.md`；
+- `controllers/performance-director.md`；
+- `references/emotion-library.md`；
+- `prompt-engineering/performance-prompt-compiler.md`；
+- `prompt-engineering/visual-style-color-light.md`；
+- `prompt-engineering/asset-prompt-system.md`；
+- `prompt-engineering/shot-cf-binding-system.md`；
+- `prompt-engineering/image-prompt-compiler.md`；
+- `prompt-engineering/storyboard-frame-system.md`；
+- `prompt-engineering/video-prompt-compiler.md`；
+- `prompt-engineering/camera-movement-library.md`；
+- `prompt-engineering/continuity-repair-system.md`；
+- `evals/prompt-production-readiness-score.md`；
+- `evals/full-package-integrity-check.md`；
+- `templates/full-creation-package.md`。
 
-## 用户资料与项目适配
+用户提供AIGC教程、模板或资料时，读取与当前任务有关的原文并保留其成熟制作方法。
 
-用户提供AIGC教程、Prompt模板或资料包时，优先读取和保留其主体结构、负面约束和输出方式。
+## S04 剧本制作拆解
 
-资料中的三视图、综合角色板、场景空镜、道具三视图、首尾帧和续拍方法属于可调用模板，不代表每个项目必须全部使用。
+提取：
 
-必须区分：
+- 主要人物、服装和可见状态变化；
+- 主要场景、空间地标和光源位置；
+- 核心道具及状态变化；
+- 每场和每镜的可见动作；
+- 时间、天气、灯光和色调变化；
+- 声音与剪辑连接；
+- 必须继承的结束状态；
+- 需要后期的精确文字、镜面和效果。
 
-- **原资料方法**：资料明确提供的模板和结构；
-- **项目适配**：根据当前剧本、模型和镜头需求选择其中一部分；
-- **自行补充**：导演级摄影、灯光、尾帧、样片门槛、镜头台账和后期控制，不得冒充原资料原文。
+## S05 视觉圣经
 
-## 生产复杂度分级
+锁定身份、空间、道具、色彩、光线、摄影、材质和禁止漂移。
 
-### LEAN（默认）
+## S06 规划资产
 
-适用15秒至90秒短片、1至3名主要角色、1至3个主要场景和个人创作者。
+建立`PLANNED_REFERENCE`资产ID。每名主要角色至少身份锚点，每个主要场景至少空镜，核心道具和特殊状态按镜头需求增加。
 
-角色先判断一张独立身份主参考是否足够。只有镜头需要或实际失败时才增加全身服装、面部近景、手部交互、标准三视图、综合角色板或特殊状态。
+## S07 资产Prompt
 
-每个主要场景默认一张无人物空镜。核心道具只有多镜重复、结构易变、尺寸影响交互、承担剧情证据或有连续状态变化时才单独生成。
+一次性交付所有必要资产的完整正向Prompt、负面Prompt和输出规则。每个资产列出使用Shot。
 
-### CONTROLLED（按需要或失败升级）
+## S08 完整Shot表与导演设计
 
-只针对具体问题增加面部、全身服装、发型细节、核心手部交互、第二场景角度、道具结构、特殊状态或局部修复Prompt。
+一次性完成所有Shot，不只做关键镜头。每镜一个主要任务和一个主要动作或揭示。
 
-### STUDIO（用户明确要求）
+必须有`visual_description`，不能用主题词代替可见画面。每镜同时建立：`director_intent`、`camera_direction`、`lighting_direction`、`performance_direction`和`emotion_curve`。空镜使用环境节奏与观看关系替代表演字段，但不得留空。
 
-用于系列IP、长片、团队协作、复杂多人动作或可复用资产库。不得默认用于普通60秒短片。
+## S09 Shot–CF绑定
 
-## S04 剧本拆解
+对每个Shot选择：
 
-只提取直接影响生成、剪辑和验收的信息：
+- `NEW_START_FRAME`；
+- `PREVIOUS_TAIL_INHERITANCE`；
+- `FIRST_LAST_FRAME`；
+- `EXISTING_USER_FRAME`；
+- `TEXT_TO_VIDEO`；
+- `POST_ONLY`。
 
-- 主要人物及可见造型；
-- 主要场景与固定空间锚点；
-- 重复出现或推动剧情的核心道具；
-- 每镜一个主要动作；
-- 时间、天气、光线和色调变化；
-- 必须提前控制的特殊状态；
-- 高风险但不可删除的镜头；
-- 上下镜头必须继承的尾态；
-- 精确文字、镜面、雾气、声音等后期专用内容。
+建立Start CF、End CF和必要Bridge CF。CF必须属于当前Shot。
 
-不得为了显示专业而额外创造资产。
+## S10 图片Prompt
 
-## S05 视觉规则
+图片Prompt默认执行视觉密度要求：剧情关键帧必须明确主体视觉状态、主要张力来源、背景功能与大形、前中后景、冻结运动痕迹、光色和材质；技术型资产板保持中性、清晰和可复用，不做无意义电影化。
 
-至少锁定整体影像风格、主辅点缀色、白平衡、曝光、高光暗部、真实光源世界位置、人物场景道具材质、摄影构图倾向和禁止风格。
+- 新首帧：交付完整Prompt；
+- 首尾帧：交付两条完整Prompt；
+- 继承上一镜：写明CF来源和备用首帧Prompt；
+- 不预制尾帧：交付文字版结束帧合同；
+- POST_ONLY：写明素材和后期操作。
 
-这些内容可以在内部结构化记录，但后续每条最终正向Prompt必须写入当前资产或镜头需要的具体信息。
+任何Shot不得留空。
 
-## S06 最小核心参考计划
+## S11 视频Prompt
 
-默认计算方式：
+图生视频必须先保护首帧身份、美术、构图与光线，再围绕唯一核心视觉事件编排身体部位动作、材质速度差、背景事件、镜头响应、时间高潮和结束状态。用户无需额外调用“强化模式”。
 
-```text
-每名主要角色：先判断1张身份主参考是否足够
-每个主要场景：1张无人物空镜
-每件必须跨镜稳定的核心道具：0至1张结构或状态参考
-每种必须精确控制的特殊变化：0至1张状态参考
-全身、手部、三视图和综合板：按镜头需要或失败升级
-```
+每个生成型Shot编写完整、独立、可复制的视频正向Prompt和负面Prompt。Prompt必须编译人物目标、内外矛盾、可见微表情、呼吸、身体语言、情绪节拍、摄影可读性和灯光可读性。
 
-资产计划区分：
+一个短镜头只有一个主要动作、一个主要情绪转折和一种主要运镜。复杂镜面、文字、雾气和多层状态使用硬切、遮挡或分层。
 
-- `REQUIRED`：没有它无法稳定开始；
-- `ON_DEMAND`：镜头确有需要或发生失败后生成；
-- `POST_ONLY`：后期完成，不交给生图模型。
+## S12 内部闭环验证
 
-## S07 核心参考图Prompt
+执行：
 
-一次性交付全部`REQUIRED`资产Prompt，但数量服从最小参考原则。
+1. 资产覆盖；
+2. Shot完整性；
+3. CF绑定；
+4. 图片来源覆盖；
+5. 视频Prompt覆盖；
+6. 相邻镜头连续性；
+7. 摄影—灯光—表演一致性；
+8. 情绪强度与相邻镜头连续性；
+9. Prompt冲突；
+10. 生成可行性；
+11. 最终包ID一致性。
 
-资产形式按需求选择：单张身份主参考、全身服装参考、标准三视图、综合角色板、面部近景、手部交互、场景空镜、道具结构或特殊状态图。
-
-内部导演控制层可分别检查构图、摄影、光学、曝光、灯光、色彩、材质和连续性；用户最终复制的完整正向Prompt必须把以上相关内容自然融合进去。
-
-禁止正向Prompt只写主体外貌，摄影、灯光和材质另放在外部合同中；禁止让用户自行拼接多个字段。
-
-## S08 唯一母参考选择
-
-用户可在外部软件生成参考图并自行筛选，不要求逐张返回。但进入正式分镜生产前，必须为每个长期继承对象选定一个当前唯一母参考：
-
-- 一个主要角色对应一个当前主身份版本；
-- 一个主要场景对应一个当前母场景；
-- 必要核心道具对应一个结构主版本；
-- 必要特殊状态对应一个明确版本。
-
-外部成本允许时，每项核心参考建议生成2至4个候选，但不是硬性配额。选择依据是身份或结构正确、可覆盖主要镜头、没有明显错误、灯光材质符合视觉规则和便于后续参考功能读取。
-
-不得混用多个相似角色候选。局部问题优先图生图或局部修复。
-
-只有实际选定文件存在时才能标记`REFERENCE_READY`；Prompt已写完但图片未生成时只能是`PROMPT_READY`。
-
-## S09 分镜设计
-
-一次性完成整片镜头表。每镜明确唯一叙事任务、一个主要动作、景别焦段机位轴线、前中后景、构图、焦点、逐镜灯光、输入状态、精确输出状态、下一镜继承、时长、声音、剪辑和风险。
-
-相似镜头必须合并，不为展示镜头语言增加无意义镜头。
-
-## S10 分镜首尾帧与控制架构
-
-实际控制帧生产顺序：
-
-```text
-第一张分镜：唯一角色母参考 + 母场景 + 必要道具 + 当前镜头
-后续分镜：唯一母参考 + 上一张已选定控制帧 + 当前镜头
-```
-
-后续镜头只改变当前动作、景别、摄影角度和必要构图，保持身份、服装、场景、道具、主光世界位置、白平衡、曝光、主色和材质。
-
-每张首帧或尾帧正向Prompt必须融合当前镜头的摄影、焦点景深、曝光、逐镜灯光和材质。
-
-每镜设计`END_FRAME_CONTRACT`。下一镜依赖准确姿势、视线、手部、道具、焦点、构图或状态时预生成尾帧；其余镜头也须定义尾态并抽取稳定尾帧。
-
-## S11 代表性样片门槛
-
-默认测试一个来自正片的普通镜头。项目确有镜面、变形、多人交互、复杂手部、遮挡切换或高难运镜时，再测试最多一个真实高风险镜头。
-
-普通镜头用于验证人物、场景和道具稳定，动作物理，摄影机执行，焦点曝光灯光，结束帧可达性和下一镜连接。
-
-高风险镜头必须使用实际首帧、尾帧、桥接帧、遮挡点或分层方法，不能用简化替代镜头假装通过。
-
-实际输出必须使用`evals/shot-output-acceptance-score.md`验收。未看到真实媒体时只能输出`SAMPLE_PLAN_READY`，不得输出`SAMPLE_VALIDATED`。
-
-普通样片和必要高风险样片存在硬失败时，不得进入无差别批量生成。
-
-## S12 导演级视频Prompt与生产执行包
-
-写Prompt前选择：
-
-- `SINGLE_START_FRAME`
-- `FIRST_LAST_FRAME`
-- `TAIL_FRAME_CONTINUATION`
-- `TWO_SEGMENT_HARD_CUT`
-- `OCCLUSION_SWITCH`
-- `LAYERED_COMPOSITE`
-
-每镜视频Prompt必须包含生成模式与控制帧、前中后景、起始姿态、分秒动作和物理、摄影机合同、焦点景深曝光、逐镜灯光、色彩材质环境、精确结束帧、下一镜继承、声音、稳定项和负面约束。
-
-生产执行包还必须建立：
-
-- 当前生产状态和证据；
-- 唯一母参考清单；
-- 普通与高风险样片计划或验收记录；
-- 控制帧依赖图；
-- 镜头生产顺序；
-- 每镜目标候选数量；
-- Prompt和媒体版本命名；
-- 镜头台账；
-- 失败分层诊断；
-- 资产升级日志；
-- 硬切、遮挡、续拍和分层合成计划；
-- 后期文字、声音、调色和导出计划。
-
-不得在代表性样片尚未通过时批量生成整片所有镜头。
-
-## S13 实际镜头验收、剪辑与交付
-
-已有真实生成片段时，逐镜使用`evals/shot-output-acceptance-score.md`审核：
-
-- 首帧与尾帧忠实度；
-- 人物身份与服装；
-- 场景、道具与手部；
-- 摄影机；
-- 焦点、景深与曝光；
-- 灯光与色彩；
-- 动作物理；
-- 可剪辑性；
-- 后期可完成度。
-
-失败后先归类：
-
-- `REFERENCE_FAILURE`
-- `CONTROL_FRAME_FAILURE`
-- `PROMPT_FAILURE`
-- `MODEL_CAPABILITY_FAILURE`
-- `POST_PRODUCTION_FAILURE`
-
-修复顺序：简化Prompt或动作、修复控制帧、固定机位、缩短片段、补尾帧或续拍、遮挡切换或分层合成，最后才新增参考资产。
-
-只有通过验收的镜头版本进入剪辑时间线。生产包明确每镜选用版本、入点出点、连接方式、分层素材、后期文字、声音、调色、最终时长和导出设置。
-
-项目状态只能依据证据标记：`DESIGN_READY`、`PROMPT_READY`、`REFERENCE_READY`、`SAMPLE_VALIDATED`、`BATCH_GENERATION_READY`、`EDIT_READY`或`DELIVERY_READY`。
-
-## “下一步”语义
-
-当前必要内容完整交付后，用户说“下一步”表示进入下一个相关交付物，不是逐张回报，也不是继续制造更多Prompt。
-
-Prompt包完成后的下一项通常是唯一母参考生成与筛选、代表性样片或实际输出验收。
-
-## 禁止行为
-
-- 把短片默认设计成完整影视资产库；
-- 默认密集六宫格或固定每个角色多张；
-- 摄影、灯光和材质只存在于Prompt外；
-- 要求用户自行拼接多个Prompt字段；
-- 每个场景预制多个无人物机位；
-- 没有实际失败就生成大量技术测试；
-- 声称自由扩写来自用户资料；
-- 每镜强制首尾帧，或普通动作默认无控制单首帧；
-- 视频Prompt只写动作，不写画面、焦点、灯光和尾帧；
-- 没有实际媒体却声称样片通过、可剪或交付完成；
-- 未选定唯一母参考就混用多个候选；
-- 样片失败仍直接批量生产；
-- 未通过验收的镜头进入最终时间线；
-- 用无限增加资产解决模型能力问题；
-- 为流程完整牺牲创作效率和实际可用性。
+最多两轮返修。
+
+## S13 最终交付
+
+使用`templates/full-creation-package.md`输出：
+
+- 剧本；
+- 视觉圣经；
+- 全片导演、摄影、灯光和人物表演基准；
+- 资产Prompt；
+- Shot总表；
+- 全部逐镜头制作卡；
+- CF和图片Prompt；
+- 全部视频Prompt；
+- 参考矩阵；
+- 连续性传递；
+- 剪辑声音后期；
+- 高风险备用；
+- 外部生成顺序；
+- 完整性检查摘要。
+
+状态为`PROMPT_PACKAGE_READY`。
+
+## 实际生成后的后续
+
+用户提供真实媒体后，才读取`controllers/production-execution.md`执行实际验收和修复。该步骤是后续能力，不得阻塞设计态完整包。

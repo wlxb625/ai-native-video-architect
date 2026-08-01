@@ -104,6 +104,20 @@ camera_diagnosis:
 
 不要因为镜头静止、缓慢或长停留而直接判错。检查的是停留是否产生理解、压迫、观察或余韵。
 
+## 表演与情绪诊断
+
+读取`controllers/performance-director.md`、`references/emotion-library.md`、`evals/performance-direction-score.md`和`evals/directing-coherence-check.md`。
+
+检查：
+
+- 情绪是否只有标签，没有人物目标和可见线索；
+- 内部情绪与对外策略是否形成有效矛盾；
+- 微表情、呼吸、身体语言是否符合景别、焦点和灯光可读性；
+- 五秒镜头是否堆叠过多情绪变化；
+- 相邻镜头情绪强度是否无事件跳级；
+- 结尾表演状态是否进入下一镜；
+- 是否反复使用瞪眼、皱眉、张嘴、握拳等模板化表演。
+
 ## 声音诊断
 
 检查：
@@ -139,7 +153,7 @@ production_diagnosis:
 
 - 改人物、结构、高潮、结尾、机制、形式规则或传播结构：TRANSFORM。
 - 把解释转为人物行动、视觉证据和母题递进：TRANSFORM LEVEL_2或LEVEL_3。
-- 只需重新设计镜头目的、揭示顺序和声画关系：TRANSFORM LEVEL_2或ADAPT，取决于是否改变场景功能。
+- 只需重新设计镜头目的、揭示顺序、摄影—灯光—表演关系和声画关系：TRANSFORM LEVEL_2或ADAPT，取决于是否改变场景功能。
 - 只需拆资产、锁角色、改生成方法、补声音、后期和替代：ADAPT。
 - 仅是偏好、合法设计或可接受风险：NONE。
 

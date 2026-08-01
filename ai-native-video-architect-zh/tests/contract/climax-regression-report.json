@@ -1,0 +1,14 @@
+{
+  "test": "climax-regression-equal-paint",
+  "expected": "FAIL",
+  "reason": "visual closure must not substitute for dramatic climax",
+  "legacy_result": "PASS 90",
+  "v0.2_result": "FAIL 51",
+  "hard_failures": [
+    "CLIMAX_IS_ONLY_CLOSING_RITUAL",
+    "VALUES_NOT_COMPARABLE",
+    "NO_ESCALATING_PRESSURE",
+    "OUTCOME_PREDETERMINED",
+    "EMOTIONAL_RESOLUTION_MISLABELED_AS_CLIMAX"
+  ]
+}

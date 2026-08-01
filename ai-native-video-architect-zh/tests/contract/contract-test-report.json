@@ -1,0 +1,24 @@
+{
+  "contract_version": "0.1.0-alpha",
+  "test_task": "TEST-DIRECTOR-001",
+  "target_stage": "S03",
+  "results": {
+    "package_validation": "PASS",
+    "contract_validation": "PASS",
+    "activation_receipt": "PASS",
+    "insufficient_candidate_submission": "BLOCKED",
+    "allowed_adaptive_patch": "APPLIED",
+    "protected_rule_patch": "REJECTED",
+    "concept_gate": "PASS",
+    "treatment_gate": "PASS",
+    "script_gate": "PASS",
+    "completion_receipt": "CONTRACT_COMPLETE"
+  },
+  "selected_test_concept": "最后一卷胶片",
+  "notes": [
+    "测试先故意提交1个候选，Runner因候选数、多样性和比例不满足而拒绝。",
+    "允许的用户偏好Patch成功写入测试策略副本。",
+    "试图修改门禁阈值的Patch被不可变层拒绝。",
+    "正式剧本只有通过G01、G02、G03后才取得完成凭证。"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "artifact_submission": "ACCEPTED",
+  "fake_semantic_evaluation": "ACCEPTED",
+  "runner_output": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S03\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}\n",
+  "error": "",
+  "conclusion": "CONTENT_ONLY_RUNTIME_CANNOT_VERIFY_EVALUATOR_HONESTY"
+}

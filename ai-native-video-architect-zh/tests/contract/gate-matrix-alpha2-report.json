@@ -1,0 +1,322 @@
+{
+  "total": 45,
+  "passed_expectations": 34,
+  "failed_expectations": 11,
+  "results": [
+    {
+      "test": "package_validator",
+      "expected": "PASS",
+      "actual": "PASS",
+      "passed": true,
+      "detail": "{\n  \"skill\": \"ai-native-video-architect-zh\",\n  \"version\": \"4.4.0\",\n  \"required_files\": 62,\n  \"status\": \"PASS\",\n  \"errors\": []\n}"
+    },
+    {
+      "test": "contract_validator",
+      "expected": "PASS",
+      "actual": "PASS",
+      "passed": true,
+      "detail": "{\n  \"contract_skill\": \"ai-native-video-architect-zh\",\n  \"contract_version\": \"0.2.0-alpha\",\n  \"status\": \"PASS\",\n  \"errors\": []\n}"
+    },
+    {
+      "test": "integrity_tamper",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"IMMUTABLE_CORE_CHANGED: changed:constitution/immutable.yaml\"\n}"
+    },
+    {
+      "test": "early_finalize",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"finalization forbidden: phase=READY_FOR_STAGE status=ACTIVE\"\n}"
+    },
+    {
+      "test": "evaluate_without_submission",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"evaluation not allowed in phase: READY_FOR_STAGE\"\n}"
+    },
+    {
+      "test": "wrong_stage_submission",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"SCHEMA_VALIDATION_FAILED: $: 'candidates' is a required property | $: 'shortlist' is a required property | $: 'selected_concept_id' is a required property | $: 'removed_or_merged_ideas' is a required property | stage_id: 'S01' was expected\"\n}"
+    },
+    {
+      "test": "S01_candidate_count",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: candidate_count 2 < required 10 | insufficient distinct settings | insufficient distinct climax action types | relationship ratio too high: 伙伴=1/2 | relationship ratio too high: 亲子=1/2\"\n}"
+    },
+    {
+      "test": "S01_duplicate_concept_id",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: duplicate concept_id\"\n}"
+    },
+    {
+      "test": "S01_selected_missing",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: selected_concept_id not in candidates\"\n}"
+    },
+    {
+      "test": "S01_shortlist_too_short",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: shortlist_count < required 3\"\n}"
+    },
+    {
+      "test": "S01_insufficient_settings",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: insufficient distinct settings\"\n}"
+    },
+    {
+      "test": "S01_insufficient_climax_types",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: insufficient distinct climax action types\"\n}"
+    },
+    {
+      "test": "S01_relationship_ratio",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: relationship ratio too high: 同一关系=10/10\"\n}"
+    },
+    {
+      "test": "S01_climax_values_identical",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"DETERMINISTIC_CHECK_FAILED: C01: opposing values are identical\"\n}"
+    },
+    {
+      "test": "S01_shortlist_ids_exist",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "test": "S01_semantic_duplicate_spoof",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "test": "G01_missing_evaluator",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G01_CONCEPT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"missing evaluator: originality_history_check\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G01_low_total",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G01_CONCEPT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"concept_score score 70 < 80\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G01_low_originality",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G01_CONCEPT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"concept_score.originality 10 < 16\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G01_missing_evidence",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G01_CONCEPT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"missing evidence: concept_score\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G01_hard_failure",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G01_CONCEPT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"hard failure in concept_score: ['GENERIC_CLICHE']\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G01_same_context",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"EVALUATION_VALIDATION_FAILED: generator_context_id must differ from evaluator_context_id\"\n}"
+    },
+    {
+      "test": "G01_hash_mismatch",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"EVALUATION_VALIDATION_FAILED: evaluation artifact_sha256 mismatch\"\n}"
+    },
+    {
+      "test": "G01_unknown_ref",
+      "expected": "BLOCK",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"EVALUATION_VALIDATION_FAILED: concept_score: unknown evidence refs ['C99']\"\n}"
+    },
+    {
+      "test": "G01_valid_pass",
+      "expected": "PASS",
+      "actual": "PASS",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G01_CONCEPT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S02\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G02_missing_visual",
+      "expected": "BLOCK/FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"missing evaluator: visual_narrative_score\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G02_low_drama",
+      "expected": "BLOCK/FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"drama_score score 70 < 80\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G02_mechanism_fail",
+      "expected": "BLOCK/FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"mechanism_overuse_check status FAIL not in ['PASS', 'NOT_APPLICABLE']\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G02_climax_low_subscore",
+      "expected": "BLOCK/FAIL",
+      "actual": "FAIL",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"FAIL\",\n  \"reasons\": [\n    \"climax_force_check.value_collision 10 < 15\"\n  ],\n  \"must_fix\": [],\n  \"current_stage\": \"S01\",\n  \"phase\": \"REVISION_REQUIRED\",\n  \"task_status\": \"REVISION_REQUIRED\"\n}"
+    },
+    {
+      "test": "G02_climax_counterfactual",
+      "expected": "BLOCK/FAIL",
+      "actual": "BLOCK",
+      "passed": true,
+      "detail": "{\n  \"status\": \"ERROR\",\n  \"error\": \"EVALUATION_VALIDATION_FAILED: climax counterfactual failed: removable_without_changing_ending expected False\"\n}"
+    },
+    {
+      "test": "G02_semantically_flat_treatment",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S03\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G02_valid_pass",
+      "expected": "PASS",
+      "actual": "PASS",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G02_TREATMENT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S03\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G03_dialogue_NA_with_dialogue",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"gate\": \"G03_SCRIPT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S04\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G03_mechanism_NA_with_mechanism",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"gate\": \"G03_SCRIPT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S04\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G03_twist_without_twist_legality_check",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"gate\": \"G03_SCRIPT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S04\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G03_semantically_flat_script",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"gate\": \"G03_SCRIPT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S04\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "G03_valid_pass",
+      "expected": "PASS",
+      "actual": "PASS",
+      "passed": true,
+      "detail": "{\n  \"gate\": \"G03_SCRIPT\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S04\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "policy_allowed_preference_patch",
+      "expected": "APPLY",
+      "actual": "APPLY",
+      "passed": true,
+      "detail": "{\n  \"status\": \"APPLIED\",\n  \"path\": \"preferences.rejected_patterns\",\n  \"operation\": \"add\"\n}"
+    },
+    {
+      "test": "policy_protected_patch",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "passed": true,
+      "detail": "{\n  \"status\": \"REJECTED\",\n  \"reason\": \"PROTECTED_OR_UNAUTHORIZED_PATH\",\n  \"path\": \"scoring.minimums\"\n}"
+    },
+    {
+      "test": "policy_can_weaken_execution_thresholds",
+      "expected": "REJECT",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "[[\"execution_parameters.internal_candidate_count\", 0, \"{\\n  \\\"status\\\": \\\"APPLIED\\\",\\n  \\\"path\\\": \\\"execution_parameters.internal_candidate_count\\\",\\n  \\\"operation\\\": \\\"replace\\\"\\n}\", \"\"], [\"execution_parameters.shortlist_count\", 0, \"{\\n  \\\"status\\\": \\\"APPLIED\\\",\\n  \\\"path\\\": \\\"execution_parameters.shortlist_count\\\",\\n  \\\"operation\\\": \\\"replace\\\"\\n}\", \"\"], [\"execution_parameters.minimum_distinct_settings\", 0, \"{\\n  \\\"status\\\": \\\"APPLIED\\\",\\n  \\\"path\\\": \\\"execution_parameters.minimum_distinct_settings\\\",\\n  \\\"operation\\\": \\\"replace\\\"\\n}\", \"\"], [\"execution_parameters.minimum_distinct_climax_action_types\", 0, \"{\\n  \\\"status\\\": \\\"APPLIED\\\",\\n  \\\"path\\\": \\\"execution_parameters.minimum_distinct_climax_action_types\\\",\\n  \\\"operation\\\": \\\"replace\\\"\\n}\", \"\"], [\"execution_parameters.maximum_same_relationship_ratio\", 0, \"{\\n  \\\"status\\\": \\\"APPLIED\\\",\\n  \\\"path\\\": \\\"execution_parameters.maximum_same_relationship_ratio\\\",\\n  \\\"operation\\\": \\\"replace\\\"\\n}\", \"\"], [\"execution_parameters.default_climax_profile\", 0, \"{\\n  \\\"status\\\": \\\"APPLIED\\\",\\n  \\\"path\\\": \\\"execution_parameters.default_climax_profile\\\",\\n  \\\"operation\\\": \\\"replace\\\"\\n}\", \"\"]]"
+    },
+    {
+      "test": "policy_threshold_bypass_actual",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"status\": \"ACCEPTED\",\n  \"stage\": \"S01\",\n  \"phase\": \"AWAITING_EVALUATION\",\n  \"current_stage\": \"S01\"\n}"
+    },
+    {
+      "test": "revision_limit_after_3_failures",
+      "expected": "CONTRACT_FAILED",
+      "actual": "CONTRACT_FAILED",
+      "passed": true,
+      "detail": "{\"task_id\": \"revision-limit\", \"contract\": \"ai-native-video-architect-zh\", \"contract_version\": \"0.2.0-alpha\", \"status\": \"CONTRACT_FAILED\", \"current_stage\": \"S01\", \"phase\": \"FAILED\", \"request\": \"测试任务\", \"target_stage\": \"S13\", \"revision_counts\": {\"G01_CONCEPT\": 3}, \"gate_results\": {\"G01_CONCEPT\": {\"decision\": \"FAIL\", \"reasons\": [\"concept_score score 10 < 80\"], \"must_fix\": [], \"evaluation\": \".execution/tasks/revision-limit/evaluations/S01-G01_CONCEPT.json\"}}, \"artifacts\": {\"S00\": \".execution/tasks/revision-limit/artifacts/S00.json\", \"S01\": \".execution/tasks/revision-limit/artifacts/S01.json\"}, \"created_at\": \"2026-07-30T15:44:28.885845+00:00\", \"updated_at\": \"2026-07-30T15:44:28.957159+00:00\", \"last_must_fix\": [\"concept_score score 10 < 80\"], \"pending_gate\": \"G01_CONCEPT\"}"
+    },
+    {
+      "test": "G12_minimal_empty_package_passes",
+      "expected": "BLOCK",
+      "actual": "ALLOWED",
+      "passed": false,
+      "detail": "{\n  \"gate\": \"G12_FULL_PACKAGE\",\n  \"decision\": \"PASS\",\n  \"reasons\": [],\n  \"must_fix\": [],\n  \"current_stage\": \"S13\",\n  \"phase\": \"READY_FOR_STAGE\",\n  \"task_status\": \"ACTIVE\"\n}"
+    },
+    {
+      "test": "full_flow_completion_receipt",
+      "expected": "PASS",
+      "actual": "PASS",
+      "passed": true,
+      "detail": "{\n  \"receipt_type\": \"COMPLETION_RECEIPT\",\n  \"status\": \"CONTRACT_COMPLETE\",\n  \"task_id\": \"full-minimal\",\n  \"completed_at\": \"2026-07-30T15:44:29.128058+00:00\",\n  \"final_artifact\": \"/mnt/data/gate_matrix_work/tmp/final.md\",\n  \"final_artifact_sha256\": \"6bd94a0b8d040601ccc4636d6b42c0676467a902022aec07de4657d4ec130883\",\n  \"passed_gates\": [\n    \"G01_CONCEPT\",\n    \"G02_TREATMENT\",\n    \"G03_SCRIPT\",\n    \"G12_FULL_PACKAGE\"\n  ],\n  \"revision_counts\": {},\n  \"immutable_integrity\": \"PASS\"\n}"
+    },
+    {
+      "test": "target_stage_S04_respected",
+      "expected": "READY_TO_FINALIZE",
+      "actual": "S05:READY_FOR_STAGE",
+      "passed": false,
+      "detail": "{\"task_id\": \"target-s04\", \"contract\": \"ai-native-video-architect-zh\", \"contract_version\": \"0.2.0-alpha\", \"status\": \"ACTIVE\", \"current_stage\": \"S05\", \"phase\": \"READY_FOR_STAGE\", \"request\": \"测试任务\", \"target_stage\": \"S04\", \"revision_counts\": {}, \"gate_results\": {\"G01_CONCEPT\": {\"decision\": \"PASS\", \"reasons\": [], \"must_fix\": [], \"evaluation\": \".execution/tasks/target-s04/evaluations/S01-G01_CONCEPT.json\"}, \"G02_TREATMENT\": {\"decision\": \"PASS\", \"reasons\": [], \"must_fix\": [], \"evaluation\": \".execution/tasks/target-s04/evaluations/S02-G02_TREATMENT.json\"}, \"G03_SCRIPT\": {\"decision\": \"PASS\", \"reasons\": [], \"must_fix\": [], \"evaluation\": \".execution/tasks/target-s04/evaluations/S03-G03_SCRIPT.json\"}}, \"artifacts\": {\"S00\": \".execution/tasks/target-s04/artifacts/S00.json\", \"S01\": \".execution/tasks/target-s04/artifacts/S01.json\", \"S02\": \".execution/tasks/target-s04/artifacts/S02.json\", \"S03\": \".execution/tasks/target-s04/artifacts/S03.json\", \"S04\": \".execution/tasks/target-s04/artifacts/S04.json\"}, \"created_at\": \"2026-07-30T15:44:29.136763+00:00\", \"updated_at\": \"2026-07-30T15:44:29.207369+00:00\"}"
+    }
+  ]
+}

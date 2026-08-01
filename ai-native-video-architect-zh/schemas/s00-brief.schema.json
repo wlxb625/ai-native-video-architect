@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "stage_id",
+    "task_id",
+    "request_summary",
+    "mode",
+    "deliverable",
+    "constraints",
+    "assumptions",
+    "climax_profile",
+    "market_context",
+    "target_audience",
+    "age_strategy",
+    "meaning_strategy"
+  ],
+  "properties": {
+    "stage_id": {
+      "const": "S00"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "request_summary": {
+      "type": "string",
+      "minLength": 5
+    },
+    "mode": {
+      "enum": [
+        "CREATE",
+        "TRANSFORM",
+        "DIAGNOSE",
+        "ADAPT"
+      ]
+    },
+    "deliverable": {
+      "type": "string"
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "full_creation_requested": {
+      "type": "boolean"
+    },
+    "climax_profile": {
+      "enum": [
+        "STRONG_DRAMATIC_PEAK",
+        "QUIET_PEAK",
+        "ANTI_CLIMAX",
+        "SPECTACLE_PEAK"
+      ]
+    },
+    "market_context": {
+      "enum": [
+        "SHORT_VIDEO",
+        "WEB_FICTION",
+        "FILM_OR_SERIES",
+        "OTHER"
+      ]
+    },
+    "target_audience": {
+      "type": "string",
+      "minLength": 2
+    },
+    "age_strategy": {
+      "enum": [
+        "YOUTH_PRIORITY_WITH_STORY_FIT_OVERRIDE",
+        "USER_FIXED",
+        "STORY_FIT_ONLY",
+        "AGE_SPECIFIC"
+      ]
+    },
+    "user_age_constraint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "meaning_strategy": {
+      "enum": [
+        "AUTO_REQUIRED_EXCEPT_FORMAL_ABSURDIST",
+        "USER_FIXED_THEME",
+        "USER_EXPLICIT_FORMAL_EXCEPTION"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

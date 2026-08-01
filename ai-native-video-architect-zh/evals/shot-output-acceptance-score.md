@@ -1,4 +1,4 @@
-# Shot Output Acceptance Score V4.2
+# Shot Output Acceptance Score V4.4
 
 ## 用途
 
