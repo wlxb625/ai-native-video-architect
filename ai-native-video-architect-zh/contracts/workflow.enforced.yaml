@@ -61,14 +61,18 @@ stages:
     output_schema: schemas/s03-script.schema.json
     gate: G03_SCRIPT
   S04:
-    name: 剧本制作拆解
+    name: NARRATIVE_LOCK与剧本制作拆解
     source_stage: S04_script_breakdown
     instruction_files:
     - config/workflow.yaml
     - controllers/post-script-production.md
+    - controllers/project-visual-strategy.md
     output_schema: schemas/generic-stage.schema.json
     next_on_submit: S05
     required_coverage_keys:
+    - narrative_lock_reference
+    - locked_narrative_facts
+    - authorized_change_scope
     - characters
     - visible_states
     - locations
@@ -78,27 +82,40 @@ stages:
     - sound_connections
     - inherited_end_states
     - post_only_elements
+    - anticipated_shot_angles_and_interactions
     - character_age_and_life_stage
     content_must_be_nonempty: true
   S05:
-    name: 视觉圣经
+    name: 项目视觉策略与视觉圣经
     source_stage: S05_visual_bible
     instruction_files:
+    - controllers/project-visual-strategy.md
     - templates/visual-bible.md
     - controllers/style-reference.md
     output_schema: schemas/generic-stage.schema.json
     next_on_submit: S06
     required_coverage_keys:
+    - project_scope
+    - activated_by
+    - narrative_lock_reference
+    - script_evidence
+    - audience_experience
+    - visual_thesis
+    - style_dna
     - character_lock
     - environment_lock
     - prop_lock
     - aspect_ratio
-    - style
     - colors
     - real_light_sources
     - materials
     - camera_tendency
+    - performance_temperature
+    - background_strategy
+    - visual_tension_sources
+    - allowed_variation
     - forbidden_drift
+    - production_implications
     - age_and_life_stage_lock
     content_must_be_nonempty: true
   S06:
@@ -110,11 +127,20 @@ stages:
     output_schema: schemas/generic-stage.schema.json
     next_on_submit: S07
     required_coverage_keys:
+    - shot_requirement_preview
     - character_identity_anchors
+    - character_view_coverage
+    - face_closeup_coverage
+    - full_body_costume_coverage
+    - hand_interaction_coverage
+    - visible_state_progression_coverage
     - main_environment_empty_plates
+    - environment_angle_coverage
+    - environment_state_coverage
     - necessary_prop_references
-    - necessary_state_references
+    - prop_state_coverage
     - used_by_shots_placeholder
+    - asset_necessity_reasons
     - age_identity_anchors
     content_must_be_nonempty: true
   S07:
@@ -127,7 +153,10 @@ stages:
     next_on_submit: S08
     required_coverage_keys:
     - asset_id
+    - project_visual_strategy_reference
     - purpose
+    - necessity_evidence
+    - covered_shot_requirements
     - used_by_shots
     - positive_prompt
     - negative_prompt
@@ -148,6 +177,7 @@ stages:
     - narrative_purpose
     - visual_description
     - duration
+    - project_visual_strategy_reference
     - director_intent
     - camera_direction
     - lighting_direction
@@ -236,6 +266,10 @@ stages:
     output_schema: schemas/generic-stage.schema.json
     gate: G12_FULL_PACKAGE
     required_coverage_keys:
+    - asset_angle_interaction_state_coverage
+    - project_visual_strategy_conformance
+    - project_visual_strategy_scope
+    - narrative_lock_preservation
     - story_closure
     - asset_coverage
     - shot_completeness
