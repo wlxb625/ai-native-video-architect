@@ -1,147 +1,293 @@
 version: 4.4.0
-
 workflow_contract:
   default_full_delivery: FULL_CREATION_PACKAGE
   no_external_asset_gate_for_prompt_package: true
   planned_reference_status: PLANNED_REFERENCE
   actual_reference_status: ACTUAL_REFERENCE
   design_ready_status: PROMPT_PACKAGE_READY
-  actual_media_required_only_for: [SAMPLE_VALIDATED, EDIT_READY, DELIVERY_READY]
+  actual_media_required_only_for:
+  - SAMPLE_VALIDATED
+  - EDIT_READY
+  - DELIVERY_READY
   internal_repair_rounds: 2
   required_modules:
-    - controllers/agent-full-creation.md
-    - controllers/post-script-production.md
-    - controllers/camera-director.md
-    - controllers/lighting-director.md
-    - controllers/performance-director.md
-    - references/emotion-library.md
-    - prompt-engineering/performance-prompt-compiler.md
-    - prompt-engineering/asset-prompt-system.md
-    - prompt-engineering/shot-cf-binding-system.md
-    - prompt-engineering/image-prompt-compiler.md
-    - prompt-engineering/storyboard-frame-system.md
-    - prompt-engineering/video-prompt-compiler.md
-    - prompt-engineering/continuity-repair-system.md
-    - evals/full-package-integrity-check.md
-    - templates/full-creation-package.md
-
+  - controllers/agent-full-creation.md
+  - controllers/post-script-production.md
+  - controllers/project-visual-strategy.md
+  - controllers/camera-director.md
+  - controllers/lighting-director.md
+  - controllers/performance-director.md
+  - references/emotion-library.md
+  - prompt-engineering/performance-prompt-compiler.md
+  - prompt-engineering/asset-prompt-system.md
+  - prompt-engineering/shot-cf-binding-system.md
+  - prompt-engineering/image-prompt-compiler.md
+  - prompt-engineering/storyboard-frame-system.md
+  - prompt-engineering/video-prompt-compiler.md
+  - prompt-engineering/continuity-repair-system.md
+  - evals/full-package-integrity-check.md
+  - templates/full-creation-package.md
 workflow:
   S00_creative_brief:
     name: 创作需求
-    required_when_missing: [genre_or_content_domain, duration, aspect_ratio, protagonist_or_subject, narrative_form, forbidden_content]
+    required_when_missing:
+    - genre_or_content_domain
+    - duration
+    - aspect_ratio
+    - protagonist_or_subject
+    - narrative_form
+    - forbidden_content
     output: CREATIVE_BRIEF
     next: S01
-
   S01_story_direction:
     name: 故事方向
-    required: [protagonist_task, core_conflict_or_rule, progression, key_choice, ending_direction]
+    required:
+    - protagonist_task
+    - core_conflict_or_rule
+    - progression
+    - key_choice
+    - ending_direction
     output: STORY_DIRECTION
     next: S02
-
   S02_story_treatment:
     name: 故事方案
-    required: [one_sentence_story, observable_progression, climax_action, final_image]
+    required:
+    - one_sentence_story
+    - observable_progression
+    - climax_action
+    - final_image
     output: STORY_TREATMENT
     next: S03
-
   S03_script_or_visual_script:
     name: 剧本或视觉脚本
-    required_for_narrative: [scene_heading, time_and_location, characters, observable_action, dialogue_or_silence, props, sound, scene_exit_state]
-    required_for_visual_script: [subject, initial_state, observable_action, environment_change, prop_change, final_state, next_scene_connection]
+    required_for_narrative:
+    - scene_heading
+    - time_and_location
+    - characters
+    - observable_action
+    - dialogue_or_silence
+    - props
+    - sound
+    - scene_exit_state
+    required_for_visual_script:
+    - subject
+    - initial_state
+    - observable_action
+    - environment_change
+    - prop_change
+    - final_state
+    - next_scene_connection
     output: SCRIPT_PACKAGE
     next: S04
-
   S04_script_breakdown:
-    name: 剧本制作拆解
-    required: [characters, visible_states, locations, props, actions, light_changes, sound_connections, inherited_end_states, post_only_elements]
-    output: SCRIPT_BREAKDOWN
+    name: NARRATIVE_LOCK与剧本制作拆解
+    required:
+    - narrative_lock_reference
+    - locked_narrative_facts
+    - authorized_change_scope
+    - characters
+    - visible_states
+    - locations
+    - props
+    - actions
+    - light_changes
+    - sound_connections
+    - inherited_end_states
+    - post_only_elements
+    - anticipated_shot_angles_and_interactions
+    output: NARRATIVE_LOCKED_SCRIPT_BREAKDOWN
     next: S05
-
   S05_visual_bible:
-    name: 视觉圣经
-    required: [character_lock, environment_lock, prop_lock, aspect_ratio, style, colors, real_light_sources, materials, camera_tendency, forbidden_drift]
-    output: VISUAL_BIBLE
+    name: 项目视觉策略与视觉圣经
+    required:
+    - project_scope
+    - activated_by
+    - narrative_lock_reference
+    - script_evidence
+    - audience_experience
+    - visual_thesis
+    - style_dna
+    - character_lock
+    - environment_lock
+    - prop_lock
+    - aspect_ratio
+    - colors
+    - real_light_sources
+    - materials
+    - camera_tendency
+    - performance_temperature
+    - background_strategy
+    - visual_tension_sources
+    - allowed_variation
+    - forbidden_drift
+    - production_implications
+    output: PROJECT_VISUAL_STRATEGY_AND_VISUAL_BIBLE
     next: S06
-
   S06_planned_reference_registry:
     name: 规划资产表
     required:
-      - character_identity_anchors
-      - main_environment_empty_plates
-      - necessary_prop_references
-      - necessary_state_references
-      - used_by_shots_placeholder
+    - shot_requirement_preview
+    - character_identity_anchors
+    - character_view_coverage
+    - face_closeup_coverage
+    - full_body_costume_coverage
+    - hand_interaction_coverage
+    - visible_state_progression_coverage
+    - main_environment_empty_plates
+    - environment_angle_coverage
+    - environment_state_coverage
+    - necessary_prop_references
+    - prop_state_coverage
+    - used_by_shots_placeholder
+    - asset_necessity_reasons
     status: PLANNED_REFERENCE
-    rule: 规划资产尚未真实生成时仍继续全部下游Prompt设计。
+    rule: 按实际Shot的景别、正侧背、身体动作、手部交互、状态变化、场景方向和道具阶段建立充分资产；不是越少越好，也不得机械全做。规划资产尚未真实生成时仍继续全部下游Prompt设计。
     output: PLANNED_REFERENCE_REGISTRY
     next: S07
-
   S07_reference_prompt_pack:
     name: 基础资产生图Prompt
-    required_per_asset: [asset_id, purpose, used_by_shots, positive_prompt, negative_prompt, output_rules]
+    required_per_asset:
+    - asset_id
+    - project_visual_strategy_reference
+    - purpose
+    - necessity_evidence
+    - covered_shot_requirements
+    - used_by_shots
+    - positive_prompt
+    - negative_prompt
+    - output_rules
     output: REFERENCE_PROMPT_PACK
     next: S08
-
   S08_complete_shot_list:
     name: 完整Shot总表与导演设计
-    required_per_shot: [shot_id, scene_id, narrative_purpose, visual_description, duration, director_intent, camera_direction, lighting_direction, performance_direction_or_non_character_performance, emotion_curve_or_environment_rhythm, input_state, primary_action, exact_end_state, camera_and_composition, continuity_in, continuity_out, risk_and_fallback]
+    required_per_shot:
+    - shot_id
+    - scene_id
+    - narrative_purpose
+    - visual_description
+    - duration
+    - project_visual_strategy_reference
+    - director_intent
+    - camera_direction
+    - lighting_direction
+    - performance_direction_or_non_character_performance
+    - emotion_curve_or_environment_rhythm
+    - input_state
+    - primary_action
+    - exact_end_state
+    - camera_and_composition
+    - continuity_in
+    - continuity_out
+    - risk_and_fallback
     completeness_rule: 所有可剪辑镜头都必须进入Shot表，包括过渡、空镜、插入镜头和POST_ONLY镜头。
     output: COMPLETE_SHOT_LIST
     next: S09
-
   S09_shot_cf_binding:
     name: Shot与Control Frame绑定
-    required_per_shot: [reference_bindings, frame_source_mode, start_cf, end_cf, optional_bridge_cfs, generation_mode]
+    required_per_shot:
+    - reference_bindings
+    - frame_source_mode
+    - start_cf
+    - end_cf
+    - optional_bridge_cfs
+    - generation_mode
     cf_definition: Control Frame
     cf_belongs_to_one_shot: true
-    allowed_frame_source_modes: [NEW_START_FRAME, PREVIOUS_TAIL_INHERITANCE, FIRST_LAST_FRAME, EXISTING_USER_FRAME, TEXT_TO_VIDEO, POST_ONLY]
+    allowed_frame_source_modes:
+    - NEW_START_FRAME
+    - PREVIOUS_TAIL_INHERITANCE
+    - FIRST_LAST_FRAME
+    - EXISTING_USER_FRAME
+    - TEXT_TO_VIDEO
+    - POST_ONLY
     output: SHOT_CF_BINDING_MAP
     next: S10
-
   S10_frame_prompt_pack:
     name: 全部控制帧生图Prompt
-    required_per_generated_cf: [cf_id, shot_id, type, reference_assets_and_roles, visible_state, positive_prompt, negative_prompt, output_rules]
+    required_per_generated_cf:
+    - cf_id
+    - shot_id
+    - type
+    - reference_assets_and_roles
+    - visible_state
+    - positive_prompt
+    - negative_prompt
+    - output_rules
     inheritance_rule: PREVIOUS_TAIL_INHERITANCE必须给继承CF、持续使用资产、允许变化和备用首帧Prompt。
     no_tail_rule: 不预生成尾帧时必须给TEXT_CONTRACT_ONLY结束帧合同。
     output: FRAME_PROMPT_PACK
     next: S11
-
   S11_video_prompt_pack:
     name: 全部逐镜头生视频Prompt
-    required_per_generated_shot: [shot_id, generation_mode, input_frames, director_intent, visual_space, start_state, performance_contract, emotion_timeline, timeline_action, action_physics, camera, focus_and_exposure, per_shot_lighting_and_emotional_function, end_state, next_shot_inheritance, positive_prompt, negative_prompt]
+    required_per_generated_shot:
+    - shot_id
+    - generation_mode
+    - input_frames
+    - director_intent
+    - visual_space
+    - start_state
+    - performance_contract
+    - emotion_timeline
+    - timeline_action
+    - action_physics
+    - camera
+    - focus_and_exposure
+    - per_shot_lighting_and_emotional_function
+    - end_state
+    - next_shot_inheritance
+    - positive_prompt
+    - negative_prompt
     post_only_rule: POST_ONLY镜头必须有素材来源、后期操作、时长和剪辑说明。
     output: VIDEO_PROMPT_PACK
     next: S12
-
   S12_internal_validation_and_repair:
     name: 内部闭环检查与返修
     checks:
-      - story_closure
-      - asset_coverage
-      - shot_completeness
-      - cf_binding
-      - image_source_coverage
-      - video_prompt_or_post_coverage
-      - camera_lighting_performance_coherence
-      - performance_direction_score
-      - emotion_intensity_continuity
-      - pairwise_continuity
-      - prompt_conflict
-      - generation_feasibility
-      - id_consistency
+    - narrative_lock_preservation
+    - project_visual_strategy_scope
+    - project_visual_strategy_conformance
+    - asset_angle_interaction_state_coverage
+    - story_closure
+    - asset_coverage
+    - shot_completeness
+    - cf_binding
+    - image_source_coverage
+    - video_prompt_or_post_coverage
+    - camera_lighting_performance_coherence
+    - performance_direction_score
+    - emotion_intensity_continuity
+    - pairwise_continuity
+    - prompt_conflict
+    - generation_feasibility
+    - id_consistency
     max_repair_rounds: 2
     gate: FULL_PACKAGE_INTEGRITY_PASS
     output: INTERNAL_VALIDATION_SUMMARY
     next: S13
-
   S13_full_creation_delivery:
     name: 完整制作提示词包
     template: templates/full-creation-package.md
-    required_sections: [project_overview, script, visual_bible, directing_and_performance_bible, reference_prompts, shot_table, shot_cards, cf_list, reference_matrix, continuity_and_emotion_handoff, editing_sound_post, risk_fallback, external_generation_order, integrity_summary]
+    required_sections:
+    - project_overview
+    - script
+    - asset_coverage_matrix
+    - project_visual_strategy
+    - narrative_lock_summary
+    - visual_bible
+    - directing_and_performance_bible
+    - reference_prompts
+    - shot_table
+    - shot_cards
+    - cf_list
+    - reference_matrix
+    - continuity_and_emotion_handoff
+    - editing_sound_post
+    - risk_fallback
+    - external_generation_order
+    - integrity_summary
     status_without_media: PROMPT_PACKAGE_READY
     output: FULL_CREATION_PACKAGE
     next: null
-
 entry_inference:
   vague_idea: S00
   clear_story_direction: S02
@@ -151,26 +297,32 @@ entry_inference:
   has_shot_list: S09
   has_storyboard_frames: S11
   has_generated_media: OPTIONAL_ACTUAL_MEDIA_REVIEW
-  single_image_prompt: DIRECT_IMAGE_PROMPT
-  single_video_prompt: DIRECT_VIDEO_PROMPT
+  single_image_prompt: LOCAL_IMAGE_VISUAL_CONTRACT
+  single_video_prompt: LOCAL_SHOT_VISUAL_CONTRACT
   diagnosis_only: DIAGNOSE
   transform_existing_work: TRANSFORM
-
+  script_only: SCRIPT_ONLY_COMPLETE
+  script_diagnosis_only: DIAGNOSE_SCRIPT
+  transform_script_only: TRANSFORM_SCRIPT_ONLY
+  image_to_video: LOCAL_SHOT_VISUAL_CONTRACT
 coverage_invariants:
   equal_counts:
-    - shot_count
-    - shot_card_count
-    - shot_visual_description_count
-    - shot_director_intent_count
-    - shot_camera_direction_count
-    - shot_lighting_direction_count
-    - character_shot_performance_direction_count
-    - shot_reference_binding_count
-    - shot_start_state_count
-    - shot_end_state_count
-    - shot_video_prompt_or_post_plan_count
+  - shot_count
+  - shot_card_count
+  - shot_visual_description_count
+  - shot_director_intent_count
+  - shot_camera_direction_count
+  - shot_lighting_direction_count
+  - character_shot_performance_direction_count
+  - shot_reference_binding_count
+  - shot_start_state_count
+  - shot_end_state_count
+  - shot_video_prompt_or_post_plan_count
   generated_shot_requires_image_source: true
   referenced_asset_ids_must_exist: true
   referenced_cf_ids_must_exist: true
   cf_belongs_to_exactly_one_shot: true
   shot_ids_consistent_across_outputs: true
+  narrative_lock_required_before_project_visual_strategy: true
+  project_visual_strategy_scope_must_be_project_only: true
+  full_package_requires_asset_angle_interaction_state_coverage: true
