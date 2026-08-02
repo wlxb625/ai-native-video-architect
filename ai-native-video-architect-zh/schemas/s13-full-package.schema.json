@@ -24,8 +24,11 @@
       "required": [
         "project_overview",
         "script",
+        "narrative_lock_summary",
+        "project_visual_strategy",
         "visual_bible",
         "directing_and_performance_bible",
+        "asset_coverage_matrix",
         "reference_prompts",
         "shot_table",
         "shot_cards",
@@ -39,102 +42,55 @@
       ],
       "properties": {
         "project_overview": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "script": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
+        },
+        "narrative_lock_summary": {
+          "type": ["string", "object", "array"]
+        },
+        "project_visual_strategy": {
+          "type": ["string", "object", "array"]
         },
         "visual_bible": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "directing_and_performance_bible": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
+        },
+        "asset_coverage_matrix": {
+          "type": ["string", "object", "array"]
         },
         "reference_prompts": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "shot_table": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "shot_cards": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "cf_list": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "reference_matrix": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "continuity_and_emotion_handoff": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "editing_sound_post": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "risk_fallback": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "external_generation_order": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         },
         "integrity_summary": {
-          "type": [
-            "string",
-            "object",
-            "array"
-          ]
+          "type": ["string", "object", "array"]
         }
       }
     },
