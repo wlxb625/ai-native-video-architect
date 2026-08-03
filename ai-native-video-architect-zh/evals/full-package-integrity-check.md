@@ -66,6 +66,7 @@ Shot总数
 有参考绑定的Shot数量
 有开始状态的Shot数量
 有结束状态的Shot数量
+有完整S10控制帧Prompt块的Shot数量
 有图像来源的生成型Shot数量
 有视频Prompt或POST_ONLY方案的Shot数量
 ```
@@ -81,6 +82,8 @@ Shot总数
 - 每个资产ID已定义；
 - 每个资产有必要性证据和使用Shot；
 - 镜头表、CF表、图片Prompt和视频Prompt编号一致。
+
+短编号允许存在，但必须保持唯一、可追溯和跨表一致。短编号不得成为删减模板字段或Prompt内容的理由。
 
 ## 内容完整性
 
@@ -105,6 +108,58 @@ Shot总数
 - video_prompt或POST_ONLY说明；
 - continuity_in与continuity_out；
 - risk_and_fallback。
+
+## S10控制帧Prompt完整性
+
+S10不得只检查“是否存在一条Prompt”。每个Shot必须完整实例化`templates/storyboard-frame-prompt-block.md`，并逐项检查：
+
+- Shot ID、Scene ID、CF ID、类型、时间与时长；
+- 镜头唯一任务和可见画面描述；
+- 此帧最强视觉关系、2—5个张力来源以及抽象情绪的可见化方式；
+- 帧来源模式；
+- 每张参考图的ID、状态和具体职责，不能只列编号；
+- 上一镜人物、手部、道具、场景地标、光线、白平衡和曝光输出状态；
+- 下一镜必须继承、允许改变和禁止改变的内容；
+- 生成模式、选择原因和失败备用；
+- 前景、中景、背景、背景功能、大形、近中远层次、方向、局部高潮和与主体的关系；
+- 静态画面中的冻结运动痕迹；
+- 主体位置、构图重心、留白、轴线、屏幕方向、焦段、机位和动作空间；
+- 人物目标、外部策略、情绪强度、视线、眼睑、眉、嘴、下颌、呼吸、肩背、姿态、重心和左右手；
+- 空镜的环境节奏、观看关系和运动强度；
+- 焦点、景深、曝光、白平衡、高光保护和暗部细节；
+- 主光真实来源、世界位置、相对摄影机与人物方向、软硬、色温、照亮区域、阴影、辅光、实景光、背景光、光比和连续性；
+- 每个生成CF的完整正向Prompt、针对性负面Prompt和输出规则；
+- 精确结束帧合同；
+- 尾帧是否预生成及原因；
+- 图生图修改Prompt；
+- 局部修复Prompt；
+- 视频动作摘要；
+- 连续性锚点；
+- 稳定替代方案。
+
+每个生成CF必须是独立可复制的完整Prompt：
+
+- 项目视觉基准必须直接写入该CF；
+- 参考图职责必须直接写入该CF；
+- 背景、构图、表演、焦点曝光、逐帧灯光、材质和连续性必须直接写入该CF；
+- 不得要求用户拼接“共用前缀”“全局负面词”或其他外部段落；
+- 不得使用“同上”“沿用前面”“参考图见上文”“Prompt略”；
+- 不得用资产编号列表替代参考职责；
+- 不得用一段紧凑摘要替代完整模板；
+- 图片Prompt只能描述一个静态瞬间，完整时间过程必须留给视频Prompt；
+- 不预生成尾帧时，`TEXT_CONTRACT_ONLY`仍必须完整描述动作终点、人物、左右手、道具、摄影机、焦点、曝光、灯光和下一镜继承。
+
+以下任一情况直接判定REPAIR：
+
+- S10仍使用`schemas/generic-stage.schema.json`；
+- 任一Shot未完整实例化分镜帧模板；
+- 任一生成CF依赖共享视觉前缀；
+- 正向Prompt缺少项目视觉基准、背景、构图、表演、焦点曝光、逐帧灯光、材质或连续性中的任一项；
+- 负面Prompt是机械复制的万能词，没有针对当前身份、人体、服装、道具、场景、光色与输出风险；
+- 输出规则未说明比例、方向、单图或多格、不可裁切区、文字规则、优先级、清晰度和文件名；
+- 下一镜依赖准确尾态却没有预生成尾帧或完整文字尾帧合同；
+- 缺少图生图、局部修复或稳定降级；
+- 短编号导致内容字段被删减。
 
 ## 导演一致性
 
@@ -138,6 +193,16 @@ Shot总数
 
 Shot、CF、图片Prompt和视频Prompt不能在剧本事实、项目视觉策略、动作、表演、情绪强度、机位、运镜、焦点、灯光和尾态上互相矛盾。
 
+完整制作包必须同时包含：
+
+- 完整基础资产Prompt包；
+- 完整Shot与导演制作卡；
+- 完整CF清单；
+- 完整S10控制帧Prompt包；
+- 完整S11逐镜视频Prompt包。
+
+CF清单不能替代控制帧Prompt包，镜头摘要不能替代视频Prompt包。
+
 ## 结果
 
 ```yaml
@@ -148,12 +213,20 @@ project_visual_strategy_conformance:
 asset_angle_interaction_state_coverage:
 shot_count:
 coverage_ratio:
+frame_prompt_full_template_coverage:
+standalone_frame_prompt_coverage:
+end_frame_contract_coverage:
+frame_prompt_repair_coverage:
 missing_fields: []
 missing_asset_coverage: []
 redundant_assets: []
 orphan_cf_ids: []
 missing_cf_ids: []
 undefined_asset_ids: []
+incomplete_frame_prompt_shots: []
+shared_prefix_dependent_cf_ids: []
+missing_end_frame_contracts: []
+missing_repair_prompts: []
 continuity_conflicts: []
 emotion_intensity_conflicts: []
 directing_coherence_conflicts: []
