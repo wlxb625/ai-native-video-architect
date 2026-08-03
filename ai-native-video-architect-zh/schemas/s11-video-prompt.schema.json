@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "S11 Video Prompt Pack With Reference Media Contract",
+  "type": "object",
+  "required": ["stage_id", "task_id", "artifact_type", "content", "coverage"],
+  "properties": {
+    "stage_id": {"const": "S11"},
+    "task_id": {"type": "string", "minLength": 1},
+    "artifact_type": {"const": "VIDEO_PROMPT_PACK"},
+    "content": {
+      "type": "object",
+      "required": ["shot_count", "generated_shot_count", "post_only_count", "shot_blocks", "package_rules"],
+      "properties": {
+        "shot_count": {"type": "integer", "minimum": 1},
+        "generated_shot_count": {"type": "integer", "minimum": 0},
+        "post_only_count": {"type": "integer", "minimum": 0},
+        "shot_blocks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/videoShot"}},
+        "package_rules": {
+          "type": "object",
+          "required": [
+            "reference_manifest_per_generated_shot",
+            "natural_language_reference_instruction",
+            "start_end_frame_conflict_checked",
+            "prompt_directly_invokes_uploaded_media",
+            "platform_binding_and_fallback_present",
+            "planned_reference_not_misrepresented"
+          ],
+          "properties": {
+            "reference_manifest_per_generated_shot": {"const": true},
+            "natural_language_reference_instruction": {"const": true},
+            "start_end_frame_conflict_checked": {"const": true},
+            "prompt_directly_invokes_uploaded_media": {"const": true},
+            "platform_binding_and_fallback_present": {"const": true},
+            "planned_reference_not_misrepresented": {"const": true}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "video_reference_manifest_coverage",
+        "video_reference_use_instruction_coverage",
+        "reference_priority_coverage",
+        "start_end_static_consistency_coverage",
+        "locked_and_moving_elements_coverage",
+        "platform_binding_coverage",
+        "platform_fallback_coverage",
+        "no_id_only_reference",
+        "planned_actual_status_accuracy",
+        "standalone_video_prompt_coverage"
+      ],
+      "properties": {
+        "video_reference_manifest_coverage": {"const": true},
+        "video_reference_use_instruction_coverage": {"const": true},
+        "reference_priority_coverage": {"const": true},
+        "start_end_static_consistency_coverage": {"const": true},
+        "locked_and_moving_elements_coverage": {"const": true},
+        "platform_binding_coverage": {"const": true},
+        "platform_fallback_coverage": {"const": true},
+        "no_id_only_reference": {"const": true},
+        "planned_actual_status_accuracy": {"const": true},
+        "standalone_video_prompt_coverage": {"const": true}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1, "pattern": ".*\\S.*"},
+    "referenceInput": {
+      "type": "object",
+      "required": [
+        "upload_slot",
+        "display_name",
+        "internal_asset_id",
+        "file_name",
+        "status",
+        "media_type",
+        "role",
+        "priority",
+        "required_upload",
+        "use_region_or_subject",
+        "allowed_influence",
+        "forbidden_influence",
+        "platform_binding"
+      ],
+      "properties": {
+        "upload_slot": {"$ref": "#/$defs/nonempty"},
+        "display_name": {"$ref": "#/$defs/nonempty"},
+        "internal_asset_id": {"$ref": "#/$defs/nonempty"},
+        "file_name": {"$ref": "#/$defs/nonempty"},
+        "status": {"enum": ["PLANNED_REFERENCE", "ACTUAL_REFERENCE", "INHERITED_CF", "USER_MEDIA"]},
+        "media_type": {"enum": ["IDENTITY", "COSTUME", "POSE_INTERACTION", "LOCATION_LAYOUT", "PROP_STRUCTURE", "VISIBLE_STATE", "STYLE_LIGHT", "START_FRAME", "END_FRAME", "BRIDGE_FRAME", "PREVIOUS_TAIL", "USER_MEDIA"]},
+        "role": {"$ref": "#/$defs/nonempty"},
+        "priority": {"enum": ["HARD_LOCK", "HIGH", "MEDIUM", "LOW"]},
+        "required_upload": {"type": "boolean"},
+        "use_region_or_subject": {"$ref": "#/$defs/nonempty"},
+        "allowed_influence": {"$ref": "#/$defs/nonempty"},
+        "forbidden_influence": {"$ref": "#/$defs/nonempty"},
+        "platform_binding": {"enum": ["IDENTITY_REFERENCE_SLOT", "IMAGE_PROMPT_SLOT", "STYLE_REFERENCE_SLOT", "START_FRAME_SLOT", "END_FRAME_SLOT", "MASKED_IMAGE_TO_IMAGE", "COMPOSITE_REFERENCE_BOARD", "NO_NATIVE_SUPPORT"]}
+      },
+      "additionalProperties": true
+    },
+    "videoShot": {
+      "type": "object",
+      "required": [
+        "shot_id",
+        "scene_id",
+        "duration",
+        "generation_mode",
+        "core_visual_event",
+        "reference_input_manifest",
+        "reference_use_instruction",
+        "reference_priority_order",
+        "start_end_static_consistency_check",
+        "locked_static_elements",
+        "allowed_moving_elements",
+        "director_intent",
+        "visual_space",
+        "start_state",
+        "performance_contract_or_non_character_performance",
+        "emotion_timeline_or_environment_rhythm",
+        "timeline_action",
+        "action_physics",
+        "camera",
+        "focus_and_exposure",
+        "per_shot_lighting_and_emotional_function",
+        "end_state",
+        "next_shot_inheritance",
+        "positive_prompt",
+        "negative_prompt",
+        "output_rules",
+        "platform_reference_binding",
+        "platform_fallback",
+        "acceptance_boundary"
+      ],
+      "properties": {
+        "shot_id": {"$ref": "#/$defs/nonempty"},
+        "scene_id": {"$ref": "#/$defs/nonempty"},
+        "duration": {"$ref": "#/$defs/nonempty"},
+        "generation_mode": {"enum": ["SINGLE_START_FRAME", "FIRST_LAST_FRAME", "TAIL_FRAME_CONTINUATION", "TWO_SEGMENT_HARD_CUT", "LAYERED_COMPOSITE", "TEXT_TO_VIDEO", "POST_ONLY"]},
+        "core_visual_event": {"$ref": "#/$defs/nonempty"},
+        "reference_input_manifest": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/referenceInput"}},
+        "reference_use_instruction": {"type": "string", "minLength": 200, "pattern": ".*\\S.*"},
+        "reference_priority_order": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}},
+        "start_end_static_consistency_check": {
+          "type": "object",
+          "required": ["identity", "costume", "scene_layout", "prop_structure_and_count", "light_world_position", "screen_direction", "conflict_resolution"],
+          "minProperties": 7,
+          "additionalProperties": true
+        },
+        "locked_static_elements": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}},
+        "allowed_moving_elements": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}},
+        "director_intent": {"$ref": "#/$defs/nonempty"},
+        "visual_space": {"$ref": "#/$defs/nonempty"},
+        "start_state": {"$ref": "#/$defs/nonempty"},
+        "performance_contract_or_non_character_performance": {"$ref": "#/$defs/nonempty"},
+        "emotion_timeline_or_environment_rhythm": {"$ref": "#/$defs/nonempty"},
+        "timeline_action": {"$ref": "#/$defs/nonempty"},
+        "action_physics": {"$ref": "#/$defs/nonempty"},
+        "camera": {"$ref": "#/$defs/nonempty"},
+        "focus_and_exposure": {"$ref": "#/$defs/nonempty"},
+        "per_shot_lighting_and_emotional_function": {"$ref": "#/$defs/nonempty"},
+        "end_state": {"$ref": "#/$defs/nonempty"},
+        "next_shot_inheritance": {"$ref": "#/$defs/nonempty"},
+        "positive_prompt": {"type": "string", "minLength": 600, "pattern": ".*\\S.*"},
+        "negative_prompt": {"type": "string", "minLength": 120, "pattern": ".*\\S.*"},
+        "output_rules": {"type": "string", "minLength": 80, "pattern": ".*\\S.*"},
+        "platform_reference_binding": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}},
+        "platform_fallback": {"type": "string", "minLength": 120, "pattern": ".*\\S.*"},
+        "acceptance_boundary": {"type": "string", "minLength": 80, "pattern": ".*\\S.*"}
+      },
+      "additionalProperties": true
+    }
+  }
+}
