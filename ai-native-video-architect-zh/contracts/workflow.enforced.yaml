@@ -207,22 +207,35 @@ stages:
     - generation_mode
     content_must_be_nonempty: true
   S10:
-    name: 控制帧Prompt
+    name: 完整控制帧Prompt
     source_stage: S10_frame_prompt_pack
     instruction_files:
+    - prompt-engineering/shot-cf-binding-system.md
     - prompt-engineering/image-prompt-compiler.md
     - prompt-engineering/storyboard-frame-system.md
-    output_schema: schemas/generic-stage.schema.json
+    - templates/storyboard-frame-prompt-block.md
+    output_schema: schemas/s10-frame-prompt.schema.json
     next_on_submit: S11
     required_coverage_keys:
-    - cf_id
-    - shot_id
-    - type
+    - full_storyboard_frame_template_instantiated
+    - standalone_prompt_per_generated_cf
     - reference_assets_and_roles
-    - visible_state
-    - positive_prompt
-    - negative_prompt
-    - output_rules
+    - visual_thesis_and_tensions
+    - previous_and_next_handoff
+    - frame_source_and_generation_mode
+    - composition_background_and_frozen_motion
+    - performance_or_non_character_performance
+    - focus_depth_exposure
+    - per_frame_lighting
+    - end_frame_contract
+    - tail_generation_decision
+    - image_to_image_repair
+    - local_inpaint_repair
+    - video_action_summary
+    - continuity_anchors
+    - stable_fallback
+    - no_shared_prefix_dependency
+    - no_compact_summary_substitution
     content_must_be_nonempty: true
   S11:
     name: 视频Prompt
@@ -274,6 +287,10 @@ stages:
     - asset_coverage
     - shot_completeness
     - cf_binding
+    - frame_prompt_full_template_coverage
+    - standalone_frame_prompt_coverage
+    - end_frame_contract_coverage
+    - frame_prompt_repair_coverage
     - image_source_coverage
     - video_prompt_or_post_coverage
     - camera_lighting_performance_coherence
@@ -418,12 +435,3 @@ gates:
       prompt_production_readiness_score:
         status: PASS
         minimum_score: 85
-      production_score:
-        status: PASS
-        minimum_score: 80
-      director_package_score:
-        status: PASS
-        minimum_score: 85
-    pass: S13
-    conditional: S12
-    fail: S08
