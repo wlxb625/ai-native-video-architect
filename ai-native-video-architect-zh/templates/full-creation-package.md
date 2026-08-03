@@ -1,4 +1,4 @@
-# Full Creation Package Template V4.4
+# Full Creation Package Template V4.5
 
 ## 1. 项目总览
 
@@ -38,6 +38,9 @@
 - Style DNA；
 - 背景职责；
 - 核心视觉张力；
+- 原创视觉语法；
+- 视觉密度范围与画面清洁度原则；
+- 材质语义与常见漂移风险；
 - 允许变化与禁止漂移；
 - 对资产、Shot、CF和生成后期的影响。
 
@@ -45,7 +48,7 @@
 
 ## 5. 视觉圣经
 
-人物、场景、道具、色彩、真实光源、摄影、材质、表演、声音、连续性和禁止漂移。
+人物、场景、道具、色彩、真实光源、摄影、材质、表演、声音、连续性、视觉密度、画幅适配和禁止漂移。
 
 ## 6. 导演与表演圣经
 
@@ -53,7 +56,9 @@
 - 全片摄影基准、常用景别、焦段感和运镜限制；
 - 每个主要场景的灯光母合同、可读性目标和情绪功能；
 - 主要人物的表演基线、动作习惯、情绪强度范围和禁止夸张方式；
-- 全片情绪曲线和关键表演峰值。
+- 全片情绪曲线和关键表演峰值；
+- 动作阶段语义与人物关系残留原则；
+- 手机端或目标平台观看距离与缩略图可读性原则。
 
 ## 7. 资产覆盖矩阵
 
@@ -85,19 +90,34 @@
 - 负面Prompt；
 - 输出规则。
 
+技术资产板以结构、身份、材质和清晰度优先，不机械使用剧情帧的奇观强化。
+
 ## 9. Shot总表
 
-| Shot | 场景 | 时长 | 剧情作用 | 项目视觉策略 | 情绪目标 | 观众位置 | 可见画面 | 主要动作 | 表演强度起→止 | 摄影策略 | 灯光功能 | 帧来源 | 视频模式 |
-|---|---|---:|---|---|---|---|---|---|---|---|---|---|---|
+| Shot | 场景 | 时长 | 剧情作用 | 主场景功能 | 次场景功能 | 项目视觉策略 | 情绪目标 | 观众位置 | 可见画面 | 主要动作 | 动作阶段 | 表演强度起→止 | 摄影策略 | 灯光功能 | 帧来源 | 视频模式 |
+|---|---|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+
+## 9A. Shot功能与画面执行矩阵
+
+| Shot | 剧本证据 | 观众即时体验 | 观众延迟体验 | 信息/情绪/奇观优先级 | 第一眼 | 第二眼 | 最终揭示 | 不得牺牲 | 功能冲突/拆镜 |
+|---|---|---|---|---|---|---|---|---|---|
+
+主功能必须且只能一个；次功能可为空且最多一个。功能标签不能只停留在表格，必须进入摄影、灯光、表演、CF和Prompt。
 
 ## 10. 逐镜头导演制作卡
 
-每个Shot完整使用`shot-production-card.md`，禁止只输出部分镜头。人物镜头必须包含表演方向和情绪时间轴；空镜必须填写环境节奏与观看关系。每镜必须引用当前项目视觉策略。
+每个Shot完整使用`shot-production-card.md`，禁止只输出部分镜头。人物镜头必须包含表演方向和情绪时间轴；空镜必须填写环境节奏与观看关系。每镜必须引用当前项目视觉策略，并完整填写：
+
+- 场景功能与观众效果；
+- 动作阶段与防误读；
+- 适用时的人物关系残留；
+- 当前画幅下的构图与可读性；
+- 缩略图与观看距离检查。
 
 ## 11. CF清单
 
-| CF ID | 所属Shot | 类型 | 项目策略 | 来源资产 | 表演/环境状态 | 是否预生成 | Prompt/合同 |
-|---|---|---|---|---|---|---|---|
+| CF ID | 所属Shot | 类型 | 主场景功能 | 项目策略 | 来源资产 | 动作阶段 | 表演/环境状态 | 是否预生成 | Prompt/合同 |
+|---|---|---|---|---|---|---|---|---|---|
 
 CF清单只负责索引，不能替代完整控制帧Prompt。
 
@@ -106,7 +126,8 @@ CF清单只负责索引，不能替代完整控制帧Prompt。
 逐镜完整使用`templates/storyboard-frame-prompt-block.md`，并直接包含S10的全部内容：
 
 - Shot、Scene、CF与时间；
-- 镜头唯一任务；
+- 镜头唯一任务与主次场景功能；
+- 观众第一眼、第二眼与最终揭示；
 - 视觉命题与2—5个张力来源；
 - 可见画面；
 - 帧来源模式；
@@ -114,6 +135,14 @@ CF清单只负责索引，不能替代完整控制帧Prompt。
 - 上一镜输出与下一镜输入；
 - 生成模式及原因；
 - 前中后景、背景功能、大形、方向、局部高潮和冻结运动痕迹；
+- 核心大形、中尺度结构、微小细节集中区、主体清洁区和视觉休息区；
+- 主要流动元素、微粒、噪点与颗粒策略；
+- 焦点、最亮区、最高对比区、色彩锚点与世界变化起点；
+- 动作阶段、接触、重量、手部方向、可见结果和防误读线索；
+- 适用时的关系残留与道具自然化；
+- 原创视觉语法、常见模板风险和替代结构；
+- 材质可观察属性与语义漂移反制；
+- 缩略图可读性、海报化风险和画幅执行；
 - 人物表演时点或NON_CHARACTER_PERFORMANCE；
 - 焦点、景深、曝光和白平衡；
 - 完整逐镜灯光；
@@ -126,16 +155,16 @@ CF清单只负责索引，不能替代完整控制帧Prompt。
 
 ## 13. 全部逐镜生视频Prompt
 
-逐镜输出S11完整视频Prompt包，包括：
+逐镜输出完整视频Prompt包，包括：
 
 - 输入控制帧；
-- 导演意图与视觉空间；
-- 开始状态；
+- 主场景功能、导演意图与视觉空间；
+- 开始状态与动作阶段；
 - 表演合同与情绪时间轴；
-- 分段动作和物理关系；
+- 分段动作、接触、重量和物理关系；
 - 摄影机、焦点、景深和曝光；
 - 逐镜灯光与情绪功能；
-- 精确结束状态；
+- 精确结束状态与关系残留；
 - 下一镜继承；
 - 完整正向Prompt；
 - 针对性负面Prompt；
@@ -150,20 +179,34 @@ CF清单只负责索引，不能替代完整控制帧Prompt。
 
 ## 15. 连续性与情绪传递表
 
-| 上一Shot | 结束位置/动作 | 结束表演与强度 | 状态进程 | 下一Shot | 开始状态 | 衔接方式 | 必须保持 |
-|---|---|---|---|---|---|---|---|
+| 上一Shot | 结束位置/动作 | 动作阶段 | 结束表演与强度 | 关系残留 | 状态进程 | 下一Shot | 开始状态 | 衔接方式 | 必须保持 |
+|---|---|---|---|---|---|---|---|---|---|
 
 ## 16. 剪辑、声音和后期
 
-镜头顺序、转场、声音桥、环境声、呼吸、对白、音乐、留白、字幕、分层合成和调色。
+镜头顺序、转场、声音桥、环境声、呼吸、对白、音乐、留白、字幕、分层合成、降噪、胶片颗粒与调色。明显颗粒和特殊媒介质感优先在后期控制，除非其本身承担叙事。
 
 ## 17. 高风险与备用
 
-逐项给风险、首选方法和稳定降级方法。表演风险优先简化微动作和运镜；资产缺口应补足实际需要的面部、角度、交互、状态或空间依据，而不是增加无关参考图。
+逐项给风险、首选方法和稳定降级方法。除原有风险外，至少检查：
+
+- 场景功能冲突；
+- 动作阶段误读；
+- 关系残留损失；
+- 焦点与叙事动作错位；
+- 缩略图不可读；
+- 视觉密度过载或中尺度结构空洞；
+- 常见AI模板回落；
+- 材质语义漂移；
+- 道具商品化；
+- 无意海报化或公益广告感；
+- 画幅与外部平台参数不一致。
 
 ## 18. 外部平台生成顺序
 
-项目视觉策略确认 → 面部/三视图/全身/手部/状态资产 → 场景主空镜与必要反向机位 → 道具及状态 → 独立首帧 → 首尾帧 → 依赖尾帧镜头 → 分层素材 → 视频 → 剪辑后期。
+项目视觉策略确认 → Shot场景功能路由 → 面部/三视图/全身/手部/状态资产 → 场景主空镜与必要反向机位 → 道具及状态 → 独立首帧 → 首尾帧 → 依赖尾帧镜头 → 分层素材 → 视频 → 剪辑后期。
+
+外部平台若提供宽高比参数，必须按当前任务设置，不能只依赖Prompt中的比例文字。
 
 ## 19. 内部完整性检查摘要
 
@@ -172,23 +215,38 @@ status: PROMPT_PACKAGE_READY | NEEDS_REPAIR
 narrative_lock_preserved:
 project_visual_strategy_scope:
 project_visual_strategy_conformance:
+scene_function_coverage:
+scene_function_execution_consistency:
+function_conflicts: []
 asset_angle_interaction_state_coverage:
 shot_count:
 shot_cards:
 shots_with_project_visual_strategy_reference:
+shots_with_primary_scene_function:
+shots_with_scene_function_script_evidence:
 shots_with_director_intent:
 shots_with_camera_direction:
 shots_with_lighting_direction:
 character_shots_with_performance_direction:
+shots_with_action_phase_semantics:
+relationship_shots_with_residue_control:
 shots_with_reference_binding:
 shots_with_full_frame_prompt_block:
 generated_cf_with_standalone_prompt:
+frames_with_visual_hierarchy:
+frames_with_clean_subject_zones:
+frames_with_visual_rest_zones:
+frames_with_focal_alignment:
+frames_with_thumbnail_readability:
+frames_with_original_visual_grammar:
+frames_with_material_drift_control:
 shots_with_end_frame_contract:
 shots_with_frame_repair_plan:
 shots_with_image_source:
 shots_with_video_prompt_or_post_plan:
 frame_prompt_pack_included:
 video_prompt_pack_included:
+aspect_ratio_conformance:
 missing_asset_coverage: []
 redundant_assets: []
 orphan_cf_ids: []
@@ -201,5 +259,18 @@ continuity_conflicts: []
 emotion_intensity_conflicts: []
 directing_coherence_conflicts: []
 prompt_conflicts: []
+action_phase_misread_frames: []
+relationship_residue_loss_frames: []
+micro_detail_overload_frames: []
+medium_structure_voids: []
+focal_misalignment_frames: []
+thumbnail_misread_frames: []
+generic_visual_template_frames: []
+material_drift_frames: []
+commercialized_prop_frames: []
+unintended_poster_frames: []
+aspect_ratio_conflicts: []
 high_risk_shots: []
 ```
+
+只有原有完整性检查与`evals/frame-communication-check.md`同时通过，才能标记`PROMPT_PACKAGE_READY`。
