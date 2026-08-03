@@ -207,10 +207,11 @@ stages:
     - generation_mode
     content_must_be_nonempty: true
   S10:
-    name: 完整控制帧Prompt
+    name: 完整控制帧Prompt与参考图调用合同
     source_stage: S10_frame_prompt_pack
     instruction_files:
     - prompt-engineering/shot-cf-binding-system.md
+    - prompt-engineering/reference-media-usage-contract.md
     - prompt-engineering/image-prompt-compiler.md
     - prompt-engineering/storyboard-frame-system.md
     - templates/storyboard-frame-prompt-block.md
@@ -220,6 +221,13 @@ stages:
     - full_storyboard_frame_template_instantiated
     - standalone_prompt_per_generated_cf
     - reference_assets_and_roles
+    - image_reference_manifest_coverage
+    - image_reference_use_instruction_coverage
+    - reference_priority_coverage
+    - platform_reference_binding_coverage
+    - platform_reference_fallback_coverage
+    - no_id_only_reference
+    - planned_actual_reference_status_accuracy
     - visual_thesis_and_tensions
     - previous_and_next_handoff
     - frame_source_and_generation_mode
@@ -238,31 +246,26 @@ stages:
     - no_compact_summary_substitution
     content_must_be_nonempty: true
   S11:
-    name: 视频Prompt
+    name: 逐镜视频Prompt与参考媒体调用合同
     source_stage: S11_video_prompt_pack
     instruction_files:
+    - prompt-engineering/reference-media-usage-contract.md
     - prompt-engineering/video-prompt-compiler.md
     - prompt-engineering/performance-prompt-compiler.md
-    output_schema: schemas/generic-stage.schema.json
+    - templates/video-prompt-block.md
+    output_schema: schemas/s11-video-prompt.schema.json
     next_on_submit: S12
     required_coverage_keys:
-    - shot_id
-    - generation_mode
-    - input_frames
-    - director_intent
-    - visual_space
-    - start_state
-    - performance_contract
-    - emotion_timeline
-    - timeline_action
-    - action_physics
-    - camera
-    - focus_and_exposure
-    - per_shot_lighting_and_emotional_function
-    - end_state
-    - next_shot_inheritance
-    - positive_prompt
-    - negative_prompt
+    - video_reference_manifest_coverage
+    - video_reference_use_instruction_coverage
+    - reference_priority_coverage
+    - start_end_static_consistency_coverage
+    - locked_and_moving_elements_coverage
+    - platform_binding_coverage
+    - platform_fallback_coverage
+    - no_id_only_reference
+    - planned_actual_status_accuracy
+    - standalone_video_prompt_coverage
     content_must_be_nonempty: true
   S12:
     name: 完整性检查与返修
@@ -289,6 +292,15 @@ stages:
     - cf_binding
     - frame_prompt_full_template_coverage
     - standalone_frame_prompt_coverage
+    - image_reference_manifest_coverage
+    - image_reference_use_instruction_coverage
+    - video_reference_manifest_coverage
+    - video_reference_use_instruction_coverage
+    - reference_priority_coverage
+    - start_end_static_consistency_coverage
+    - platform_reference_binding_coverage
+    - platform_reference_fallback_coverage
+    - planned_actual_reference_status_accuracy
     - end_frame_contract_coverage
     - frame_prompt_repair_coverage
     - image_source_coverage
