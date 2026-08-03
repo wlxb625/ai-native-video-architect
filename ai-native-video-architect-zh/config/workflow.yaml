@@ -26,6 +26,7 @@ workflow_contract:
   - prompt-engineering/video-prompt-compiler.md
   - prompt-engineering/continuity-repair-system.md
   - evals/full-package-integrity-check.md
+  - templates/storyboard-frame-prompt-block.md
   - templates/full-creation-package.md
 workflow:
   S00_creative_brief:
@@ -204,17 +205,50 @@ workflow:
     next: S10
   S10_frame_prompt_pack:
     name: 全部控制帧生图Prompt
+    template: templates/storyboard-frame-prompt-block.md
+    output_schema: schemas/s10-frame-prompt.schema.json
+    required_per_shot_block:
+    - shot_id
+    - scene_id
+    - time_and_duration
+    - shot_unique_task
+    - visual_thesis_and_tensions
+    - visible_description
+    - frame_source_mode
+    - reference_assets_and_roles
+    - previous_shot_output
+    - next_shot_input
+    - generation_mode_and_reason
+    - composition_and_layers
+    - performance_timepoint_or_non_character_performance
+    - focus_depth_exposure
+    - per_shot_lighting
+    - control_frames
+    - end_frame_contract
+    - tail_generation_decision
+    - image_to_image_repair
+    - local_inpaint_repair
+    - video_action_summary
+    - continuity_anchors
+    - stable_fallback
     required_per_generated_cf:
     - cf_id
     - shot_id
     - type
+    - file_name
     - reference_assets_and_roles
     - visible_state
+    - static_moment_and_frozen_motion
+    - standalone_visual_baseline
     - positive_prompt
     - negative_prompt
     - output_rules
-    inheritance_rule: PREVIOUS_TAIL_INHERITANCE必须给继承CF、持续使用资产、允许变化和备用首帧Prompt。
-    no_tail_rule: 不预生成尾帧时必须给TEXT_CONTRACT_ONLY结束帧合同。
+    full_template_rule: 每个Shot必须完整实例化templates/storyboard-frame-prompt-block.md，不得用紧凑摘要、单独Prompt、资产编号列表或“同上”替代任一字段。
+    standalone_prompt_rule: 每个生成CF的正向Prompt、负面Prompt和输出规则必须独立可复制；全局视觉基准、参考职责、背景、构图、表演、焦点曝光、逐帧灯光、材质与连续性必须直接写入该CF，不得依赖公共前缀。
+    short_id_rule: 允许使用短编号，但短编号只减少名称长度，不得减少模板字段、Prompt密度或连续性说明。
+    static_frame_rule: 图片Prompt只描述一个准确静态瞬间和冻结运动痕迹，不得把完整时间过程塞入单帧。
+    inheritance_rule: PREVIOUS_TAIL_INHERITANCE必须给继承CF、持续使用资产、允许变化、禁止变化和备用首帧Prompt。
+    no_tail_rule: 不预生成尾帧时必须给TEXT_CONTRACT_ONLY结束帧合同，并完整说明动作终点、手部、道具、摄影机、焦点、曝光、灯光和下一镜继承。
     output: FRAME_PROMPT_PACK
     next: S11
   S11_video_prompt_pack:
@@ -251,6 +285,10 @@ workflow:
     - asset_coverage
     - shot_completeness
     - cf_binding
+    - frame_prompt_full_template_coverage
+    - standalone_frame_prompt_coverage
+    - end_frame_contract_coverage
+    - frame_prompt_repair_coverage
     - image_source_coverage
     - video_prompt_or_post_coverage
     - camera_lighting_performance_coherence
@@ -279,6 +317,8 @@ workflow:
     - shot_table
     - shot_cards
     - cf_list
+    - frame_prompt_pack
+    - video_prompt_pack
     - reference_matrix
     - continuity_and_emotion_handoff
     - editing_sound_post
@@ -326,3 +366,9 @@ coverage_invariants:
   narrative_lock_required_before_project_visual_strategy: true
   project_visual_strategy_scope_must_be_project_only: true
   full_package_requires_asset_angle_interaction_state_coverage: true
+  generated_cf_requires_full_storyboard_frame_block: true
+  generated_cf_prompt_must_be_standalone: true
+  shared_prompt_prefix_dependency_forbidden: true
+  compact_summary_cannot_substitute_storyboard_frame_template: true
+  text_contract_required_when_tail_not_generated: true
+  full_package_requires_frame_and_video_prompt_packs: true
