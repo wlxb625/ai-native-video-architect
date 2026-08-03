@@ -99,29 +99,73 @@
 | CF ID | 所属Shot | 类型 | 项目策略 | 来源资产 | 表演/环境状态 | 是否预生成 | Prompt/合同 |
 |---|---|---|---|---|---|---|---|
 
-## 12. 参考图使用矩阵
+CF清单只负责索引，不能替代完整控制帧Prompt。
+
+## 12. 全部控制帧生图Prompt
+
+逐镜完整使用`templates/storyboard-frame-prompt-block.md`，并直接包含S10的全部内容：
+
+- Shot、Scene、CF与时间；
+- 镜头唯一任务；
+- 视觉命题与2—5个张力来源；
+- 可见画面；
+- 帧来源模式；
+- 每张参考图的具体职责；
+- 上一镜输出与下一镜输入；
+- 生成模式及原因；
+- 前中后景、背景功能、大形、方向、局部高潮和冻结运动痕迹；
+- 人物表演时点或NON_CHARACTER_PERFORMANCE；
+- 焦点、景深、曝光和白平衡；
+- 完整逐镜灯光；
+- 每个生成CF独立可复制的正向Prompt、负面Prompt和输出规则；
+- 结束帧合同；
+- 尾帧生成判定；
+- 图生图修改、局部修复、视频动作摘要、连续性锚点和稳定替代。
+
+禁止只提供CF名称、简短画面说明或公共视觉前缀。短编号不影响内容完整度。
+
+## 13. 全部逐镜生视频Prompt
+
+逐镜输出S11完整视频Prompt包，包括：
+
+- 输入控制帧；
+- 导演意图与视觉空间；
+- 开始状态；
+- 表演合同与情绪时间轴；
+- 分段动作和物理关系；
+- 摄影机、焦点、景深和曝光；
+- 逐镜灯光与情绪功能；
+- 精确结束状态；
+- 下一镜继承；
+- 完整正向Prompt；
+- 针对性负面Prompt；
+- POST_ONLY方案或稳定降级。
+
+镜头摘要不能替代可直接使用的视频Prompt。
+
+## 14. 参考图使用矩阵
 
 | Shot | 面部/结构参考 | 场景机位 | 道具/状态参考 | 上一镜尾帧 | 新增参考需求 |
 |---|---|---|---|---|---|
 
-## 13. 连续性与情绪传递表
+## 15. 连续性与情绪传递表
 
 | 上一Shot | 结束位置/动作 | 结束表演与强度 | 状态进程 | 下一Shot | 开始状态 | 衔接方式 | 必须保持 |
 |---|---|---|---|---|---|---|---|
 
-## 14. 剪辑、声音和后期
+## 16. 剪辑、声音和后期
 
 镜头顺序、转场、声音桥、环境声、呼吸、对白、音乐、留白、字幕、分层合成和调色。
 
-## 15. 高风险与备用
+## 17. 高风险与备用
 
 逐项给风险、首选方法和稳定降级方法。表演风险优先简化微动作和运镜；资产缺口应补足实际需要的面部、角度、交互、状态或空间依据，而不是增加无关参考图。
 
-## 16. 外部平台生成顺序
+## 18. 外部平台生成顺序
 
 项目视觉策略确认 → 面部/三视图/全身/手部/状态资产 → 场景主空镜与必要反向机位 → 道具及状态 → 独立首帧 → 首尾帧 → 依赖尾帧镜头 → 分层素材 → 视频 → 剪辑后期。
 
-## 17. 内部完整性检查摘要
+## 19. 内部完整性检查摘要
 
 ```yaml
 status: PROMPT_PACKAGE_READY | NEEDS_REPAIR
@@ -137,12 +181,22 @@ shots_with_camera_direction:
 shots_with_lighting_direction:
 character_shots_with_performance_direction:
 shots_with_reference_binding:
+shots_with_full_frame_prompt_block:
+generated_cf_with_standalone_prompt:
+shots_with_end_frame_contract:
+shots_with_frame_repair_plan:
 shots_with_image_source:
 shots_with_video_prompt_or_post_plan:
+frame_prompt_pack_included:
+video_prompt_pack_included:
 missing_asset_coverage: []
 redundant_assets: []
 orphan_cf_ids: []
 undefined_asset_ids: []
+incomplete_frame_prompt_shots: []
+shared_prefix_dependent_cf_ids: []
+missing_end_frame_contracts: []
+missing_repair_prompts: []
 continuity_conflicts: []
 emotion_intensity_conflicts: []
 directing_coherence_conflicts: []
