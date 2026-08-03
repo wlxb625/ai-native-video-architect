@@ -33,6 +33,8 @@
         "shot_table",
         "shot_cards",
         "cf_list",
+        "frame_prompt_pack",
+        "video_prompt_pack",
         "reference_matrix",
         "continuity_and_emotion_handoff",
         "editing_sound_post",
@@ -42,60 +44,163 @@
       ],
       "properties": {
         "project_overview": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "script": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "narrative_lock_summary": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "project_visual_strategy": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "visual_bible": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "directing_and_performance_bible": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "asset_coverage_matrix": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "reference_prompts": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "shot_table": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "shot_cards": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "cf_list": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
+        },
+        "frame_prompt_pack": {
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
+        },
+        "video_prompt_pack": {
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "reference_matrix": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "continuity_and_emotion_handoff": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "editing_sound_post": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "risk_fallback": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "external_generation_order": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         },
         "integrity_summary": {
-          "type": ["string", "object", "array"]
+          "type": [
+            "string",
+            "object",
+            "array"
+          ]
         }
       }
     },
     "coverage": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "frame_prompt_pack_included",
+        "video_prompt_pack_included",
+        "full_frame_prompt_template_coverage",
+        "standalone_frame_prompt_coverage"
+      ],
+      "properties": {
+        "frame_prompt_pack_included": {
+          "const": true
+        },
+        "video_prompt_pack_included": {
+          "const": true
+        },
+        "full_frame_prompt_template_coverage": {
+          "const": true
+        },
+        "standalone_frame_prompt_coverage": {
+          "const": true
+        }
+      },
+      "additionalProperties": true
     },
     "final_artifact_sha256": {
       "type": "string",
