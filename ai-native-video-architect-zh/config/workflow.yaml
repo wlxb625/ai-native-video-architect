@@ -21,12 +21,14 @@ workflow_contract:
   - prompt-engineering/performance-prompt-compiler.md
   - prompt-engineering/asset-prompt-system.md
   - prompt-engineering/shot-cf-binding-system.md
+  - prompt-engineering/reference-media-usage-contract.md
   - prompt-engineering/image-prompt-compiler.md
   - prompt-engineering/storyboard-frame-system.md
   - prompt-engineering/video-prompt-compiler.md
   - prompt-engineering/continuity-repair-system.md
   - evals/full-package-integrity-check.md
   - templates/storyboard-frame-prompt-block.md
+  - templates/video-prompt-block.md
   - templates/full-creation-package.md
 workflow:
   S00_creative_brief:
@@ -204,8 +206,9 @@ workflow:
     output: SHOT_CF_BINDING_MAP
     next: S10
   S10_frame_prompt_pack:
-    name: 全部控制帧生图Prompt
+    name: 完整控制帧Prompt与参考图调用合同
     template: templates/storyboard-frame-prompt-block.md
+    reference_contract: prompt-engineering/reference-media-usage-contract.md
     output_schema: schemas/s10-frame-prompt.schema.json
     required_per_shot_block:
     - shot_id
@@ -216,6 +219,11 @@ workflow:
     - visible_description
     - frame_source_mode
     - reference_assets_and_roles
+    - reference_input_manifest
+    - reference_use_instruction
+    - reference_priority_order
+    - platform_reference_binding
+    - platform_reference_fallback
     - previous_shot_output
     - next_shot_input
     - generation_mode_and_reason
@@ -237,6 +245,11 @@ workflow:
     - type
     - file_name
     - reference_assets_and_roles
+    - reference_input_manifest
+    - reference_use_instruction
+    - reference_priority_order
+    - platform_reference_binding
+    - reference_fallback
     - visible_state
     - static_moment_and_frozen_motion
     - standalone_visual_baseline
@@ -244,7 +257,12 @@ workflow:
     - negative_prompt
     - output_rules
     full_template_rule: 每个Shot必须完整实例化templates/storyboard-frame-prompt-block.md，不得用紧凑摘要、单独Prompt、资产编号列表或“同上”替代任一字段。
-    standalone_prompt_rule: 每个生成CF的正向Prompt、负面Prompt和输出规则必须独立可复制；全局视觉基准、参考职责、背景、构图、表演、焦点曝光、逐帧灯光、材质与连续性必须直接写入该CF，不得依赖公共前缀。
+    standalone_prompt_rule: 每个生成CF的参考图使用指令、正向Prompt、负面Prompt和输出规则必须独立可复制；全局视觉基准、参考职责、背景、构图、表演、焦点曝光、逐帧灯光、材质与连续性必须直接写入该CF，不得依赖公共前缀。
+    reference_manifest_rule: 每个生成CF必须列出用户实际需要上传的文件名、状态、媒体类型、职责、优先级、允许影响、禁止影响和推荐平台槽位。
+    natural_language_reference_rule: 用户可复制部分必须使用“参考图1、参考图2、当前底图”等自然语言调用参考媒体，不能只写C1、L2、P5等内部ID。
+    reference_priority_rule: 必须明确当前底图或控制帧、人物身份、服装状态、道具、场景、姿态和风格的冲突优先级。
+    planned_reference_truth_rule: PLANNED_REFERENCE必须明确尚未真实生成，禁止伪称已验证角色一致性。
+    platform_fallback_rule: 平台只支持一张参考图或不支持多参考时，必须给合成参考板、分步生成、局部图生图或后期合成方案。
     short_id_rule: 允许使用短编号，但短编号只减少名称长度，不得减少模板字段、Prompt密度或连续性说明。
     static_frame_rule: 图片Prompt只描述一个准确静态瞬间和冻结运动痕迹，不得把完整时间过程塞入单帧。
     inheritance_rule: PREVIOUS_TAIL_INHERITANCE必须给继承CF、持续使用资产、允许变化、禁止变化和备用首帧Prompt。
@@ -252,16 +270,27 @@ workflow:
     output: FRAME_PROMPT_PACK
     next: S11
   S11_video_prompt_pack:
-    name: 全部逐镜头生视频Prompt
+    name: 逐镜视频Prompt与参考媒体调用合同
+    template: templates/video-prompt-block.md
+    reference_contract: prompt-engineering/reference-media-usage-contract.md
+    output_schema: schemas/s11-video-prompt.schema.json
     required_per_generated_shot:
     - shot_id
+    - scene_id
+    - duration
     - generation_mode
-    - input_frames
+    - core_visual_event
+    - reference_input_manifest
+    - reference_use_instruction
+    - reference_priority_order
+    - start_end_static_consistency_check
+    - locked_static_elements
+    - allowed_moving_elements
     - director_intent
     - visual_space
     - start_state
-    - performance_contract
-    - emotion_timeline
+    - performance_contract_or_non_character_performance
+    - emotion_timeline_or_environment_rhythm
     - timeline_action
     - action_physics
     - camera
@@ -271,7 +300,15 @@ workflow:
     - next_shot_inheritance
     - positive_prompt
     - negative_prompt
-    post_only_rule: POST_ONLY镜头必须有素材来源、后期操作、时长和剪辑说明。
+    - output_rules
+    - platform_reference_binding
+    - platform_fallback
+    - acceptance_boundary
+    prompt_reference_rule: 每条视频正向Prompt开头必须明确如何使用首帧、尾帧、人物身份、服装状态、场景和关键道具参考，不得只在Prompt外列编号。
+    start_end_priority_rule: 当前Shot首帧锁定起点，尾帧或Bridge帧锁定终点；人物身份图用于防止中间换脸，但不得覆盖首帧中的当前表情、角度和光线。
+    static_conflict_rule: 首尾帧在人物、服装、场景、道具数量、光源方向或屏幕方向上冲突时，必须先修复静帧，禁止直接让视频模型自行调和。
+    platform_fallback_rule: 平台无多参考、无尾帧或无角色参考能力时，必须给分步生成、合成参考板、抽尾帧续拍或分层合成方案。
+    post_only_rule: POST_ONLY镜头必须有素材来源、参考职责、后期操作、时长和剪辑说明。
     output: VIDEO_PROMPT_PACK
     next: S12
   S12_internal_validation_and_repair:
@@ -287,6 +324,15 @@ workflow:
     - cf_binding
     - frame_prompt_full_template_coverage
     - standalone_frame_prompt_coverage
+    - image_reference_manifest_coverage
+    - image_reference_use_instruction_coverage
+    - video_reference_manifest_coverage
+    - video_reference_use_instruction_coverage
+    - reference_priority_coverage
+    - start_end_static_consistency_coverage
+    - platform_reference_binding_coverage
+    - platform_reference_fallback_coverage
+    - planned_actual_reference_status_accuracy
     - end_frame_contract_coverage
     - frame_prompt_repair_coverage
     - image_source_coverage
@@ -317,6 +363,7 @@ workflow:
     - shot_table
     - shot_cards
     - cf_list
+    - reference_media_execution_matrix
     - frame_prompt_pack
     - video_prompt_pack
     - reference_matrix
@@ -368,7 +415,17 @@ coverage_invariants:
   full_package_requires_asset_angle_interaction_state_coverage: true
   generated_cf_requires_full_storyboard_frame_block: true
   generated_cf_prompt_must_be_standalone: true
+  generated_cf_requires_reference_input_manifest: true
+  generated_cf_requires_natural_language_reference_instruction: true
+  generated_video_requires_reference_input_manifest: true
+  generated_video_requires_natural_language_reference_instruction: true
+  reference_priority_must_be_explicit: true
+  start_end_static_conflict_must_be_repaired_before_video: true
+  platform_reference_binding_and_fallback_required: true
+  planned_reference_cannot_be_claimed_as_actual: true
+  id_only_reference_instruction_forbidden: true
   shared_prompt_prefix_dependency_forbidden: true
   compact_summary_cannot_substitute_storyboard_frame_template: true
   text_contract_required_when_tail_not_generated: true
   full_package_requires_frame_and_video_prompt_packs: true
+  full_package_requires_reference_media_execution_matrix: true
