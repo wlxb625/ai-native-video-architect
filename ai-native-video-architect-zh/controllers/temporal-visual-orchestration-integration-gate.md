@@ -11,8 +11,17 @@ module_status: EXPERIMENTAL_CORE_CANDIDATE
 current_validation:
   uploaded_reference_case: 1
   synthetic_cross_project_cases: 5
+  internal_full_pipeline_benchmarks: 1
+  externally_generated_benchmarks: 0
   real_cross_project_cases_required_before_hard_gate: 3
 ```
+
+已完成内部完整流程基准：
+
+- `benchmarks/temporal-orchestration-benchmark-001-slow-one-second.md`；
+- `evals/temporal-orchestration-benchmark-001-report.md`。
+
+该基准验证了同一现实主义项目内可根据不同Shot切换摄影机、环境、灯光和声音关系，但尚未通过外部视频生成验证。
 
 当前模块可以用于：
 
@@ -93,6 +102,8 @@ current_validation:
 → 横向汇总
 ```
 
+没有额外真实参考时，可先执行内部完整流程基准，但其结果只能记为`DESIGN_PASS_EXTERNAL_GENERATION_PENDING`，不能计入真实跨项目案例数量。
+
 ## 五、防止过度膨胀
 
 新增字段必须证明它控制了以下至少一项：
@@ -109,3 +120,15 @@ current_validation:
 ## 六、当前结论
 
 现阶段将本模块保留为“可调用、可测试、尚未全局强制”的导演层候选，是比立即改写所有核心模板更安全的做法。
+
+当前已通过：
+
+- 单一外部参考的案例抽象；
+- 五类合成横向压力测试；
+- 一个完整现实主义项目的设计态端到端基准。
+
+当前仍缺：
+
+- 外部生成后的镜头执行验证；
+- 两个以上差异明显的真实项目；
+- 对实际模型失败类型的修正规则。
