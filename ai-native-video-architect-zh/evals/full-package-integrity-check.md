@@ -2,280 +2,303 @@
 
 ## 用途
 
-在Agent交付完整制作提示词包前，检查剧本锁定、项目视觉策略、所有Shot、CF、资产、导演字段、表演、场景功能、画面沟通和Prompt是否真正闭环。
+在交付完整制作提示词包前，检查`NARRATIVE_LOCK`、项目视觉策略、资产、Shot、`CONTINUITY_LEDGER`、CF、图片Prompt、视频Prompt、导演执行、画面沟通和可生成性是否形成同一闭环。
 
-本检查保留V4.4全部要求，并与`evals/frame-communication-check.md`并行执行。
+本检查保留V4.4的完整制作能力，并与`evals/frame-communication-check.md`并行执行。它只核验当前制作包，不重新创作第二套策略、镜头或连续状态。
 
-## NARRATIVE_LOCK保留
+## 一、NARRATIVE_LOCK
 
-检查制作阶段是否保留：
+检查是否保留：
 
 - 主角或主体；
 - 核心关系与处境；
 - 世界规则或主要机制；
 - 关键选择；
-- 高潮行动者和不可逆变化；
+- 高潮行动者与不可逆变化；
 - 结尾及开放程度；
 - 主题意义；
 - 用户授权边界。
 
-发现为了风格、资产、场景功能或生成便利擅自改变上述事实，直接REPAIR。
+为了风格、资产、场景功能、生成便利或单镜奇观擅自改变上述事实，直接`REPAIR`。
 
-## 项目视觉策略
+## 二、项目视觉策略
 
-完整制作包必须存在`PROJECT_VISUAL_STRATEGY`并满足：
+完整项目必须有`PROJECT_VISUAL_STRATEGY`，并满足：
 
-- 标记`scope: PROJECT_ONLY`；
+- `scope: PROJECT_ONLY`；
 - 生成于`NARRATIVE_LOCK`之后；
 - 引用当前剧本证据；
-- 未把固定色彩、摄影、材质、表演温度、背景功能、场景功能或画幅写成Skill通用默认；
-- 定义Style DNA、背景职责、视觉张力、原创视觉语法、连续性锚点、允许变化和禁止漂移；
-- 定义当前项目的视觉密度、画面清洁度和材质语义边界；
-- 资产、Shot、CF、图片Prompt和视频Prompt均能追溯到该策略；
-- 镜头之间允许有叙事驱动的差异，不要求机械相同。
+- 定义Style DNA、背景职责、视觉张力、原创视觉语法、视觉密度、清洁度、材质语义、画幅影响、连续性锚点、允许变化和禁止漂移；
+- 资产、Shot、CF、图片Prompt和视频Prompt能够追溯到该策略；
+- 镜头允许有叙事驱动差异，不机械相同；
+- 没有把当前项目的配色、摄影、材质、表演温度、背景功能和画幅写成Skill默认。
 
-单张图片或单镜头任务只能使用局部视觉合同，不能伪称完整项目策略。
+单图或单镜任务只能使用局部视觉合同。
 
-## 场景功能路由
+## 三、场景功能与导演执行
 
 每个正式Shot必须：
 
 - 有且只有一个主场景功能；
-- 次场景功能为空或最多一个；
-- 有本镜事件、人物状态、信息释放或环境变化作为剧本证据；
-- 明确观众即时体验、延迟体验和信息/情绪/奇观优先级；
-- 明确第一眼、第二眼与最终揭示；
-- 把功能传递到摄影、灯光、表演、背景、CF和Prompt；
-- 写明不得牺牲项和功能冲突判定。
+- 次功能为空或最多一个；
+- 有剧本证据；
+- 明确信息、情绪、奇观优先级和观众第一眼、第二眼、最终理解；
+- 把功能传递到导演意图、摄影、灯光、表演、背景、CF和Prompt；
+- 写明不得牺牲项和冲突/拆镜判定。
 
-以下直接REPAIR：
+以下直接`REPAIR`：
 
 - 功能标签只存在于Shot表；
 - 一个短Shot有三个以上同权功能；
-- 功能要求互相冲突却未拆镜；
-- 为追求震撼、共鸣、反转或其他功能擅自修改剧情事实。
+- 功能冲突却未拆镜；
+- 为追求震撼、共鸣、反转或治愈改写剧情事实。
 
-## 资产角度、交互与状态覆盖
+## 四、资产覆盖
 
-资产覆盖不能只统计是否存在一个角色图和一个场景图。逐项检查：
+逐项检查实际镜头是否有足够依据：
 
-- 重要面部近景是否有面部身份依据；
-- 正面、严格侧面、背面、转身和离场背影是否有结构依据；
-- 全身、俯身、跪姿、走动和复杂身体方向是否有全身比例与服装结构依据；
-- 发型、发饰、服装和配饰前后结构是否可见；
-- 精确手部叙事是否有手型、尺寸、左右手分工和道具接触依据；
-- 污染、伤损、湿水、变装等状态是否有进程依据；
-- 场景正反方向、关键局部和时间状态是否有布局依据；
-- 核心道具结构、页面、开合、破损、燃烧或阶段变化是否有依据；
-- 每项资产是否有必要性证据和实际使用Shot；
-- 是否存在只为显得专业、没有镜头使用的冗余资产。
+- 面部近景身份；
+- 正面、严格侧面、背面、转身和离场背影；
+- 全身、俯身、跪姿、走动和复杂身体方向；
+- 发型、服装和配饰前后结构；
+- 精确手部与道具交互；
+- 污染、伤损、湿水、变装、体力等状态进程；
+- 场景正反方向、关键局部、时间状态和世界光源；
+- 道具结构、尺寸、页面、开合、破损、消耗和阶段变化；
+- 每项资产的必要性、使用Shot与缺失风险。
 
-缺少任何实际镜头所需依据，资产覆盖不得PASS。
+缺少实际镜头所需依据不得`PASS`；没有Shot使用的冗余资产应删除。
 
-## 硬性计数
+## 五、唯一连续性台账
 
-以下数量必须相等：
+完整项目必须只有一个`CONTINUITY_LEDGER`。第一镜引用`PROJECT_INITIAL_STATE`，后续镜头引用上一镜唯一`End State ID`。
 
-```text
-Shot总数
-镜头制作卡数量
-有可见画面描述的Shot数量
-有项目视觉策略引用的Shot数量
-有主场景功能与剧本证据的Shot数量
-有导演意图的Shot数量
-有摄影方向的Shot数量
-有逐镜灯光方向的Shot数量
-人物镜头中有表演方向与情绪曲线的数量
-有动作阶段语义的Shot数量
-适用关系镜头中有关系残留控制的数量
-有参考绑定的Shot数量
-有开始状态和结束状态的Shot数量
-有完整S10控制帧Prompt块的Shot数量
-有图像来源的生成型Shot数量
-有视频Prompt或POST_ONLY方案的Shot数量
+每个Shot必须具有：
+
+```yaml
+continuity_reference:
+  ledger_id:
+  source_end_state_id:
+  inherited_facts_used:
+  new_change_in_this_shot:
+  current_end_state_id:
+  next_shot_required_inheritance: []
 ```
 
-空镜、纯道具和环境镜头不得用空白绕过表演字段，应标记`NON_CHARACTER_PERFORMANCE`并给出环境节奏、观看关系和运动强度。
+台账至少覆盖：
 
-## ID完整性
+- 人物知识、目的和决定；
+- 动作阶段与完成度；
+- 位置、朝向、姿态、视线、呼吸、重心、手部与接触；
+- 道具状态与归属；
+- 伤损、污渍、湿水、服装、体力与其他累积状态；
+- 场景地理、地标、轴线与屏幕方向；
+- 摄影、焦点、灯光、天气、时间与声音状态；
+- 情绪和关系残留；
+- 本镜新增变化与精确尾态。
 
-- 所有Shot ID唯一；
-- 所有CF ID唯一；
+禁止Shot卡、CF、图片Prompt、视频Prompt或最终模板建立竞争版本的`input_state / continuity_in / continuity_out`。
+
+以下直接`REPAIR`：
+
+- `source_end_state_id`不存在；
+- 上一镜End State没有成为下一镜起态；
+- Shot、CF和Prompt引用不同版本状态；
+- 已完成动作重新开始；
+- 人物忘记信息或恢复旧目的；
+- 道具、伤损、湿水、服装、体力或接触状态被重置；
+- 换机位后改变了空间事实；
+- 情绪每镜从零重新起步；
+- 只保持配色相似，却丢失剧情因果。
+
+## 六、硬性计数
+
+以下数量必须与适用Shot总数一致：
+
+```text
+镜头制作卡
+可见画面描述
+项目视觉策略引用
+有效CONTINUITY_LEDGER条目
+有效source_end_state_id
+已登记current_end_state_id
+主场景功能与剧本证据
+导演意图
+摄影方向
+逐镜灯光方向
+人物镜头的表演方向与情绪曲线
+空镜的NON_CHARACTER_PERFORMANCE与环境节奏
+动作阶段语义
+适用关系镜头的关系残留
+参考绑定
+完整S10控制帧Prompt块
+生成型Shot的图像来源
+视频Prompt或POST_ONLY方案
+风险与稳定备用
+```
+
+简单镜头可以不启用完整时空编排，但必须记录`REQUIRED / SIMPLIFIED / NOT_REQUIRED`及理由，不能以不启用为由省略导演、摄影、灯光、连续性或Prompt。
+
+## 七、ID与绑定完整性
+
+- 所有Scene、Shot、CF、Asset、Ledger Entry和End State ID唯一；
 - 每个CF只属于一个Shot；
-- 每个引用CF都存在；
-- 每个资产ID已定义；
-- 每个资产有必要性证据和使用Shot；
-- 镜头表、CF表、图片Prompt和视频Prompt编号一致。
+- 每个引用对象真实存在；
+- Shot表、台账、CF表、图片Prompt、视频Prompt和参考矩阵编号一致；
+- START CF对应台账起态；
+- END CF或结束帧合同对应当前End State；
+- Bridge CF不改变未授权剧情事实；
+- 继承上一镜尾帧时写明CF、End State和备用方案。
 
-短编号允许存在，但必须保持唯一、可追溯和跨表一致。短编号不得成为删减模板字段或Prompt内容的理由。
+短编号不能成为删字段或缩短Prompt的理由。
 
-## 内容完整性
+## 八、Shot内容完整性
 
 每个Shot必须有：
 
-- narrative_purpose；
-- visual_description；
-- project_visual_strategy_reference；
-- scene_function及剧本证据；
-- director_intent；
-- camera_direction；
-- lighting_direction；
-- performance_direction或NON_CHARACTER_PERFORMANCE；
-- emotion_curve或environment_rhythm；
-- action_semantics；
-- relationship_residue或不适用原因；
-- input_state；
-- primary_action；
-- exact_end_state；
-- reference_bindings；
-- frame_source_mode；
-- control_frames；
-- generation_mode；
-- image_prompt或继承说明；
-- video_prompt或POST_ONLY说明；
-- continuity_in与continuity_out；
-- risk_and_fallback。
+- `narrative_purpose`；
+- `visual_description`；
+- `project_visual_strategy_reference`；
+- `continuity_ledger_reference`；
+- `source_end_state_id`；
+- `new_change_in_this_shot`；
+- `current_end_state_id`；
+- `scene_function`及证据；
+- `director_intent`；
+- `camera_direction`；
+- `lighting_direction`；
+- `performance_direction`或`NON_CHARACTER_PERFORMANCE`；
+- `emotion_curve`或`environment_rhythm`；
+- `action_semantics`；
+- `relationship_residue`或不适用原因；
+- `reference_bindings`；
+- `frame_source_mode`；
+- `control_frames`；
+- `generation_mode`；
+- `image_prompt`或继承说明；
+- `video_prompt`或`POST_ONLY`说明；
+- `risk_and_fallback`。
 
-## S10控制帧Prompt完整性
+时空视觉编排只在条件满足时完整填写，并只记录系统关系，不重复摄影、灯光、表演和台账参数。
 
-S10不得只检查“是否存在一条Prompt”。每个Shot必须完整实例化`templates/storyboard-frame-prompt-block.md`，并逐项检查：
+## 九、S10控制帧与图片Prompt
 
-- Shot ID、Scene ID、CF ID、类型、时间与时长；
-- 镜头唯一任务、主次场景功能和可见画面描述；
-- 观众第一眼、第二眼与最终揭示；
-- 此帧最强视觉关系、2—5个张力来源以及抽象情绪的可见化方式；
-- 帧来源模式；
-- 每张参考图的ID、状态和具体职责，不能只列编号；
-- 上一镜人物、手部、道具、场景地标、光线、白平衡和曝光输出状态；
-- 下一镜必须继承、允许改变和禁止改变的内容；
-- 生成模式、选择原因和失败备用；
-- 前景、中景、背景、背景功能、大形、近中远层次、方向、局部高潮和与主体的关系；
-- 核心大形、中尺度结构、微小细节集中区、主体清洁区、视觉休息区与细节衰减；
-- 主要流动元素、辅助环境元素、微粒、数字噪点和胶片颗粒策略；
-- 叙事动作区、局部最亮区、最高局部对比、主要高饱和色、最高锐度和世界变化起点；
-- 动作阶段、接触、重量或力量承担、手部与身体趋势、可见结果和防误读线索；
-- 适用时的关系残留、道具自然化和非自愿情绪泄漏；
-- 原创视觉语法、常见模板风险与替代结构；
-- 材质可观察属性和语义漂移反制；
+每个需要生成CF的Shot必须完整实例化`templates/storyboard-frame-prompt-block.md`，至少检查：
+
+- Shot、Scene、CF、类型、时间和时长；
+- 镜头唯一任务、主次场景功能与观众阅读顺序；
+- 项目视觉策略与参考资产职责；
+- `ledger_id`、`represented_state_id`和上一镜End State；
+- 帧来源与生成模式；
+- 前中后景、背景职责、大形、方向、局部高潮与冻结运动痕迹；
+- 核心大形、中尺度结构、细节集中区、主体清洁区、视觉休息区与衰减；
+- 焦点、最亮区、最高对比、色彩锚点和世界变化起点；
+- 动作阶段、接触、重量、手部趋势、可见结果与防误读线索；
+- 适用时的关系残留和道具自然化；
+- 人物表演或环境节奏；
+- 构图、景别、焦段、机位、轴线和动作空间；
+- 焦点、景深、曝光、白平衡、高光与暗部；
+- 真实光源、世界位置、方向、软硬、色温、光比、照亮区域和阴影；
+- 原创视觉语法、材质可观察属性和语义漂移反制；
 - 缩略图可读性、海报化风险和画幅执行；
-- 静态画面中的冻结运动痕迹；
-- 主体位置、构图重心、留白、轴线、屏幕方向、焦段、机位和动作空间；
-- 人物目标、外部策略、情绪强度、视线、眼睑、眉、嘴、下颌、呼吸、肩背、姿态、重心和左右手；
-- 空镜的环境节奏、观看关系和运动强度；
-- 焦点、景深、曝光、白平衡、高光保护和暗部细节；
-- 主光真实来源、世界位置、相对摄影机与人物方向、软硬、色温、照亮区域、阴影、辅光、实景光、背景光、光比和连续性；
-- 每个生成CF的完整正向Prompt、针对性负面Prompt和输出规则；
-- 精确结束帧合同；
-- 尾帧是否预生成及原因；
-- 图生图修改Prompt；
-- 局部修复Prompt；
-- 视频动作摘要；
-- 连续性锚点；
-- 稳定替代方案。
+- 完整正向Prompt、针对性负面Prompt和输出规则；
+- END CF或`TEXT_CONTRACT_ONLY`的精确尾态；
+- 图生图、局部修复和稳定降级。
 
-每个生成CF必须是独立可复制的完整Prompt：
+每个生成CF必须独立可复制：禁止公共视觉前缀、“同上”“沿用前面”“Prompt略”和只列资产ID。静态Prompt只能描述一个瞬间。
 
-- 项目视觉基准和场景功能必须直接写入该CF；
-- 参考图职责必须直接写入该CF；
-- 背景、构图、表演、动作阶段、视觉层级、焦点、灯光、材质、画幅和连续性必须直接写入该CF；
-- 不得要求用户拼接“共用前缀”“全局负面词”或其他外部段落；
-- 不得使用“同上”“沿用前面”“参考图见上文”“Prompt略”；
-- 不得用资产编号列表替代参考职责；
-- 不得用一段紧凑摘要替代完整模板；
-- 图片Prompt只能描述一个静态瞬间，完整时间过程必须留给视频Prompt；
-- 不预生成尾帧时，`TEXT_CONTRACT_ONLY`仍必须完整描述动作终点、关系残留、人物、左右手、道具、摄影机、焦点、曝光、灯光和下一镜继承。
+以下直接`REPAIR`：
 
-以下任一情况直接判定REPAIR：
+- START CF不符合台账起态；
+- END CF与当前End State不一致；
+- 下一镜依赖准确尾态却无预生成尾帧或完整文字合同；
+- Prompt缺少项目视觉、场景功能、背景、构图、表演、动作阶段、焦点曝光、灯光、材质、画幅或连续性；
+- 负面Prompt是无针对性的万能词；
+- 输出规则缺少比例、方向、不可裁切区、文字规则、优先级或文件名；
+- 缺少局部修复与稳定备用。
 
-- S10仍使用`schemas/generic-stage.schema.json`；
-- 任一Shot未完整实例化分镜帧模板；
-- 任一生成CF依赖共享视觉前缀；
-- 正向Prompt缺少项目视觉基准、场景功能、背景、构图、表演、动作阶段、视觉层级、焦点曝光、逐帧灯光、材质、画幅或连续性中的任一项；
-- 负面Prompt是机械复制的万能词，没有针对当前身份、人体、动作误读、接触与重量、服装、道具、场景、光色、视觉污染、模板、材质与输出风险；
-- 输出规则未说明比例、方向、单图或多格、不可裁切区、文字规则、优先级、清晰度、平台比例参数和文件名；
-- 下一镜依赖准确尾态却没有预生成尾帧或完整文字尾帧合同；
-- 缺少图生图、局部修复或稳定降级；
-- 短编号导致内容字段被删减。
+## 十、V4.5画面沟通
 
-## V4.5画面沟通检查
-
-必须读取并通过`evals/frame-communication-check.md`。至少检查：
+必须通过`evals/frame-communication-check.md`：
 
 ### 视觉密度
 
-- 华丽是否依赖结构、材质和光影，而不是随机碎屑；
-- 画面是否所有区域同等复杂或同等锐利；
-- 为了干净是否删除了中尺度结构，导致空洞；
-- 主体面部、手部和核心道具是否被高频背景污染。
+- 华丽来自空间、结构、材质和光影，而不是随机碎屑；
+- 画面不是所有区域同等复杂、锐利和装饰密集；
+- 干净没有删除必要的中尺度结构；
+- 面部、手部和核心道具不被背景污染。
 
 ### 焦点与缩略图
 
-- 动作、最亮处、最高对比、主要高饱和色和世界变化起点是否共同服务镜头任务；
-- 手机端或目标观看距离下，主大形、主体、动作、道具和因果是否可读。
+- 动作、最亮处、最高对比、色彩锚点、最高锐度和变化起点共同服务镜头任务；
+- 目标观看距离下能读出主大形、主体关系、关键动作、道具和因果。
 
 ### 动作与关系
 
-- 动作阶段是否明确；
-- 接触、重量、手部方向和动作结果是否一致；
-- 是否被误读为相反动作；
-- 关系镜头是否同时保留动作准确性与情绪余温。
+- 阶段、接触、重量、手部方向和结果一致；
+- 不被误读为相反动作；
+- 关系镜头同时保留动作准确和情绪余温。
 
 ### 原创、道具与材质
 
-- 是否只删除常见符号而没有替代结构；
-- 是否回落为通用AI模板；
-- 道具是否过度陈列、商品化或宣传化；
-- 目标材质是否被玻璃、冰、塑料、霓虹或其他常见材质替代。
+- 有正向替代结构，不只是禁止常见符号；
+- 未回落为通用AI模板；
+- 道具不被无意商品化或宣传化；
+- 目标材质未被玻璃、冰、塑料或霓虹替代。
 
 ### 画幅
 
-- 当前比例是否真实进入构图重建；
-- Prompt比例与外部平台参数是否一致；
-- 是否把一次测试比例误写成Skill默认。
+- 当前比例真实进入构图重建；
+- Prompt与外部平台比例参数一致；
+- 测试比例没有变成Skill默认。
 
-## 导演一致性
+## 十一、导演一致性
 
 读取`evals/directing-coherence-check.md`和`evals/performance-direction-score.md`，检查：
 
-- 情绪目标是否由可见表演实现；
-- 观众位置是否由机位、距离和揭示顺序实现；
-- 镜头与灯光是否让关键表演可读；
-- 表演强度是否符合事件、时长和相邻镜头；
-- 灯光变化是否有真实原因；
-- 结尾表演状态、动作阶段和关系残留是否写入End CF和下一镜开始状态；
-- 变化是否符合当前项目视觉策略，而不是模型随机换风格。
+- 情绪目标由可见表演实现；
+- 观众位置由机位、距离、构图和揭示顺序实现；
+- 摄影和灯光让关键表演与动作可读；
+- 表演强度符合事件、时长和上一镜尾态；
+- 灯光变化有真实光源或明确形式规则；
+- 结束表演、动作阶段和关系残留进入当前End State；
+- 时空编排只协调关系，没有与专业模块竞争；
+- 所有变化符合当前项目视觉策略。
 
-## 连续性
+## 十二、视频Prompt一致性
 
-逐对检查：
+每个生成型Shot的视频Prompt必须：
 
-- 人物身份、比例、发型和服装结构；
-- 人物位置、朝向、视线；
-- 左右手、道具和接触；
-- 动作阶段、完成百分比、重量承担和关系残留；
-- 污染、伤损、湿水、变装等状态进程；
-- 表演强度、呼吸、嘴、肩膀、手指和重心；
-- 屏幕方向与轴线；
-- 场景地标和反向空间；
-- 光源方向、白平衡、曝光；
-- 色彩与材质进程；
-- 声音和剪辑连接。
+- 从台账起态开始；
+- 保护首帧身份、美术、构图和光线；
+- 只推进本镜唯一核心事件；
+- 保留完整摄影、灯光、表演、环境和动作设计；
+- 写清身体部位顺序、材质速度差、背景过程、摄影机起止和时间峰值；
+- 抵达可见、可截图、可验证的当前End State；
+- 把该End State交给下一镜；
+- 具有针对身份、人体、动作、道具、空间、光色和状态重置的负面约束。
 
-## Prompt一致性
+Shot、CF、图片Prompt和视频Prompt不能在剧情事实、项目策略、场景功能、动作阶段、关系残留、表演、机位、运镜、焦点、灯光、画幅和尾态上互相矛盾。
 
-Shot、CF、图片Prompt和视频Prompt不能在剧本事实、项目视觉策略、场景功能、动作阶段、关系残留、表演、情绪强度、机位、运镜、焦点、灯光、画幅和尾态上互相矛盾。
+## 十三、制作包组成
 
 完整制作包必须同时包含：
 
-- 完整基础资产Prompt包；
-- 完整Shot与导演制作卡；
+- 剧本与`NARRATIVE_LOCK`；
+- `PROJECT_VISUAL_STRATEGY`；
+- 资产覆盖矩阵与全部资产Prompt；
+- 完整Shot总表与制作卡；
+- 唯一`CONTINUITY_LEDGER`；
 - 完整CF清单；
 - 完整S10控制帧Prompt包；
-- 完整S11逐镜视频Prompt包。
+- 完整S11视频Prompt包；
+- 参考矩阵；
+- 剪辑、声音与后期说明；
+- 高风险备用与生成顺序。
 
-CF清单不能替代控制帧Prompt包，镜头摘要不能替代视频Prompt包。
+CF清单不能替代控制帧Prompt，镜头摘要不能替代视频Prompt。最终的连续性表只能是台账的人类可读视图，不能成为第二事实源。
 
-## 结果
+## 十四、结果
 
 ```yaml
 status: PASS | REPAIR
@@ -284,10 +307,14 @@ project_visual_strategy_scope:
 project_visual_strategy_conformance:
 scene_function_coverage:
 scene_function_execution_consistency:
-function_conflicts: []
 asset_angle_interaction_state_coverage:
+continuity_ledger_present:
+continuity_ledger_single_source:
 shot_count:
-coverage_ratio:
+shot_card_coverage:
+valid_source_end_state_coverage:
+registered_current_end_state_coverage:
+end_state_handoff_coverage:
 frame_prompt_full_template_coverage:
 standalone_frame_prompt_coverage:
 action_semantics_coverage:
@@ -306,6 +333,10 @@ redundant_assets: []
 orphan_cf_ids: []
 missing_cf_ids: []
 undefined_asset_ids: []
+missing_ledger_entries: []
+missing_end_state_ids: []
+broken_end_state_handoffs: []
+competing_continuity_records: []
 incomplete_frame_prompt_shots: []
 shared_prefix_dependent_cf_ids: []
 missing_end_frame_contracts: []
@@ -325,7 +356,8 @@ material_drift_frames: []
 commercialized_prop_frames: []
 unintended_poster_frames: []
 aspect_ratio_conflicts: []
+high_risk_shots: []
 repair_actions: []
 ```
 
-只有本检查与`frame-communication-check.md`均为`PASS`，才能输出`PROMPT_PACKAGE_READY`。
+只有本检查和`frame-communication-check.md`均为`PASS`，才能标记`PROMPT_PACKAGE_READY`。没有真实媒体时不得声称已通过实际样片验收。
