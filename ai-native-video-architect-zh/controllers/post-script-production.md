@@ -22,28 +22,135 @@ NARRATIVE_LOCK
 
 本控制器只在用户要求进入制作时启用。只写剧本、诊断剧本或修改文本时，不得强制执行S04—S13。
 
-## 必读模块
+## 模块加载策略
+
+核心原则：
+
+> 全流程不等于全仓库加载。仍然只使用一个Skill，但按照当前阶段和镜头需要读取模块；案例、基准和开发评估不得进入普通项目的默认创作上下文。
+
+### 1. 制作入口常驻
+
+进入`ADAPT`或`FULL_CREATION_PACKAGE`时读取：
 
 - `controllers/agent-full-creation.md`；
-- `controllers/project-visual-strategy.md`；
-- `controllers/camera-director.md`；
-- `controllers/lighting-director.md`；
-- `controllers/performance-director.md`；
-- `references/emotion-library.md`；
-- `prompt-engineering/performance-prompt-compiler.md`；
-- `prompt-engineering/visual-style-color-light.md`；
-- `prompt-engineering/asset-prompt-system.md`；
-- `prompt-engineering/shot-cf-binding-system.md`；
-- `prompt-engineering/image-prompt-compiler.md`；
-- `prompt-engineering/storyboard-frame-system.md`；
-- `prompt-engineering/video-prompt-compiler.md`；
-- `prompt-engineering/camera-movement-library.md`；
+- `controllers/post-script-production.md`；
 - `prompt-engineering/continuity-repair-system.md`；
-- `evals/prompt-production-readiness-score.md`；
-- `evals/full-package-integrity-check.md`；
 - `templates/full-creation-package.md`。
 
-时空视觉编排只在项目或镜头满足启用条件时读取，不作为所有Shot的固定必填模块。
+这些文件负责总流程、唯一连续性台账和最终交付结构，不代替各阶段专业模块。
+
+### 2. 按阶段加载
+
+#### S04—S05｜叙事锁定与项目视觉策略
+
+读取：
+
+- `controllers/project-visual-strategy.md`；
+- 当前剧本与`NARRATIVE_LOCK`直接需要的叙事模块。
+
+此阶段不读取视频生成基准、真实媒体验收或外部测试案例。
+
+#### S06—S07｜资产规划与资产Prompt
+
+读取：
+
+- `prompt-engineering/asset-prompt-system.md`；
+- `prompt-engineering/visual-style-color-light.md`；
+- 实际资产需要的身份、服装、场景、道具和状态参考模块。
+
+没有人物表演、复杂灯光或特定材质需求时，不为显示完整而加载无关细分模块。
+
+#### S08｜Shot、导演、摄影、灯光与表演
+
+按当前Shot读取：
+
+- `controllers/camera-director.md`；
+- `controllers/lighting-director.md`；
+- 人物镜头读取`controllers/performance-director.md`；
+- 需要细化情绪时读取`references/emotion-library.md`与`prompt-engineering/performance-prompt-compiler.md`；
+- 进行场景功能判断时读取`references/scene-function-taxonomy.md`与`controllers/scene-function-router.md`。
+
+空镜、纯道具或纯环境Shot不读取人物表演细化模块，但必须给出环境节奏和观看关系。
+
+#### S09—S10｜CF与图片Prompt
+
+读取：
+
+- `prompt-engineering/shot-cf-binding-system.md`；
+- `prompt-engineering/storyboard-frame-system.md`；
+- `prompt-engineering/image-prompt-compiler.md`；
+- V4.5画面控制需要时读取`controllers/frame-clarity-density-controller.md`、`prompt-engineering/image-prompt-compiler-v4.5-extension.md`与`templates/scene-function-frame-control-block.md`。
+
+技术资产板不强制加载剧情关键帧的复杂画面密度控制；剧情关键帧也不能因为减少加载而省略必要的构图、灯光、材质和动作语义。
+
+#### S11｜视频Prompt
+
+读取：
+
+- `prompt-engineering/video-prompt-compiler.md`；
+- 需要选择或细化运镜时读取`prompt-engineering/camera-movement-library.md`；
+- 继续引用当前Shot已经批准的摄影、灯光、表演、CF和连续性结果。
+
+不得为了生成视频Prompt重新加载并重做已经锁定的项目视觉策略、资产和Shot设计。
+
+#### S12｜最终闭环检查
+
+读取：
+
+- `evals/prompt-production-readiness-score.md`；
+- `evals/full-package-integrity-check.md`；
+- `evals/frame-communication-check.md`。
+
+检查模块只核验当前制作包，不把测试项目、案例内容或实验性审美带回当前创作。
+
+### 3. 条件加载：时空视觉编排
+
+只有出现以下情况之一时，才读取：
+
+- `controllers/temporal-visual-orchestration.md`；
+- `templates/temporal-visual-orchestration-block.md`；
+- `evals/temporal-visual-orchestration-check.md`。
+
+启用条件：
+
+- 同一镜头两个以上系统明显变化；
+- 人物、环境、摄影机、灯光或声音存在明确先后、响应、对抗或脱节；
+- 视觉序列、MV、梦境、奇观、动作高潮或复杂转场；
+- 相邻镜头依赖运动、声音、视线、亮度、语义或情绪接力；
+- 出现“人物动人物的、背景动背景的”风险。
+
+普通叙事镜头只使用简化关系判断；静态资产板和无时间变化的单图不加载该模块。
+
+### 4. 真实媒体存在时加载
+
+只有用户提供真实图片、样片或视频并要求审核、修复时，才读取：
+
+- `controllers/production-execution.md`；
+- `evals/shot-output-acceptance-score.md`。
+
+设计态没有真实媒体时不得加载后伪称完成了外部验收。
+
+### 5. 开发验证专用，普通创作禁止默认加载
+
+以下内容只在开发Skill、压力测试、复盘真实生成结果或决定是否升级核心规则时读取：
+
+- `benchmarks/`目录；
+- `references/case-studies/`目录；
+- `references/test-learning-abstraction-protocol.md`；
+- `controllers/temporal-visual-orchestration-integration-gate.md`；
+- `evals/cross-project-orchestration-pressure-test.md`；
+- `evals/temporal-orchestration-benchmark-*`；
+- `evals/temporal-orchestration-benchmark-001-external-scorecard.md`。
+
+这些文件用于验证能力，不得把《慢一秒》、东方视觉参考或任何测试项目的具体人物、情节、材质、色彩、运镜和节奏带入普通项目。
+
+### 6. 加载冲突处理
+
+- 当前阶段已经得到稳定结论时，后续模块引用该结论，不重新生成一份竞争版本；
+- 连续性状态统一读取`CONTINUITY_LEDGER`；
+- 时空编排只统筹关系，不重复摄影、灯光、表演和连续性参数；
+- 评估失败时只回退到对应薄弱层，不重新加载整套仓库；
+- 用户只要求单镜头、单张图、单个Prompt或文本诊断时，只读取完成该任务的最小模块集合。
 
 ## S04 NARRATIVE_LOCK与制作拆解
 
